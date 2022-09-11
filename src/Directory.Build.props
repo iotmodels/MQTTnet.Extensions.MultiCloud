@@ -1,0 +1,25 @@
+<Project>
+  <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Deterministic>true</Deterministic>
+    <RepositoryUrl>https://github.com/iotmodels/MQTTnet.Extensions.MultiCloud</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <Copyright>copyleft</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/iotmodels/MQTTnet.Extensions.MultiCloud</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>mqtt; azure-iot</PackageTags>
+	<PackageIcon>iotpnp-128.png</PackageIcon>
+    <GenerateAssemblyVersionInfo>true</GenerateAssemblyVersionInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Condition="!Exists('packages.config')">
+      <PrivateAssets>all</PrivateAssets>
+      <Version>3.5.109</Version>
+    </PackageReference>
+  </ItemGroup>
+</Project>

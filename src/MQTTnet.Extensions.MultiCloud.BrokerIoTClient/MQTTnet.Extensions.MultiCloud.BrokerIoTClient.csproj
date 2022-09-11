@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <Title>MQTT PnP Client based on MQTTnet</Title>
+    <Description>Base APIs to create PnP Clients to work with any complaiant MQTT Broker</Description>
+    <PackageIcon>iotpnp-128.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\iotpnp-128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MQTTnet.Extensions.MultiCloud.Clients\MQTTnet.Extensions.MultiCloud.Clients.csproj" />
+    <ProjectReference Include="..\MQTTnet.Extensions.MultiCloud.Connections\MQTTnet.Extensions.MultiCloud.Connections.csproj" />
+  </ItemGroup>
+
+</Project>

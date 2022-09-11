@@ -1,0 +1,72 @@
+{
+  "@context": "dtmi:dtdl:context;2",
+  "@id": "dtmi:rido:pnp:memmon;1",
+  "@type": "Interface",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "started",
+      "schema": "dateTime"
+    },
+    {
+      "@type": "Property",
+      "name": "enabled",
+      "schema": "boolean",
+      "writable": true
+    },
+    {
+      "@type": ["Property", "TimeSpan"],
+      "name": "interval",
+      "schema": "integer",
+      "writable": true,
+      "unit": "second"
+    },
+    {
+      "@type": ["Telemetry", "DataSize"],
+      "name": "workingSet",
+      "schema": "double",
+      "unit": "byte"
+    },
+    {
+      "@type": "Command",
+      "name": "getRuntimeStats",
+      "request": {
+        "@type": "CommandPayload",
+        "name": "diagnosticsMode",
+        "schema": {
+          "@type": "Enum",
+          "enumValues": [
+            {
+              "name": "minimal",
+              "enumValue": 0
+            },
+            {
+              "enumValue": 1,
+              "name": "complete"
+            },
+            {
+              "name": "full",
+              "enumValue": 2
+            }
+          ],
+          "valueSchema": "integer"
+        }
+      },
+      "response": {
+        "@type": "CommandPayload",
+        "name": "diagnosticResults",
+        "schema": {
+          "@type": "Map",
+          "mapKey": {
+            "name": "key",
+            "schema": "string"
+          },
+          "mapValue": {
+            "name": "val",
+            "schema": "string"
+          }
+        }
+      }
+    }
+  ]
+}
