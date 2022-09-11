@@ -10,7 +10,6 @@ namespace dtmi_rido_pnp_memmon.hub;
 
 public class memmon : HubMqttClient, Imemmon
 {
-    public string InitialState { get; set; }
 
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
