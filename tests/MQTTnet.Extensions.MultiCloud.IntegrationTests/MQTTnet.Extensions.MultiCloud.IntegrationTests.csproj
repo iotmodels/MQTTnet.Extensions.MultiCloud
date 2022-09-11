@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.AwsIoTClient\MQTTnet.Extensions.MultiCloud.AwsIoTClient.csproj" />
     <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.AzureIoTClient\MQTTnet.Extensions.MultiCloud.AzureIoTClient.csproj" />
+    <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -40,6 +41,15 @@
 		<None Update="*.key">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="memmon\dtmi_rido_pnp_memmon-1.hub.g.cs">
+	    <DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
+	  </Compile>
+	  <Compile Update="memmon\dtmi_rido_pnp_memmon-1.mqtt.g.cs">
+	    <DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

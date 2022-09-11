@@ -1,5 +1,6 @@
-﻿using dtmi_rido_pnp_IoTHubClassic;
+﻿using dtmi_rido_pnp_memmon.hub;
 using Microsoft.Azure.Devices;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using pnp_memmon;
 using System.Text.Json;
 using Xunit.Abstractions;
@@ -31,7 +32,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task NewDeviceSendDefaults()
         {
-            var td = await memmon.CreateClientAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}");
+
+            var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             await td.Property_interval.InitPropertyAsync(td.InitialState, defaultInterval);
             await Task.Delay(200);
             var serviceTwin = await rm.GetTwinAsync(deviceId);
@@ -61,7 +63,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             };
             await rm.UpdateTwinAsync(deviceId, JsonSerializer.Serialize(patch), twin.ETag);
 
-            var td = await memmon.CreateClientAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}");
+            var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             td.Property_interval.OnProperty_Updated = async m =>
             {
                 return await Task.FromResult(new PropertyAck<int>("interval")
@@ -88,7 +90,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task UpdatesDesiredPropertyWhenOnline()
         {
-            var td = await memmon.CreateClientAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}");
+            var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             td.Property_interval.OnProperty_Updated = async m =>
             {
                 var ack = new PropertyAck<int>(m.Name)
@@ -133,7 +135,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         public async Task CommandsGetCalled()
         {
             bool commandInvoked = false;
-            var td = await memmon.CreateClientAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}");
+            var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             td.Command_getRuntimeStats.OnCmdDelegate = async m =>
             {
                 commandInvoked = true;

@@ -9,13 +9,13 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         public PnPMqttClient(IMqttClient c, string modelId = "")
         {
             Connection = c;
-            _ = Connection.PublishStringAsync(
+            Connection.PublishStringAsync(
                 BirthConvention.BirthTopic(Connection.Options.ClientId),
                 new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
                 {
                     ModelId = modelId
                 }.ToJson(),
-                Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true);
+                Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true).Wait();
         }
     }
 }
