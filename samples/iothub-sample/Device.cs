@@ -31,8 +31,10 @@ namespace iothub_sample
 
             var client = new HubMqttClient(await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionString, stoppingToken));
 
-                var v = await client.ReportPropertyAsync(new { started = DateTime.Now }, stoppingToken);
-                var twin = await client.GetTwinAsync(stoppingToken);
+            var v = await client.ReportPropertyAsync(new { started = DateTime.Now }, stoppingToken);
+
+            var twin = await client.GetTwinAsync(stoppingToken);
+
             client.OnCommandReceived = async m =>
             {
                 return await Task.FromResult(new CommandResponse()
