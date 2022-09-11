@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-namespace MQTTnet.Extensions.MultiCloud.Clients
+namespace MQTTnet.Extensions.MultiCloud
 {
     public class PropertyAck<T>
     {

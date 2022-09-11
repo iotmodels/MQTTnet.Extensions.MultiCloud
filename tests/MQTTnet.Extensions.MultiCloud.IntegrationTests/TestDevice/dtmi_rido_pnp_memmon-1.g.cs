@@ -2,16 +2,12 @@
 
 using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.Clients;
 using pnp_memmon;
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MQTTnet.Extensions.MultiCloud.Clients.Connections;
 
 namespace dtmi_rido_pnp_IoTHubClassic
 {

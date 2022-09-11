@@ -4,7 +4,6 @@ using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AwsIoTClient;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using MQTTnet.Extensions.MultiCloud.Clients.Connections;
 using MQTTnet.Extensions.MultiCloud.Connections;
 
 namespace memmon;

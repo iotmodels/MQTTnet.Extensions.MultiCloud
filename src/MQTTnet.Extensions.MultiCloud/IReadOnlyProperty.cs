@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.MultiCloud.Clients
+namespace MQTTnet.Extensions.MultiCloud
 {
     public interface IReadOnlyProperty<T>
     {

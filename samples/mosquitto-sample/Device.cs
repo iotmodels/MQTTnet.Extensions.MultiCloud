@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using MQTTnet.Extensions.MultiCloud.Clients.Connections;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Collections.Generic;

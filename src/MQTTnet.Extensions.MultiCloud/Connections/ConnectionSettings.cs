@@ -32,7 +32,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
         public string? X509Key { get; set; } //paht-to.pfx|pfxpwd, or thumbprint
         public string? ModelId { get; set; }
         public string? ModuleId { get; set; }
-        public AuthType? Auth
+        public AuthType Auth
         {
             get => !string.IsNullOrEmpty(X509Key) ? AuthType.X509 :
                     !string.IsNullOrEmpty(SharedAccessKey) ? AuthType.Sas :
@@ -106,7 +106,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             DisableCrl = GetStringValue(map, nameof(DisableCrl), Default_DisableCrl) == "true";
         }
 
-        private static void AppendIfNotEmpty(StringBuilder sb, string name, string? val)
+        private static void AppendIfNotEmpty(StringBuilder sb, string name, string val)
         {
             if (!string.IsNullOrEmpty(val))
             {

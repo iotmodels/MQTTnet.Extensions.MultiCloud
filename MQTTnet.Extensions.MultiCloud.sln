@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{CD56A1AA-4
 		docs\X509Certificates.md = docs\X509Certificates.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.Clients", "src\MQTTnet.Extensions.MultiCloud.Clients\MQTTnet.Extensions.MultiCloud.Clients.csproj", "{F9489CFC-354C-4235-9BC0-88CFC01AF7F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud", "src\MQTTnet.Extensions.MultiCloud\MQTTnet.Extensions.MultiCloud.csproj", "{F9489CFC-354C-4235-9BC0-88CFC01AF7F5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.BrokerIoTClient", "src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj", "{A3A08059-040A-4668-8010-AE03758C4021}"
 EndProject
