@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Clients;
 using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;

@@ -6,23 +6,33 @@
 [![Nuget](https://img.shields.io/nuget/v/MQTTnet.Extensions.MultiCloud.BrokerIoTClient?label=MQTTnet.Extensions.MultiCloud.BrokerIoTClient&style=plastic)](https://www.nuget.org/packages/MQTTnet.Extensions.MultiCloud.BrokerIoTClient)
 [![Nuget](https://img.shields.io/nuget/v/MQTTnet.Extensions.MultiCloud.AwsIoTClient?label=MQTTnet.Extensions.MultiCloud.AwsIoTClient&style=plastic)](https://www.nuget.org/packages/MQTTnet.Extensions.MultiCloud.AwsIoTClient)
 
-[![ci](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml)
-[![ci](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml)
+[![master-ci](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml)
+[![dev-ci](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml)
 
 > Note: Pre-Release versions can be found in MyGet: https://www.myget.org/F/ridopackages/api/v3/index.json
 
 
-## Quick Start
+## QuickStarts
 
-### Run the memmon sample in test.mosquitto.org
+### Using `test.mosquitto.org`
 
-- Navigate to the memmon sample `samples/memmon`. It's configured to use `test.mosquitto.org:8886` (encrypted/no auth), and run with `dotnet run` or in Visual Studio hit `F5`.
+- Navigate to the Memmory Monitor sample in `samples/memmon` and run with `dotnet run` or in Visual Studio hit `F5`. It's configured to connect tp `test.mosquitto.org:8886` (encrypted/no auth), 
 - Browse to [https://iotmodels.github.io/pnp-mqtt](https://iotmodels.github.io/pnp-mqtt) and connect to `test.mosquitto.org:8081` (websockets, encrypted/no auth)
 - You should see a list of devices, select a device matching your machine name. Invoke the command, or change a property. The console application should show those changes.
 
 ![test.mosquitto.org](docs/tmo.gif)
 
-### Create your own 
+> Same sample can be executed with a local mosquitto server, this project uses [mosquitto-local](https://github.com/ridomin/mosquitto-local)
+
+### Using `Azure IoT Central`
+
+- Create a new IoT Central application
+- Create a new device template importing the Memory Monitor interface: [samples/memmon/dtmi_rido_pnp_memmon-1.json](/memmon/dtmi_rido_pnp_memmon-1.json), customize the Views an Publish the template.
+- Create a new Device Identity, select `Connect` to get the IdScope, DeviceID and Key 
+- Start the application with `dotnet run /ConnectionStrings:cs="IdScope=<dps-id-scope>;DeviceId=<deviceId>;SharedAccessKey=<deviceSasKey>"
+- Interact with the device from the Central application.
+
+### Create your own device
 
 1. Define your device interactions using the [DTDL](https://aka.ms/dtdl) language. Like this [DTDL interface](samples/memmon/dtmi_rido_pnp_memmon-1.json)
 2. Create the base libraries to implement the DTDL interface for each cloud vendor. See the [Memory Monitor sample](samples/memmon/dtmi_rido_pnp_memmon-1.g.cs)
@@ -33,20 +43,19 @@
 
 ## TL;DR;
 
-Any MQTT solution will have at least two parts: Things or Devices, and Solutions to manage those things. 
+Any MQTT solution will have at least two parts: Devices and Solutions to interact with those devices.. 
 
 This repo focuses on the first part: how to implement things/devices that can work with any cloud vendor supporting a MQTT service. 
 
 
-1. First, you need to connect the devices to the endpoint in a secure way, this can be done by using TLS with Basic Auth credentials or X509 client certificates.
+1. Connect the devices to the endpoint in a secure way, this can be done by using TLS with Basic-Auth-Credentials or X509 client certificates.
 
 2. Describe the _interaction patterns_ (basically Pub/Sub) in a way that can be implemented for different cloud vendors, these interaction patterns consist of:
-   - Telemetry. Ephimeral data sent by device sensors
-   - Properties. To manage the device state, sometime it's reported by the device and sometimes is managed by the Solution
-   - Commands. To invoke specific actions from the solution side (not this should work when the device is using a private network, not accesible from the Intenet).
+   - Telemetry. Ephimeral data sent by device sensors, eg. the device temperature.
+   - Properties. To manage the device state, sometimes it's reported by the device and can also be managed from the Solution. eg How often the telemetry must be sent.
+   - Commands. To invoke specific actions. 
 
-3. Enable solutions to reflect those _interaction patterns_ to create UI experiences
-
+3. Enable solutions to reflect those _interaction patterns_ to create UI experiences, IoT Central, IoTExplorer or PnP-MQTT are examples of PnP enabled solutions.
 
 
 ## ConnectionSettings
@@ -175,52 +184,7 @@ public interface Imemmon
 }
 ```
 
-### IoT Hub Client
-
-Azure IoT implentation for IoT Hub and/or IoT Central
-
-```cs
-public class memmon : HubMqttClient, Imemmon
-{
-    public memmon(IMqttClient c) : base(c)
-    {
-        Property_interval = new WritableProperty<int>(c, "interval");
-        Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
-    }
-}
-```
-
-### AWSClient
-
-Adopting the same primitives for AWS using DeviceShadows instead  Device Twin, see 
-
-```cs
-public class memmon :AwsMqttClient, Imemmon
-{
-    public memmon(IMqttClient c) : base(c)
-    {
-        Property_interval = new WritableProperty<int>(c, "interval");
-        Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
-    }
-}
-```
-
-
-### Client for any MQTT Broker
-
-The same strongly typed APIs can be used to interact with any Broker, in this case it will use `Retained Messages` to manage the state
-
-```cs
-public class memmon :PnPMqttClient, Imemmon
-{
-    public memmon(IMqttClient c) : base(c)
-    {
-        Property_interval = new WritableProperty<int>(c, "interval");
-        Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
-    }
-}
-```
-
+The `Imemmon` interface is implemented for Azure, AWS and Hive.
 
 ### X509 Support
 

@@ -1,17 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-namespace MQTTnet.Extensions.MultiCloud.Clients
+namespace MQTTnet.Extensions.MultiCloud
 {
     public class PropertyAck<T>
     {
         public readonly string Name;
         public readonly string ComponentName;
 
-        public PropertyAck()
-        {
-
-        }
 
         public PropertyAck(string name) : this(name, "") { }
 
@@ -19,6 +15,7 @@ namespace MQTTnet.Extensions.MultiCloud.Clients
         {
             Name = name;
             ComponentName = component;
+            LastReported = default!;
         }
 
         [JsonIgnore]
@@ -33,13 +30,13 @@ namespace MQTTnet.Extensions.MultiCloud.Clients
 
         [JsonPropertyName("ad")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [JsonPropertyName("ac")]
         public int Status { get; set; }
 
         [JsonPropertyName("value")]
-        public T Value { get; set; } = default;
+        public T Value { get; set; } = default!;
 
         public void SetDefault(T defaultValue)
         {

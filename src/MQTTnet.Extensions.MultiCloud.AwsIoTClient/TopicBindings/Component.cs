@@ -1,6 +1,5 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.Clients;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

@@ -6,7 +6,7 @@ using Humanizer;
 using dtmi_rido_pnp_memmon;
 using System.Reflection;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using MQTTnet.Extensions.MultiCloud.Clients;
+using MQTTnet.Extensions.MultiCloud;
 
 namespace memmon;
 

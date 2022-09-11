@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Clients;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -26,13 +25,14 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
             }
             updateBinder = new UpdatePropertyBinder(connection, propFullName);
             PropertyName = name;
+            PropertyValue = default!;
             //this.component = component;
         }
 
         public async Task<int> ReportPropertyAsync(CancellationToken cancellationToken = default)
         {
             //bool asComponent = !string.IsNullOrEmpty(component);
-            await updateBinder.ReportPropertyAsync(PropertyValue, cancellationToken);
+            await updateBinder.ReportPropertyAsync(PropertyValue!, cancellationToken);
             return -1;
         }
 

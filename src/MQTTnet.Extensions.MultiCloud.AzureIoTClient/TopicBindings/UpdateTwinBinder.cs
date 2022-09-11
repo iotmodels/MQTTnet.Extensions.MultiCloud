@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Clients;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using MQTTnet.Protocol;
 using System;

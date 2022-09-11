@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Clients;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -22,6 +21,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         {
             updateBinder = new UpdateShadowBinder(connection);
             PropertyName = name;
+            PropertyValue = default!;
             this.component = component;
         }
 
