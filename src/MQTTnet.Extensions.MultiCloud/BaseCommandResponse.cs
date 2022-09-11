@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MQTTnet.Extensions.MultiCloud.Clients
+namespace MQTTnet.Extensions.MultiCloud
 {
     public abstract class BaseCommandResponse
     {

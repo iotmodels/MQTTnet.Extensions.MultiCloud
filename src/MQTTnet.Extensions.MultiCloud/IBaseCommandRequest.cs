@@ -1,4 +1,4 @@
-﻿namespace MQTTnet.Extensions.MultiCloud.Clients
+﻿namespace MQTTnet.Extensions.MultiCloud
 {
     public interface IBaseCommandRequest<T>
     {

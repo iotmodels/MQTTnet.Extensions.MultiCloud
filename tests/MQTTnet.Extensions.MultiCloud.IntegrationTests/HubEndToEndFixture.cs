@@ -1,6 +1,5 @@
 ﻿using dtmi_rido_pnp_IoTHubClassic;
 using Microsoft.Azure.Devices;
-using MQTTnet.Extensions.MultiCloud.Clients;
 using pnp_memmon;
 using System.Text.Json;
 using Xunit.Abstractions;

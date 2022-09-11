@@ -1,5 +1,5 @@
-﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.Clients;
+﻿using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
 using System.Threading.Tasks;
 using Xunit;
 
