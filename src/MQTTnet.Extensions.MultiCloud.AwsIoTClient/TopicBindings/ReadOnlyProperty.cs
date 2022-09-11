@@ -22,6 +22,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         {
             updateBinder = new UpdateShadowBinder(connection);
             PropertyName = name;
+            PropertyValue = default!;
             this.component = component;
         }
 

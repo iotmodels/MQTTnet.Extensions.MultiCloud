@@ -2,6 +2,6 @@
 {
     public class CommandResponse : BaseCommandResponse
     {
-        public string ReponsePayload { get; set; }
+        public string? ReponsePayload { get; set; }
     }
 }

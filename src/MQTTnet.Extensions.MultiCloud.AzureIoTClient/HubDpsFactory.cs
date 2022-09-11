@@ -1,5 +1,6 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps;
+using MQTTnet.Extensions.MultiCloud.Clients.Connections;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Threading;

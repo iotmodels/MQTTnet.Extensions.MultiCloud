@@ -1,5 +1,6 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Exceptions;
+using MQTTnet.Extensions.MultiCloud.Clients.Connections;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Threading.Tasks;
