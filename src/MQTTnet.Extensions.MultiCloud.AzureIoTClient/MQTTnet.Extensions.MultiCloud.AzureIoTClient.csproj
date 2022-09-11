@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Title>Azure IoT Hub Client based on MQTTnet</Title>
+    <Description>Implements basic Azure IoT Hub primitives, including:
+SaS and X509 Auth, Telemetry, Properties and Commands. 
+
+Provides an API surface to implement IoT PnP Devices.</Description>
+    <PackageTags>mqtt; azure-iot; pnp; dtdl</PackageTags>
+    <PackageIcon>iotpnp-128.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\iotpnp-128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MQTTnet.Extensions.MultiCloud.Clients\MQTTnet.Extensions.MultiCloud.Clients.csproj" />
+    <ProjectReference Include="..\MQTTnet.Extensions.MultiCloud.Connections\MQTTnet.Extensions.MultiCloud.Connections.csproj" />
+  </ItemGroup>
+
+</Project>

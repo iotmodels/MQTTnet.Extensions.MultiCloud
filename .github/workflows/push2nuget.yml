@@ -1,0 +1,44 @@
+name: push to nuget
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+
+    - uses: dotnet/nbgv@master
+      id: nbgv
+
+    - run: echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: |
+          6.0.x
+          3.1.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Pack
+      run: dotnet pack -c Release -o _nupkgs
+
+    - name: Push NuGet
+      run: echo "Will push to nuget version $NpmPackageVersion"
+      #run: cd _nupkgs && dotnet nuget push * --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+    - name: Tag
+      run: |
+        git config user.name "GitHub Action Bot"
+        git config user.email "<>"
+        git tag "v${{ steps.nbgv.outputs.NugetPackageVersion }}"
+        git push origin "v${{ steps.nbgv.outputs.NugetPackageVersion }}"
