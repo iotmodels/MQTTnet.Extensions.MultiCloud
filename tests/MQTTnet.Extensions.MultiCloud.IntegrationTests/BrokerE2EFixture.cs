@@ -44,8 +44,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             {
 
                 birthFound = true;
-                //var jsonString = Encoding.UTF8.GetString(m.ApplicationMessage.Payload);
-                //bm = JsonSerializer.Deserialize<BirthConvention.BirthMessage>(jsonString);
+                var jsonString = Encoding.UTF8.GetString(m.ApplicationMessage.Payload);
+                bm = JsonSerializer.Deserialize<BirthConvention.BirthMessage>(jsonString);
                 await Task.Yield();
 
             };

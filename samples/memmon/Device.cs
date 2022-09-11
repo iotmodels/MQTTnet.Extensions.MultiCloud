@@ -43,7 +43,8 @@ public class Device : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogWarning("Connecting..");
+        var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+        _logger.LogWarning($"Connecting to..{cs}");
         var memmonFactory = new MemMonFactory(_configuration);
         client = await memmonFactory.CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
         client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;

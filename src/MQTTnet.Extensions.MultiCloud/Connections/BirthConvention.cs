@@ -20,7 +20,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             }
             [JsonPropertyName("model-id")]
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            public string ModelId { get; set; }
+            public string? ModelId { get; set; }
             [JsonPropertyName("when")]
             public DateTime When { get; set; }
             [JsonPropertyName("status")]
