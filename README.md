@@ -6,8 +6,8 @@
 [![Nuget](https://img.shields.io/nuget/v/MQTTnet.Extensions.MultiCloud.BrokerIoTClient?label=MQTTnet.Extensions.MultiCloud.BrokerIoTClient&style=plastic)](https://www.nuget.org/packages/MQTTnet.Extensions.MultiCloud.BrokerIoTClient)
 [![Nuget](https://img.shields.io/nuget/v/MQTTnet.Extensions.MultiCloud.AwsIoTClient?label=MQTTnet.Extensions.MultiCloud.AwsIoTClient&style=plastic)](https://www.nuget.org/packages/MQTTnet.Extensions.MultiCloud.AwsIoTClient)
 
-
-[![CI/CD](https://github.com/iotmodels/MqttNet.Extensions.MultiCloud/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/iotmodels/MqttNet.Extensions.MultiCloud/actions/workflows/dotnet.yml)
+[![ci](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml)
+[![ci](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml)
 
 > Note: Pre-Release versions can be found in MyGet: https://www.myget.org/F/ridopackages/api/v3/index.json
 
