@@ -1,6 +1,6 @@
 # MQTTnet.Extensions.MultiCloud
 
-:rocket: Create MQTT devices compatible with any MQTT Cloud provider, such as **Azure IoT**, **AWS IoT Core**, **Hive MQ**, **CloudFlare** or even **Mosquitto**.
+:rocket: Create MQTT devices compatible with any MQTT Cloud provider, such as **Azure IoT**, **AWS IoT Core**, **Hive MQ** or  **Mosquitto**.
 
 [![Nuget](https://img.shields.io/nuget/v/MQTTnet.Extensions.MultiCloud.AzureIoTClient?label=MQTTnet.Extensions.MultiCloud.AzureIoTClient&style=plastic)](https://www.nuget.org/packages/MQTTnet.Extensions.MultiCloud.AzureIoTClient)
 [![Nuget](https://img.shields.io/nuget/v/MQTTnet.Extensions.MultiCloud.BrokerIoTClient?label=MQTTnet.Extensions.MultiCloud.BrokerIoTClient&style=plastic)](https://www.nuget.org/packages/MQTTnet.Extensions.MultiCloud.BrokerIoTClient)
@@ -22,12 +22,14 @@
 
 ![test.mosquitto.org](docs/tmo.gif)
 
-> Same sample can be executed with a local mosquitto server, this project uses [mosquitto-local](https://github.com/ridomin/mosquitto-local)
+> The same sample can be executed with a local mosquitto server, this project uses [mosquitto-local](https://github.com/ridomin/mosquitto-local)
 
 ### Using `Azure IoT Central`
 
+The same device code works with Azure IoT, you can use IoT Hub and IoT Explorer, or IoT Central:
+
 - Create a new IoT Central application
-- Create a new device template importing the Memory Monitor interface: [samples/memmon/dtmi_rido_pnp_memmon-1.json](/memmon/dtmi_rido_pnp_memmon-1.json), customize the Views an Publish the template.
+- Create a new device template importing the Memory Monitor interface: [samples/memmon/dtmi_rido_pnp_memmon-1.json](samples/memmon/dtmi_rido_pnp_memmon-1.json), customize the Views an Publish the template.
 - Create a new Device Identity, select `Connect` to get the IdScope, DeviceID and Key 
 - Start the application with `dotnet run /ConnectionStrings:cs="IdScope=<dps-id-scope>;DeviceId=<deviceId>;SharedAccessKey=<deviceSasKey>"
 - Interact with the device from the Central application.
