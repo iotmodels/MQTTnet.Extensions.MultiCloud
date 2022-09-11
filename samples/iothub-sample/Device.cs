@@ -5,6 +5,7 @@ using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.Clients;
+using MQTTnet.Extensions.MultiCloud.Clients.Connections;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Text.Json;

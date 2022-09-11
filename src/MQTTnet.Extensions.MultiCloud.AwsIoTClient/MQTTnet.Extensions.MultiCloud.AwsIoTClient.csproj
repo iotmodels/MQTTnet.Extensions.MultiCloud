@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MQTTnet.Extensions.MultiCloud.Clients\MQTTnet.Extensions.MultiCloud.Clients.csproj" />
-    <ProjectReference Include="..\MQTTnet.Extensions.MultiCloud.Connections\MQTTnet.Extensions.MultiCloud.Connections.csproj" />
   </ItemGroup>
 
 </Project>

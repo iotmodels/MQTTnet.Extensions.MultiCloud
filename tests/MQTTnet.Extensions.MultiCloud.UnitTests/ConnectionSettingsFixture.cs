@@ -1,4 +1,5 @@
-﻿using MQTTnet.Extensions.MultiCloud.Connections;
+﻿using MQTTnet.Extensions.MultiCloud.Clients.Connections;
+using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using Xunit;
 

@@ -11,6 +11,7 @@ using pnp_memmon;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MQTTnet.Extensions.MultiCloud.Clients.Connections;
 
 namespace dtmi_rido_pnp_IoTHubClassic
 {
