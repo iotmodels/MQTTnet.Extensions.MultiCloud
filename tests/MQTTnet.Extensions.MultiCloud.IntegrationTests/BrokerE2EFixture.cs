@@ -45,7 +45,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 
                 birthFound = true;
                 var jsonString = Encoding.UTF8.GetString(m.ApplicationMessage.Payload);
-                bm = JsonSerializer.Deserialize<BirthConvention.BirthMessage>(jsonString);
+                bm = Json.FromString<BirthConvention.BirthMessage>(jsonString);
                 await Task.Yield();
 
             };
@@ -54,7 +54,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             var td = new memmon(await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs));
             await Task.Delay(100);
             Assert.True(birthFound);
-            //Assert.Equal("", bm!.ModelId);
+            Assert.Equal(Imemmon.ModelId, bm!.ModelId);
+            Assert.Equal(BirthConvention.ConnectionStatus.online, bm!.ConnectionStatus);
+            
+            // TODO simulate disconnection, or LWT
+            
         }
     }
 }

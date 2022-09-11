@@ -14,5 +14,13 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
                     new JsonStringEnumConverter()
                 }
              });
+        public static T FromString<T>(string s) => JsonSerializer.Deserialize<T>(s,
+            new JsonSerializerOptions()
+            {
+                Converters =
+                    {
+                        new JsonStringEnumConverter()
+                    }
+            })!;
     }
 }

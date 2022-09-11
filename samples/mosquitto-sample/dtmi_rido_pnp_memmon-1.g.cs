@@ -3,6 +3,7 @@
 
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Collections.Generic;
 
@@ -37,7 +38,7 @@ public class Cmd_getRuntimeStats_Request : IBaseCommandRequest<Cmd_getRuntimeSta
     {
         return new Cmd_getRuntimeStats_Request()
         {
-            DiagnosticsMode = System.Text.Json.JsonSerializer.Deserialize<DiagnosticsMode>(payload)
+            DiagnosticsMode = Json.FromString<DiagnosticsMode>(payload)
         };
     }
 }
