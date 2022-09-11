@@ -33,8 +33,7 @@ jobs:
       run: dotnet pack -c Release -o _nupkgs
 
     - name: Push NuGet
-      run: echo "Will push to nuget version $NpmPackageVersion"
-      #run: cd _nupkgs && dotnet nuget push * --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      run: cd _nupkgs && dotnet nuget push * --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
     - name: Tag
       run: |
