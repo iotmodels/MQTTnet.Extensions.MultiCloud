@@ -46,7 +46,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Assert.Equal(defaultInterval, td.Property_interval.PropertyValue.Value);
         }
 
-        [Fact(Skip = "Async issues")]
+        [Fact]
         public async Task DeviceReadsSettingsAtStartup()
         {
             var twin = await rm.GetTwinAsync(deviceId);
@@ -87,7 +87,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Assert.Equal(interval, td.Property_interval.PropertyValue.Value);
         }
 
-        [Fact(Skip = "Async issues")]
+        [Fact]
         public async Task UpdatesDesiredPropertyWhenOnline()
         {
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
