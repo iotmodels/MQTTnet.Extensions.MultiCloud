@@ -46,7 +46,6 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Assert.Equal(defaultInterval, td.Property_interval.PropertyValue.Value);
         }
 
-        [Fact]
         [Fact(Skip = "Async issues")]
         public async Task DeviceReadsSettingsAtStartup()
         {
