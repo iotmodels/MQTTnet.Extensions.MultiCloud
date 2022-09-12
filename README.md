@@ -1,6 +1,6 @@
 # MQTTnet.Extensions.MultiCloud
 
-:rocket: Create dotnet MQTT applications compatible with any MQTT Cloud provider, such as **Azure IoT**, **AWS IoT Core**, **Hive MQ** or  **Mosquitto**. [Based on [dotnet/MQTTnet](https://github.com/dotnet/MQTTnet)]
+:rocket: Create dotnet MQTT applications compatible with any MQTT Cloud provider, such as **Azure IoT**, **AWS IoT Core**, **Hive MQ** or  **Mosquitto**. Based on [dotnet/MQTTnet](https://github.com/dotnet/MQTTnet).
 
 ![Architecture](docs/arch.png)
 
@@ -42,7 +42,7 @@ The same application code works with Azure IoT, you can use IoT Hub and IoT Expl
 
 #### Next Steps
 - Connect to Azure IoT Hub by providing a device connection string
-- Use IoT Explorer to interact with the device
+- Use IoT Explorer to interact with the device. Must configure IoT Explorer to be able to resolve the DTDL model from a local or a custom repository.
 - Configure DPS with Azure IoT Hub
 
 ### Create your own 
@@ -60,7 +60,6 @@ Any MQTT solution will have at least two parts: Devices and Solutions to interac
 
 This repo focuses on the first part: how to implement things/devices that can work with any cloud vendor supporting a MQTT service. 
 
-
 1. Connect the devices to the endpoint in a secure way, this can be done by using TLS with Basic-Auth-Credentials or X509 client certificates.
 
 2. Describe the _interaction patterns_ (basically Pub/Sub) in a way that can be implemented for different cloud vendors, these interaction patterns consist of:
@@ -70,6 +69,11 @@ This repo focuses on the first part: how to implement things/devices that can wo
 
 3. Enable solutions to reflect those _interaction patterns_ to create UI experiences, IoT Central, IoTExplorer or PnP-MQTT are examples of PnP enabled solutions.
 
+Read the [IoT Plug and Play convention](https://docs.microsoft.com/azure/iot-develop/overview-iot-plug-and-play) for more details.
+
+### Adapt the Telemetry/Property/Command pattern to different brokers
+
+Each cloud vendor offers different features to implement this patterns, see the [feature matrix](docs/feat-matrix.md).
 
 ## ConnectionSettings
 
