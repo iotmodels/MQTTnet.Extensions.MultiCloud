@@ -12,6 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         public GenericCommand(IMqttClient connection)
         {
             var subAck = connection.SubscribeAsync("$iothub/methods/POST/#").Result;
+            ReplySubscriptions.Add("$iothub/methods/POST/#");
             subAck.TraceErrors();
             connection.ApplicationMessageReceivedAsync += async m =>
             {

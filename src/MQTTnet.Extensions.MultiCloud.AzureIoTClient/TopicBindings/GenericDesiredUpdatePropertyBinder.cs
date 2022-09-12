@@ -12,6 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         public GenericDesiredUpdatePropertyBinder(IMqttClient connection)
         {
             var subAck = connection.SubscribeAsync("$iothub/twin/PATCH/properties/desired/#").Result;
+            ReplySubscriptions.Add("$iothub/twin/PATCH/properties/desired/#");
             subAck.TraceErrors();
             IPropertyStoreWriter updateTwin = new UpdateTwinBinder(connection);
             connection.ApplicationMessageReceivedAsync += async m =>
