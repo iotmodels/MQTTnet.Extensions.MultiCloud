@@ -38,7 +38,7 @@ jobs:
       env:
         E2EHubConnectionString: ${{secrets.E2EHubConnectionString}}
         TestHubName: ${{secrets.TestHubName}} 
-      run: dotnet test --no-build --verbosity n --blame  -p:BuildInParallel=false 
+      run: dotnet test --no-build --verbosity n --blame-hang
 
     - name: Pack
       run: dotnet pack -c Release -o _nupkgs
