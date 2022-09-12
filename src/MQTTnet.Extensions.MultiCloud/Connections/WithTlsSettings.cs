@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections
 {
@@ -10,8 +9,10 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
     {
         public static MqttClientOptionsBuilder WithTlsSettings(this MqttClientOptionsBuilder builder, ConnectionSettings cs)
         {
-            var tls = new MqttClientOptionsBuilderTlsParameters();
-            tls.UseTls = cs.UseTls;
+            var tls = new MqttClientOptionsBuilderTlsParameters
+            {
+                UseTls = cs.UseTls
+            };
             if (cs.UseTls)
             {
                 var certs = new List<X509Certificate2>();
@@ -20,7 +21,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
                     var cert = X509ClientCertificateLocator.Load(cs.X509Key);
                     certs.Add(cert);
                 }
-                
+
                 if (!string.IsNullOrEmpty(cs.CaFile))
                 {
                     var caCert = new X509Certificate2(cs.CaFile);
@@ -41,7 +42,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
                         return res;
 #endif
 #if NETSTANDARD2_1
-                    return ea.Certificate.Issuer == caCert.Subject;
+                        return ea.Certificate.Issuer == caCert.Subject;
 #endif
                     };
                 }

@@ -11,7 +11,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
     {
         public IMqttClient Connection { get; set; }
 
-        public string InitialState { get;  set; }
+        public string InitialState { get; set; }
 
         private readonly IPropertyStoreReader getTwinBinder;
         private readonly IReportPropertyBinder updateTwinBinder;
@@ -25,7 +25,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             updateTwinBinder = new UpdateTwinBinder(c);
             command = new GenericCommand(c);
             genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c);
-            Task.Run(async () => this.InitialState = await GetTwinAsync());
+            Task.Run(async () => InitialState = await GetTwinAsync());
         }
 
         public Func<GenericCommandRequest, Task<CommandResponse>> OnCommandReceived

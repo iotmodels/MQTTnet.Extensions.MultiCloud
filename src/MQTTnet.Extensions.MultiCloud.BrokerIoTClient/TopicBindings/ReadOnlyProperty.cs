@@ -1,7 +1,4 @@
 ﻿using MQTTnet.Client;
-
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +6,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 {
     public class ReadOnlyProperty<T> : IReadOnlyProperty<T>
     {
-        readonly IReportPropertyBinder updateBinder;
+        private readonly IReportPropertyBinder updateBinder;
         public string PropertyName { get; }
         //readonly string component;
 

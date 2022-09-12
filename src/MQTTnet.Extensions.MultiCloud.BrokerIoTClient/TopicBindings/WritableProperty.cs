@@ -9,11 +9,13 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
     public class WritableProperty<T> : IWritableProperty<T>
     {
         public PropertyAck<T> PropertyValue { get; set; }
-        readonly string propertyName;
-        readonly string componentName;
+
+        private readonly string propertyName;
+        private readonly string componentName;
+
         //readonly UpdateTwinBinder updateTwin;
-        readonly IReportPropertyBinder updatePropertyBinder;
-        readonly DesiredUpdatePropertyBinder<T>? desiredBinder;
+        private readonly IReportPropertyBinder updatePropertyBinder;
+        private readonly DesiredUpdatePropertyBinder<T>? desiredBinder;
 
         public Func<PropertyAck<T>, Task<PropertyAck<T>>> OnProperty_Updated
         {

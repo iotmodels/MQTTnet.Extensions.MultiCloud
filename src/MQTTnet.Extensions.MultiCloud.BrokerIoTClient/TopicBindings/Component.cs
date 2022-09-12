@@ -7,8 +7,8 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 {
     public abstract class Component
     {
-        readonly string name;
-        readonly UpdatePropertyBinder update;
+        private readonly string name;
+        private readonly UpdatePropertyBinder update;
 
         public Component(IMqttClient connection, string name)
         {

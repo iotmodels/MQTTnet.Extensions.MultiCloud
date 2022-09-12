@@ -28,7 +28,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                     if (pendingRequests.TryRemove(rid, out var tcs))
                     {
                         tcs.SetResult(twinVersion);
-                    } 
+                    }
                     else
                     {
                         Trace.TraceWarning($"RID: {rid} not found in pending requests. Actual : {string.Join(" ", pendingRequests.Keys.ToArray<int>())}");
