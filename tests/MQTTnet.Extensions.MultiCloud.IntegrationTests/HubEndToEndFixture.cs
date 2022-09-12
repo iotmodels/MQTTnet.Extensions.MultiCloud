@@ -131,7 +131,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             Assert.Equal(interval, td.Property_interval.PropertyValue.Value);
         }
 
-        [Fact(Skip = "threading issues")]
+        [Fact]
         public async Task CommandsGetCalled()
         {
             bool commandInvoked = false;
