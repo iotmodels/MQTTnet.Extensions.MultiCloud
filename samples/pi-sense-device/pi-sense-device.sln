@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32819.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pi-sense-device", "pi-sense-device.csproj", "{648CF8D9-617C-4D3F-B1FB-1B46CA0CD088}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{648CF8D9-617C-4D3F-B1FB-1B46CA0CD088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{648CF8D9-617C-4D3F-B1FB-1B46CA0CD088}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{648CF8D9-617C-4D3F-B1FB-1B46CA0CD088}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{648CF8D9-617C-4D3F-B1FB-1B46CA0CD088}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2431C382-8360-4D1A-8192-867B544B5C17}
+	EndGlobalSection
+EndGlobal

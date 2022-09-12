@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-pi_sense_device-15259864-24f9-45ee-8722-c72ed515d0ba</UserSecretsId>
+    <RootNamespace>pi_sense_device</RootNamespace>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Iot.Device.Bindings" Version="2.1.0-*" />
+	<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.AzureIoTClient\MQTTnet.Extensions.MultiCloud.AzureIoTClient.csproj" />
+    <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="dtmi_rido_pnp_sensehat-1.g.cs">
+			<DependentUpon>dtmi_rido_pnp_sensehat-1.json</DependentUpon>
+		</Compile>
+		<Compile Update="dtmi_rido_pnp_sensehat-1.mqtt.g.cs">
+			<DependentUpon>dtmi_rido_pnp_sensehat-1.json</DependentUpon>
+		</Compile>
+		<Compile Update="dtmi_rido_pnp_sensehat-1.hub.g.cs">
+			<DependentUpon>dtmi_rido_pnp_sensehat-1.json</DependentUpon>
+		</Compile>
+	</ItemGroup>
+</Project>

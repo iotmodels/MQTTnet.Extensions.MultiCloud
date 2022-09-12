@@ -1,0 +1,82 @@
+{
+  "@context": "dtmi:dtdl:context;2",
+  "@id": "dtmi:rido:pnp:sensehat;1",
+  "@type": "Interface",
+  "displayName": "Raspberry PI Sense Hat",
+  "description": "Reports Telemetry from PI Sense Hat sensors.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "piri",
+      "displayName": "Pi Runtime Info",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "ipaddr",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "combineTelemetry",
+      "schema": "boolean",
+      "writable" :  true
+    },
+    {
+      "@type": [ "Property", "TimeSpan" ],
+      "name": "interval",
+      "schema": "integer",
+      "writable": true,
+      "unit": "second"
+    },
+    {
+      "@type": [ "Telemetry", "Temperature" ],
+      "name": "t1",
+      "displayName": "Temperature 1",
+      "schema": "double",
+      "unit": "degreeCelsius"
+    },
+    {
+      "@type": [ "Telemetry", "Temperature" ],
+      "name": "t2",
+      "displayName": "Temperature 2",
+      "schema": "double",
+      "unit": "degreeCelsius"
+    },
+    {
+      "@type": [ "Telemetry", "RelativeHumidity" ],
+      "name": "h",
+      "displayName": "Humidity",
+      "schema": "double",
+      "unit": "percent"
+    },
+    {
+      "@type": [ "Telemetry", "Pressure" ],
+      "name": "p",
+      "displayName": "Pressure",
+      "schema": "double",
+      "unit": "pascal"
+    },
+    {
+      "@type": [ "Telemetry", "MagneticInduction" ],
+      "name": "m",
+      "displayName": "Magnetic Induction",
+      "schema": "double",
+      "unit": "tesla"
+    },
+    {
+      "@type": "Command",
+      "name": "ChangeLCDColor",
+      "request": {
+        "@type": "CommandPayload",
+        "name": "color",
+        "schema": "string"
+      },
+      "response": {
+        "@type": "CommandPayload",
+        "name": "previousColor",
+        "schema": "string"
+      }
+    }
+  ]
+}
