@@ -46,7 +46,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             Assert.Equal(defaultInterval, td.Property_interval.PropertyValue.Value);
         }
 
-        [Fact(Skip = "threading issues")]
+        [Fact]
         public async Task DeviceReadsSettingsAtStartup()
         {
             var twin = await rm.GetTwinAsync(deviceId);
