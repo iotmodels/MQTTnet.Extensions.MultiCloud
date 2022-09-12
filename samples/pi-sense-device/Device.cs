@@ -20,8 +20,6 @@ public class Device : BackgroundService
 
     private const int default_interval = 5;
 
-    private bool combineTelemtry = true;
-
     ConnectionSettings connectionSettings;
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
     {
@@ -38,6 +36,7 @@ public class Device : BackgroundService
         _logger.LogWarning($"Connected to {connectionSettings}");
 
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
+        client.Property_combineTelemetry.OnProperty_Updated = Property_combineTelemetry_UpdateHandler;
         client.Command_ChangeLCDColor.OnCmdDelegate = Cmd_ChangeLCDColor_Handler;
 
         await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
@@ -134,6 +133,19 @@ public class Device : BackgroundService
                             default_interval;
         };
         client.Property_interval.PropertyValue = ack;
+        return await Task.FromResult(ack);
+    }
+
+    private async Task<PropertyAck<bool>> Property_combineTelemetry_UpdateHandler(PropertyAck<bool> p)
+    {
+        ArgumentNullException.ThrowIfNull(client);
+        var ack = new PropertyAck<bool>(p.Name);
+        ack.Description = "desired notification accepted";
+        ack.Status = 200;
+        ack.Version = p.Version;
+        ack.Value = p.Value;
+        ack.LastReported = p.Value;
+        client.Property_combineTelemetry.PropertyValue = ack;
         return await Task.FromResult(ack);
     }
 

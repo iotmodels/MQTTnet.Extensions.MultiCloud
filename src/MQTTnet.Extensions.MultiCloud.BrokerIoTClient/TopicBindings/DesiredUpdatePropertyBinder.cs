@@ -1,5 +1,6 @@
 ﻿using MQTTnet.Client;
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -12,7 +13,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
         public Func<PropertyAck<T>, Task<PropertyAck<T>>>? OnProperty_Updated = null;
         public DesiredUpdatePropertyBinder(IMqttClient connection, string propertyName, string componentName = "")
         {
-            var subAck =  connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/props/#").Result;
+            var subAck =  connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/props/{propertyName}/+").Result;
             subAck.TraceErrors();
             IReportPropertyBinder propertyBinder = new UpdatePropertyBinder(connection, propertyName);
             connection.ApplicationMessageReceivedAsync += async m =>
@@ -25,7 +26,11 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
                     //var desiredProperty = desired?[propertyName];
                     if (desiredProperty != null)
                     {
-                        if (OnProperty_Updated != null)
+                        if (OnProperty_Updated == null)
+                        {
+                            Trace.TraceWarning($"Desired property {propertyName} received, but no handler found.");
+                        }
+                        else
                         {
                             var property = new PropertyAck<T>(propertyName, componentName)
                             {

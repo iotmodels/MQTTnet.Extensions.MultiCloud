@@ -27,6 +27,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{CD56A1AA-4FF5-4116-BCF0-8AC0B062A6B3}"
 	ProjectSection(SolutionItems) = preProject
 		docs\ConnectionSettings.md = docs\ConnectionSettings.md
+		docs\feat-matrix.md = docs\feat-matrix.md
 		docs\iotpnp-128.png = docs\iotpnp-128.png
 		README.md = README.md
 		docs\X509Certificates.md = docs\X509Certificates.md

@@ -35,7 +35,13 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <None Update="*.pfx">
+		<None Update="*.pfx">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	  <None Update="*.key">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="*.pem">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

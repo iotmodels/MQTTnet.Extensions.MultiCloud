@@ -55,7 +55,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             // TODO simulate disconnection, or LWT
         }
 
-        [Fact(Skip = "threading issues")]
+        [Fact]
         public async Task DeviceReadsInitialProps()
         {
             PropertyAck<int> ack = new PropertyAck<int>("interval");

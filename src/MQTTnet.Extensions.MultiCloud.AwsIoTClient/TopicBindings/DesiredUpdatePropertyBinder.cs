@@ -26,7 +26,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
                      JsonNode? desiredProperty = null;
                      if (string.IsNullOrEmpty(componentName))
                      {
-                         desiredProperty = desired![propertyName]!;
+                         desiredProperty = desired?[propertyName]!;
                      }
                      else
                      {
