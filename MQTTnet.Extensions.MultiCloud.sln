@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		src\Directory.Build.targets = src\Directory.Build.targets
 		run-mosquitto.sh = run-mosquitto.sh
 		version.json = version.json
+		xunit.runner.json = xunit.runner.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{43263A3D-9530-4EE5-B019-F576A3ED2162}"
