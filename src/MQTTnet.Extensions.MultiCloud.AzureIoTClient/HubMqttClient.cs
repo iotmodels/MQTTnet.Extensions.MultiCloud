@@ -1,6 +1,5 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -11,6 +10,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
     public class HubMqttClient : IHubMqttClient
     {
         public IMqttClient Connection { get; set; }
+
+        public string InitialState { get;  set; }
 
         private readonly IPropertyStoreReader getTwinBinder;
         private readonly IReportPropertyBinder updateTwinBinder;
@@ -24,6 +25,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             updateTwinBinder = new UpdateTwinBinder(c);
             command = new GenericCommand(c);
             genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c);
+            this.InitialState = GetTwinAsync().Result;
         }
 
         public Func<GenericCommandRequest, Task<CommandResponse>> OnCommandReceived

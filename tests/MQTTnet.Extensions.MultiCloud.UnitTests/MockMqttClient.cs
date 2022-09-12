@@ -112,7 +112,8 @@ namespace MQTTnet.Extensions.UnitTests
         {
             numSubscriptions++;
             //options.TopicFilters.ForEach(t => Trace.TraceInformation(t.Topic));
-            return Task.FromResult(new MqttClientSubscribeResult());
+            var subAck = new MqttClientSubscribeResult();
+            return Task.FromResult(subAck);
         }
 
         public Task<MqttClientUnsubscribeResult> UnsubscribeAsync(MqttClientUnsubscribeOptions options, CancellationToken cancellationToken = default)

@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -20,7 +19,8 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         {
             this.connection = connection;
             pendingRequests = new ConcurrentQueue<TaskCompletionSource<int>>();
-            _ = connection.SubscribeAsync($"$aws/things/{connection.Options.ClientId}/shadow/update/accepted");
+            var subAck  = connection.SubscribeAsync($"$aws/things/{connection.Options.ClientId}/shadow/update/accepted").Result;
+            subAck.TraceErrors();
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 await Task.Yield();

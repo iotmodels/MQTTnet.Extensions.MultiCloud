@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

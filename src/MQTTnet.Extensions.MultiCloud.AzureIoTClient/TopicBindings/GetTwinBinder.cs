@@ -11,7 +11,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 {
     public class GetTwinBinder : IPropertyStoreReader
     {
-        private static readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingGetTwinRequests = new ConcurrentDictionary<int, TaskCompletionSource<string>>();
+        private readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingGetTwinRequests = new ConcurrentDictionary<int, TaskCompletionSource<string>>();
         private readonly IMqttClient connection;
 
         internal int lastRid = -1;
@@ -20,6 +20,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         {
             connection = conn;
             var subAck = connection.SubscribeAsync("$iothub/twin/res/#").Result;
+            subAck.TraceErrors();
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
@@ -46,7 +47,10 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 
             if (puback.ReasonCode == 0)
             {
-                pendingGetTwinRequests.TryAdd(rid, tcs);
+                if (!pendingGetTwinRequests.TryAdd(rid, tcs))
+                {
+                    Trace.TraceWarning($"GetTwinBinder: RID {rid} not added to pending requests");
+                }
             }
             else
             {

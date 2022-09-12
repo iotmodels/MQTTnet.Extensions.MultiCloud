@@ -13,6 +13,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         public DesiredUpdatePropertyBinder(IMqttClient connection, string propertyName, string componentName = "")
         {
             var subAck = connection.SubscribeAsync($"$aws/things/{connection.Options.ClientId}/shadow/update/accepted").Result;
+            subAck.TraceErrors();
             IPropertyStoreWriter updateShadow = new UpdateShadowBinder(connection);
             connection.ApplicationMessageReceivedAsync += async m =>
              {

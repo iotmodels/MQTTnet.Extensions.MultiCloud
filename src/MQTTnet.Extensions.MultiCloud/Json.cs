@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MQTTnet.Extensions.MultiCloud.Connections
+namespace MQTTnet.Extensions.MultiCloud
 {
     public static class Json
     {
@@ -14,5 +14,13 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
                     new JsonStringEnumConverter()
                 }
              });
+        public static T FromString<T>(string s) => JsonSerializer.Deserialize<T>(s,
+            new JsonSerializerOptions()
+            {
+                Converters =
+                    {
+                        new JsonStringEnumConverter()
+                    }
+            })!;
     }
 }

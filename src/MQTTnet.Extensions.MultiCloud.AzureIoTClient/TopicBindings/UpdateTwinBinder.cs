@@ -1,9 +1,9 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Connections;
 using MQTTnet.Protocol;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,13 +11,14 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 {
     public class UpdateTwinBinder : IReportPropertyBinder, IPropertyStoreWriter
     {
-        private static readonly ConcurrentDictionary<int, TaskCompletionSource<int>> pendingRequests = new ConcurrentDictionary<int, TaskCompletionSource<int>>();
+        private readonly ConcurrentDictionary<int, TaskCompletionSource<int>> pendingRequests = new ConcurrentDictionary<int, TaskCompletionSource<int>>();
         private readonly IMqttClient connection;
 
         public UpdateTwinBinder(IMqttClient connection)
         {
             this.connection = connection;
             var subAck = connection.SubscribeAsync("$iothub/twin/res/#").Result;
+            subAck.TraceErrors();
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
@@ -27,7 +28,12 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                     if (pendingRequests.TryRemove(rid, out var tcs))
                     {
                         tcs.SetResult(twinVersion);
+                    } 
+                    else
+                    {
+                        Trace.TraceWarning($"RID: {rid} not found in pending requests. Actual : {string.Join(" ", pendingRequests.Keys.ToArray<int>())}");
                     }
+
                 }
                 await Task.Yield();
             };
@@ -40,13 +46,16 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
             var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
             if (puback.ReasonCode == 0)
             {
-                pendingRequests.TryAdd(rid, tcs);
+                if (!pendingRequests.TryAdd(rid, tcs))
+                {
+                    Trace.TraceWarning($"UpdTwinBinder: RID {rid} not added to pending requests");
+                }
             }
             else
             {
                 Trace.TraceError($"Error '{puback}' publishing twin GET");
             }
-            return await tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(5));
+            return await tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(10));
         }
     }
 }

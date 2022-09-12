@@ -7,7 +7,7 @@
 [![Nuget](https://img.shields.io/nuget/v/MQTTnet.Extensions.MultiCloud.AwsIoTClient?label=MQTTnet.Extensions.MultiCloud.AwsIoTClient&style=plastic)](https://www.nuget.org/packages/MQTTnet.Extensions.MultiCloud.AwsIoTClient)
 
 [![master-ci](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml)
-[![dev-ci](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml)
+
 
 > Note: Pre-Release versions can be found in MyGet: https://www.myget.org/F/ridopackages/api/v3/index.json
 
@@ -16,13 +16,13 @@
 
 ### Using `test.mosquitto.org`
 
-- Navigate to the Memmory Monitor sample in `samples/memmon` and run with `dotnet run` or in Visual Studio hit `F5`. It's configured to connect tp `test.mosquitto.org:8886` (encrypted/no auth), 
+- Navigate to the Memmory Monitor sample in `samples/memmon` and run with `dotnet run` or in Visual Studio hit `F5`. Using `test.mosquitto.org:8886` (encrypted/no auth) by default.
 - Browse to [https://iotmodels.github.io/pnp-mqtt](https://iotmodels.github.io/pnp-mqtt) and connect to `test.mosquitto.org:8081` (websockets, encrypted/no auth)
 - You should see a list of devices, select a device matching your machine name. Invoke the command, or change a property. The console application should show those changes.
 
 ![test.mosquitto.org](docs/tmo.gif)
 
-> The same sample can be executed with a local mosquitto server, this project uses [mosquitto-local](https://github.com/ridomin/mosquitto-local)
+> The same sample can be executed with a local mosquitto server, you can use a pre-configured docker image like: [mosquitto-local](https://github.com/ridomin/mosquitto-local)
 
 ### Using `Azure IoT Central`
 
@@ -192,6 +192,3 @@ The `Imemmon` interface is implemented for Azure, AWS and Hive.
 
 - CA certificates can be provided in `PEM` or `CER` format to intilize the TLS connection
 - Client certificates, including the private key, can be provided by PFX files (with password), or by querying the Certificate Store `CurrentUser\My` by `thumbrpint`, see [Connecting with Certificates](docs/X509Certificates.md) for more details.
-
-
-

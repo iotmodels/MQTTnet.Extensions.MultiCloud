@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +15,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         public Command(IMqttClient connection, string commandName, string componentName = "")
         {
             var subAck = connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/commands/#").Result;
+            subAck.TraceErrors();
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
