@@ -6,6 +6,7 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY samples/memmon/. memmon/
+
 RUN cd memmon && chmod +x ./proj2nupkg.sh && ./proj2nupkg.sh && cd ..
 
 WORKDIR "/src/memmon"
