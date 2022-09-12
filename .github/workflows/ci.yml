@@ -31,14 +31,14 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
 
-    #- name: start mosquitto local
-    #  run: docker run -d --rm -p 8080:8080 -p 1883:1883 -p 8883:8883 -p 8884:8884 -p 8443:8443  ridomin/mosquitto-local:dev
+    - name: start mosquitto local
+      run: docker run -d --rm -p 8080:8080 -p 1883:1883 -p 8883:8883 -p 8884:8884 -p 8443:8443  ridomin/mosquitto-local:dev
 
     - name: Test
       env:
         E2EHubConnectionString: ${{secrets.E2EHubConnectionString}}
         TestHubName: ${{secrets.TestHubName}} 
-      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" tests/MQTTnet.Extensions.MultiCloud.UnitTests
+      run: dotnet test --no-build --verbosity d 
 
     - name: Pack
       run: dotnet pack -c Release -o _nupkgs
