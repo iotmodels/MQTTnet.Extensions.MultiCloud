@@ -21,10 +21,10 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build the Docker image
-      run: docker build . --file samples/memmon/Dockerfile --tag ghcr.io/ridomin/memmon:x64
+      run: docker build . --file samples/memmon/Dockerfile --tag ghcr.io/iotmodels/memmon:x64
     - name: push image
       run: docker push ghcr.io/ridomin/memmon:x64
     #- name: Build the Docker image ARM
     #  run: docker build . --file samples/memmon/Dockerfile.pi --tag ghcr.io/ridomin/memmon:arm
     - name: push image arm
-      run: docker push ghcr.io/ridomin/memmon:arm
+      run: docker push ghcr.io/iotmodels/memmon:arm
