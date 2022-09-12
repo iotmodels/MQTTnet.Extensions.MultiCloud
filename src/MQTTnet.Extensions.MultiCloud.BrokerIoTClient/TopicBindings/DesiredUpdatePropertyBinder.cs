@@ -12,7 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
         public Func<PropertyAck<T>, Task<PropertyAck<T>>>? OnProperty_Updated = null;
         public DesiredUpdatePropertyBinder(IMqttClient connection, string propertyName, string componentName = "")
         {
-            var subAck =  connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/props/#").Result;
+            var subAck =  connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/props/{propertyName}/+").Result;
             subAck.TraceErrors();
             IReportPropertyBinder propertyBinder = new UpdatePropertyBinder(connection, propertyName);
             connection.ApplicationMessageReceivedAsync += async m =>

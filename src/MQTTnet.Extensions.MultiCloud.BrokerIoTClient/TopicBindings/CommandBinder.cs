@@ -13,7 +13,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 
         public Command(IMqttClient connection, string commandName, string componentName = "")
         {
-            var subAck = connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/commands/#").Result;
+            var subAck = connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/commands/commandName/+").Result;
             subAck.TraceErrors();
             connection.ApplicationMessageReceivedAsync += async m =>
             {
