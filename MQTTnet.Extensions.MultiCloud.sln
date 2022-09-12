@@ -51,6 +51,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_actions", "_actions", "{59
 		.github\workflows\push2nuget.yml = .github\workflows\push2nuget.yml
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pi-sense-device", "samples\pi-sense-device\pi-sense-device.csproj", "{B1A0A159-0673-4A0F-99CA-4B8E1722A898}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{DD0BE021-4D3B-4F36-A0FB-D2C87208C2C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD0BE021-4D3B-4F36-A0FB-D2C87208C2C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD0BE021-4D3B-4F36-A0FB-D2C87208C2C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1A0A159-0673-4A0F-99CA-4B8E1722A898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1A0A159-0673-4A0F-99CA-4B8E1722A898}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1A0A159-0673-4A0F-99CA-4B8E1722A898}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1A0A159-0673-4A0F-99CA-4B8E1722A898}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{25CDD7D6-6C3C-4C6C-A4D8-2314BEB72E9B} = {843305D5-575C-4BE9-85A5-64B2467E1C7C}
 		{A3C58114-BB68-46E7-B43C-C621A29AEA54} = {43263A3D-9530-4EE5-B019-F576A3ED2162}
 		{DD0BE021-4D3B-4F36-A0FB-D2C87208C2C6} = {43263A3D-9530-4EE5-B019-F576A3ED2162}
+		{B1A0A159-0673-4A0F-99CA-4B8E1722A898} = {843305D5-575C-4BE9-85A5-64B2467E1C7C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5DDE4B3A-6908-44A1-84D8-91A86C8A3815}

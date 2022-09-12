@@ -5,7 +5,7 @@ using pnp_memmon;
 using System.Text.Json;
 using Xunit.Abstractions;
 
-namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
+namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
 {
 
     public class HubEndToEndFixture : IDisposable
@@ -46,7 +46,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             Assert.Equal(defaultInterval, td.Property_interval.PropertyValue.Value);
         }
 
-        [Fact]
+        [Fact(Skip = "Async issues")]
         public async Task DeviceReadsSettingsAtStartup()
         {
             var twin = await rm.GetTwinAsync(deviceId);
@@ -87,7 +87,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             Assert.Equal(interval, td.Property_interval.PropertyValue.Value);
         }
 
-        [Fact]
+        [Fact(Skip = "Async issues")]
         public async Task UpdatesDesiredPropertyWhenOnline()
         {
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));

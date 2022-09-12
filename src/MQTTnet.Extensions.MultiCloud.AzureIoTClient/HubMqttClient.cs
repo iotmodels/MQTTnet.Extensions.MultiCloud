@@ -11,7 +11,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
     {
         public IMqttClient Connection { get; set; }
 
-        public string InitialState { get;  private set; }
+        public string InitialState { get;  set; }
 
         private readonly IPropertyStoreReader getTwinBinder;
         private readonly IReportPropertyBinder updateTwinBinder;
