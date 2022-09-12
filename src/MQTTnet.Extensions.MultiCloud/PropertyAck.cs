@@ -8,7 +8,13 @@ namespace MQTTnet.Extensions.MultiCloud
         public readonly string Name;
         public readonly string ComponentName;
 
+        public PropertyAck()
+        {
+            Name = "";
+            ComponentName = "";
+            LastReported = default!;
 
+        }
         public PropertyAck(string name) : this(name, "") { }
 
         public PropertyAck(string name, string component)

@@ -3,12 +3,7 @@ using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using pnp_memmon;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 {
@@ -58,7 +53,48 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             Assert.Equal(BirthConvention.ConnectionStatus.online, bm!.ConnectionStatus);
             
             // TODO simulate disconnection, or LWT
+        }
+
+        [Fact]
+        public async Task DeviceReadsInitialProps()
+        {
+            PropertyAck<int> ack = new PropertyAck<int>("interval");
+            var ta = await BrokerClientFactory.CreateFromConnectionSettingsAsync(scs);
+            //ta.ApplicationMessageReceivedAsync += async m =>
+            //{
+            //    if (m.ApplicationMessage.Topic == "pnp/e2e-device/props/interval")
+            //    {
+            //        //ack = Json.FromString<PropertyAck<int>>(Encoding.UTF8.GetString(m.ApplicationMessage.Payload))!;
+            //    }
+            //    await Task.Yield();
+
+            //};
+            //await ta.SubscribeAsync("pnp/e2e-device/props/interval");
+
+             await ta.PublishStringAsync("pnp/e2e-device/props/interval/set", Json.Stringify(3), Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true);
+
+            cs.ModelId = Imemmon.ModelId;
+            var td = new memmon(await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs));
+
             
+            td.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
+
+            Task<PropertyAck<int>> Property_interval_UpdateHandler(PropertyAck<int> p)
+            {
+                ack.Description = "desired notification accepted from e2e";
+                ack.Status = 200;
+                ack.Version = p.Version;
+                ack.Value = p.Value;
+                ack.LastReported = p.Value;
+                
+                //td.Property_interval.PropertyValue = ack;
+                //await td.Property_interval.ReportPropertyAsync();
+                Assert.Equal(3, td.Property_interval.PropertyValue.Value); //TODO Task.Wait on Async
+                Assert.Equal(200, ack.Status);
+            
+                return Task.FromResult(ack);
+            };
+            //Task.WaitAll(Property_interval_UpdateHandler);
         }
     }
 }

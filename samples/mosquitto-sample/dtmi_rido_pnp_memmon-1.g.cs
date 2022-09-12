@@ -3,7 +3,6 @@
 
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
-using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Collections.Generic;
 

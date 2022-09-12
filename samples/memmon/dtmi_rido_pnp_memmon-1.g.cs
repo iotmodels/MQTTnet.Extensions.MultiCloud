@@ -3,7 +3,6 @@
 
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
-using MQTTnet.Extensions.MultiCloud.Connections;
 
 namespace dtmi_rido_pnp_memmon;
 
