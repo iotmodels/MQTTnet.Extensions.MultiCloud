@@ -18,8 +18,6 @@ namespace dtmi_rido_pnp_memmon.mqtt
         public ITelemetry<double> Telemetry_workingSet { get; set; }
         public ICommand<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response> Command_getRuntimeStats { get; set; }
 
-        public string InitialState => String.Empty;
-
         internal memmon(IMqttClient c) : base(c, Imemmon.ModelId)
         {
             Property_started = new ReadOnlyProperty<DateTime>(c, "started");

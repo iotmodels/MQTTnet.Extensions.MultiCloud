@@ -165,12 +165,14 @@ public class Device : BackgroundService
         result.diagnosticResults.Add("machine name", Environment.MachineName);
         result.diagnosticResults.Add("os version", Environment.OSVersion.ToString());
         result.diagnosticResults.Add("started", TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3));
+        
         if (req.DiagnosticsMode == DiagnosticsMode.complete)
         {
-            result.diagnosticResults.Add("this app:", System.Reflection.Assembly.GetExecutingAssembly()?.FullName ?? "");
+            result.diagnosticResults.Add("sdk info:", infoVersion);
         }
         if (req.DiagnosticsMode == DiagnosticsMode.full)
         {
+            result.diagnosticResults.Add("sdk info:", infoVersion);
             result.diagnosticResults.Add("interval: ", client.Property_interval.PropertyValue.Value.ToString());
             result.diagnosticResults.Add("enabled: ", client.Property_enabled.PropertyValue.Value.ToString());
             result.diagnosticResults.Add("twin receive: ", twinRecCounter.ToString());
