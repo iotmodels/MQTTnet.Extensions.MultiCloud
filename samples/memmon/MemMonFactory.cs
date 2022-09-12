@@ -45,6 +45,10 @@ internal class MemMonFactory
         {
             return await CreateAwsClientAsync(connectionString, cancellationToken);
         }
+        else if (connectionSettings.HostName.Contains("azure-devices.net"))
+        {
+            return await CreateHubClientAsync(connectionString, cancellationToken);
+        }
         else
         {
             return await CreateBrokerClientAsync(connectionString, cancellationToken);
