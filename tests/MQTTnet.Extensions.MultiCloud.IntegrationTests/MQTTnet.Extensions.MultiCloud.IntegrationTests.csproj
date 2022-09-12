@@ -44,10 +44,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="memmon\dtmi_rido_pnp_memmon-1.hub.g.cs">
+	  <Compile Update="e2e\memmon\dtmi_rido_pnp_memmon-1.hub.g.cs">
 	    <DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
 	  </Compile>
-	  <Compile Update="memmon\dtmi_rido_pnp_memmon-1.mqtt.g.cs">
+	  <Compile Update="e2e\memmon\dtmi_rido_pnp_memmon-1.mqtt.g.cs">
 	    <DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
 	  </Compile>
 	</ItemGroup>
