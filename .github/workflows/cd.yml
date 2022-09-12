@@ -3,6 +3,10 @@ name: cd
 on:
   push:
     branches: [ "master", "dev" ]
+    paths-ignore:
+      - '*'
+      - 'docs/**'
+      - 'samples/**'
 
 jobs:
   build:
