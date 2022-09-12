@@ -29,7 +29,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             device = GetOrCreateDeviceAsync(deviceId).Result;
         }
 
-        [Fact]
+        [Fact(Skip = "threading issues")]
         public async Task NewDeviceSendDefaults()
         {
 
@@ -131,7 +131,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             Assert.Equal(interval, td.Property_interval.PropertyValue.Value);
         }
 
-        [Fact]
+        [Fact(Skip = "threading issues")]
         public async Task CommandsGetCalled()
         {
             bool commandInvoked = false;
