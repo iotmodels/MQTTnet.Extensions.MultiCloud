@@ -20,6 +20,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         {
             connection = conn;
             var subAck = connection.SubscribeAsync("$iothub/twin/res/#").Result;
+            subAck.TraceErrors();
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;

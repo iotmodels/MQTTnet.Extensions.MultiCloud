@@ -20,6 +20,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
             string deviceId = conn.Options.ClientId;
             topicBase = $"$aws/things/{deviceId}/shadow";
             var subAck = connection.SubscribeAsync(topicBase + "/get/accepted").Result;
+            subAck.TraceErrors();
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
