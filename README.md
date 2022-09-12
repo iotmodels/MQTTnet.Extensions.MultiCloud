@@ -1,6 +1,6 @@
 # MQTTnet.Extensions.MultiCloud
 
-:rocket: Create dotnet MQTT applications compatible with any MQTT Cloud provider, such as **Azure IoT**, **AWS IoT Core**, **Hive MQ** or  **Mosquitto**. Based on [dotnet/MQTTnet](https://github.com/dotnet/MQTTnet).
+:rocket: Create dotnet MQTT applications compatible with any MQTT Cloud provider, such as **Azure IoT**, **AWS IoT Core**, **Hive MQ** or  **Mosquitto**. Based on [dotnet/MQTTnet](https://github.com/dotnet/MQTTnet). See the [feature matrix](docs/feat-matrix.md) by cloud provider.
 
 ![Architecture](docs/arch.png)
 
@@ -73,7 +73,7 @@ Read the [IoT Plug and Play convention](https://docs.microsoft.com/azure/iot-dev
 
 ### Adapt the Telemetry/Property/Command pattern to different brokers
 
-Each cloud vendor offers different features to implement this patterns, see the [feature matrix](docs/feat-matrix.md).
+Each cloud vendor offers different features to implement these patterns, see the [feature matrix](docs/feat-matrix.md).
 
 ## ConnectionSettings
 

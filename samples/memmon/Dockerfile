@@ -5,9 +5,9 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["memmon/memmon.csproj", "memmon/"]
-RUN dotnet restore "memmon/memmon.csproj"
-COPY . .
+COPY samples/memmon/. memmon/
+RUN cd memmon && chmod +x ./proj2nupkg.sh && ./proj2nupkg.sh && cd ..
+
 WORKDIR "/src/memmon"
 RUN dotnet build "memmon.csproj" -c Release -o /app/build
 

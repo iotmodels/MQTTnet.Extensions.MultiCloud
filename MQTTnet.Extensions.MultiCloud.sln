@@ -32,6 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_actions", "_actions", "{68
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\cd.yml = .github\workflows\cd.yml
 		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.github\workflows\memmon-docker.yml = .github\workflows\memmon-docker.yml
 		.github\workflows\push2nuget.yml = .github\workflows\push2nuget.yml
 	EndProjectSection
 EndProject
