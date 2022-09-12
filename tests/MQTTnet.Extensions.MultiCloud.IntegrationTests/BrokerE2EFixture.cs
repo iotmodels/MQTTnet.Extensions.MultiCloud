@@ -29,7 +29,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             Password = "password"
         };
 
-        [Fact(Skip = "threading issues")]
+        [Fact]
         public async Task DeviceSendsBirth()
         {
             BirthConvention.BirthMessage? bm = null;
@@ -55,7 +55,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             // TODO simulate disconnection, or LWT
         }
 
-        [Fact(Skip = "threading issues")]
+        [Fact]
         public async Task DeviceReadsInitialProps()
         {
             PropertyAck<int> ack = new PropertyAck<int>("interval");
