@@ -17,9 +17,9 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
         private readonly IReportPropertyBinder updatePropertyBinder;
         private readonly DesiredUpdatePropertyBinder<T>? desiredBinder;
 
-        public Func<PropertyAck<T>, Task<PropertyAck<T>>> OnProperty_Updated
+        public Func<PropertyAck<T>, PropertyAck<T>> OnProperty_Updated
         {
-            get => desiredBinder!.OnProperty_Updated!;
+            get => desiredBinder?.OnProperty_Updated!;
             set => desiredBinder!.OnProperty_Updated = value;
         }
 
@@ -48,7 +48,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
             {
                 Value = defaultValue,
             };
-            _ = await updatePropertyBinder.ReportPropertyAsync(PropertyValue, cancellationToken);
+            await updatePropertyBinder.ReportPropertyAsync(PropertyValue, cancellationToken);
         }
     }
 }

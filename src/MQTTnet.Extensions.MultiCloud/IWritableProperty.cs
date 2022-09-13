@@ -9,7 +9,7 @@ namespace MQTTnet.Extensions.MultiCloud
         string PropertyName { get; }
         PropertyAck<T> PropertyValue { get; set; }
 
-        Func<PropertyAck<T>, Task<PropertyAck<T>>> OnProperty_Updated { get; set; }
+        Func<PropertyAck<T>, PropertyAck<T>> OnProperty_Updated { get; set; }
 
         Task InitPropertyAsync(string twin, T defaultValue, CancellationToken cancellationToken = default);
         Task<int> ReportPropertyAsync(CancellationToken token = default);

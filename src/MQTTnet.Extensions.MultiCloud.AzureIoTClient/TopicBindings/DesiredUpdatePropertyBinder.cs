@@ -10,11 +10,10 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 {
     public class DesiredUpdatePropertyBinder<T>
     {
-        public Func<PropertyAck<T>, Task<PropertyAck<T>>> OnProperty_Updated = null;
-        public DesiredUpdatePropertyBinder(IMqttClient connection, string propertyName, string componentName = "")
+        public Func<PropertyAck<T>, PropertyAck<T>> OnProperty_Updated = null;
+        public DesiredUpdatePropertyBinder(IMqttClient connection, IReportPropertyBinder updTwinBinder, string propertyName, string componentName = "")
         {
             connection.SubscribeWithReply("$iothub/twin/PATCH/properties/desired/#");
-            IPropertyStoreWriter updateTwin = new UpdateTwinBinder(connection);
             connection.ApplicationMessageReceivedAsync += async m =>
              {
                  var topic = m.ApplicationMessage.Topic;
@@ -36,14 +35,15 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                                  Value = desiredProperty.Deserialize<T>(),
                                  Version = desired?["$version"]?.GetValue<int>() ?? 0
                              };
-                             var ack = await OnProperty_Updated(property);
+                             var ack = OnProperty_Updated(property);
                              if (ack != null)
                              {
-                                 _ = updateTwin.ReportPropertyAsync(ack.ToAckDict());
+                                 updTwinBinder.ReportPropertyAsync(ack.ToAckDict()).RunSynchronously();
                              }
                          }
                      }
                  }
+                 await Task.Yield();
              };
         }
 

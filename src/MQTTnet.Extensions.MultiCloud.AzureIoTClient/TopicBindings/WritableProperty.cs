@@ -14,10 +14,10 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 
         public string PropertyName { get; set; }
         private readonly string componentName;
-        private readonly IPropertyStoreWriter updateTwin;
+        private readonly IReportPropertyBinder updateTwin;
         private readonly DesiredUpdatePropertyBinder<T> desiredBinder;
 
-        public Func<PropertyAck<T>, Task<PropertyAck<T>>> OnProperty_Updated
+        public Func<PropertyAck<T>, PropertyAck<T>> OnProperty_Updated
         {
             get => desiredBinder.OnProperty_Updated;
             set => desiredBinder.OnProperty_Updated = value;
@@ -29,23 +29,24 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
             componentName = component;
             PropertyValue = new PropertyAck<T>(name, componentName);
             updateTwin = new UpdateTwinBinder(connection);
-            desiredBinder = new DesiredUpdatePropertyBinder<T>(connection, name, componentName);
+            desiredBinder = new DesiredUpdatePropertyBinder<T>(connection, updateTwin, name, componentName);
         }
 
         public async Task<int> ReportPropertyAsync(CancellationToken token = default) => await updateTwin.ReportPropertyAsync(PropertyValue.ToAckDict(), token);
 
         public async Task InitPropertyAsync(string twin, T defaultValue, CancellationToken cancellationToken = default)
         {
+            await Task.Yield();
             PropertyValue = InitFromTwin(twin, PropertyName, componentName, defaultValue);
             if (desiredBinder.OnProperty_Updated != null && PropertyValue.DesiredVersion > 1)
             {
-                var ack = await desiredBinder.OnProperty_Updated.Invoke(PropertyValue);
+                var ack = desiredBinder.OnProperty_Updated.Invoke(PropertyValue);
                 if (ack != null)
                 {
                     PropertyValue = ack;
                 }
             }
-            _ = updateTwin.ReportPropertyAsync(PropertyValue.ToAckDict(), cancellationToken);
+            _ = updateTwin.ReportPropertyAsync(PropertyValue.ToAckDict(), cancellationToken).ConfigureAwait(false);
         }
 
         private PropertyAck<T> InitFromTwin(string twinJson, string propName, string componentName, T defaultValue)
@@ -53,7 +54,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
             if (string.IsNullOrEmpty(twinJson))
             {
                 Trace.TraceWarning("InitFromTwin: Cannot initialize from empty twin");
-                return new PropertyAck<T>(propName, componentName) { Value = defaultValue };
+                return new PropertyAck<T>(propName, componentName) { Value = defaultValue, Version = 0, Status = 203, Description = "Init from default value" };
             }
 
             var root = JsonNode.Parse(twinJson);

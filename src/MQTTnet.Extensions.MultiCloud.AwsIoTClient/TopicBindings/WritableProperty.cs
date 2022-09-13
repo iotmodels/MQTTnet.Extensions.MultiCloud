@@ -16,7 +16,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         private readonly IPropertyStoreWriter updatePropertyBinder;
         private readonly DesiredUpdatePropertyBinder<T> desiredBinder;
 
-        public Func<PropertyAck<T>, Task<PropertyAck<T>>> OnProperty_Updated
+        public Func<PropertyAck<T>, PropertyAck<T>> OnProperty_Updated
         {
             get => desiredBinder!.OnProperty_Updated!;
             set => desiredBinder.OnProperty_Updated = value;
@@ -39,13 +39,13 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
 
             if (desiredBinder.OnProperty_Updated != null && PropertyValue.DesiredVersion > 1)
             {
-                var ack = await desiredBinder.OnProperty_Updated.Invoke(PropertyValue);
-                _ = updatePropertyBinder.ReportPropertyAsync(ack.ToAckDict(), cancellationToken);
+                var ack = desiredBinder.OnProperty_Updated.Invoke(PropertyValue);
+                await updatePropertyBinder.ReportPropertyAsync(ack.ToAckDict(), cancellationToken);
                 PropertyValue = ack;
             }
             else
             {
-                _ = updatePropertyBinder.ReportPropertyAsync(PropertyValue.ToAckDict());
+                await updatePropertyBinder.ReportPropertyAsync(PropertyValue.ToAckDict());
             }
         }
 

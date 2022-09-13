@@ -7,6 +7,6 @@ namespace MQTTnet.Extensions.MultiCloud
         where T : IBaseCommandRequest<T>, new()
         where TResponse : BaseCommandResponse
     {
-        Func<T, Task<TResponse>>? OnCmdDelegate { get; set; }
+        Func<T, TResponse>? OnCmdDelegate { get; set; }
     }
 }

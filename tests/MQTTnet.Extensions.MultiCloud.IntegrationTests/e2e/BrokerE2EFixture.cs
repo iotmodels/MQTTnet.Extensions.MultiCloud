@@ -78,7 +78,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
 
             td.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
 
-            Task<PropertyAck<int>> Property_interval_UpdateHandler(PropertyAck<int> p)
+            PropertyAck<int> Property_interval_UpdateHandler(PropertyAck<int> p)
             {
                 ack.Description = "desired notification accepted from e2e";
                 ack.Status = 200;
@@ -91,7 +91,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                 Assert.Equal(3, td.Property_interval.PropertyValue.Value); //TODO Task.Wait on Async
                 Assert.Equal(200, ack.Status);
 
-                return Task.FromResult(ack);
+                return ack;
             };
             //Task.WaitAll(Property_interval_UpdateHandler);
         }

@@ -10,7 +10,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 {
     public class DesiredUpdatePropertyBinder<T>
     {
-        public Func<PropertyAck<T>, Task<PropertyAck<T>>>? OnProperty_Updated = null;
+        public Func<PropertyAck<T>, PropertyAck<T>>? OnProperty_Updated = null;
         public DesiredUpdatePropertyBinder(IMqttClient connection, string propertyName, string componentName = "")
         {
             var subAck = connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/props/{propertyName}/+").Result;
@@ -37,15 +37,16 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
                                 Value = desiredProperty.Deserialize<T>()!,
                                 //Version = desired?["$version"]?.GetValue<int>() ?? 0
                             };
-                            var ack = await OnProperty_Updated(property);
+                            var ack = OnProperty_Updated(property);
                             if (ack != null)
                             {
                                 //_ = updateTwin.SendRequestWaitForResponse(ack);
-                                _ = propertyBinder.ReportPropertyAsync(ack);
+                                propertyBinder.ReportPropertyAsync(ack).RunSynchronously();
                             }
                         }
                     }
                 }
+                await Task.Yield();
             };
         }
     }
