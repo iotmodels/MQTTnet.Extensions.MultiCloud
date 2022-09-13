@@ -38,7 +38,7 @@ jobs:
       env:
         E2EHubConnectionString: ${{secrets.E2EHubConnectionString}}
         TestHubName: ${{secrets.TestHubName}} 
-      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" --filter FullyQualifiedName!=MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
+      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" --filter FullyQualifiedName!=MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e.*
 
     - name: Pack
       run: dotnet pack -c Release -o _nupkgs
