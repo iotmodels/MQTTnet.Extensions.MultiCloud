@@ -8,30 +8,23 @@ using Xunit.Abstractions;
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
 {
 
-    public class HubEndToEndFixture : IDisposable
+    public class HubEndToEndFixture 
     {
-        string hubConnectionString = Environment.GetEnvironmentVariable("E2EHubConnectionString")!;
-        string hubName = Environment.GetEnvironmentVariable("TestHubName")!;
-        readonly RegistryManager rm;
+        static string hubConnectionString = Environment.GetEnvironmentVariable("E2EHubConnectionString")!;
+        static string hubName = Environment.GetEnvironmentVariable("TestHubName")!;
+        
         readonly string deviceId = string.Empty;
-        readonly Device device;
 
         const int defaultInterval = 23;
-
-        private readonly ITestOutputHelper output;
-
-        public HubEndToEndFixture(ITestOutputHelper output)
-        {
-            this.output = output;
-            rm = RegistryManager.CreateFromConnectionString(hubConnectionString);
-            deviceId = "memmon-test" + new Random().Next(100);
-            output.WriteLine(deviceId);
-            device = GetOrCreateDeviceAsync(deviceId).Result;
-        }
+        
+        RegistryManager rm = RegistryManager.CreateFromConnectionString(hubConnectionString);
 
         [Fact]
         public async Task NewDeviceSendDefaults()
         {
+            var deviceId = "memmon-test" + new Random().Next(100);
+            var device = await GetOrCreateDeviceAsync(deviceId);
+
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             await td.Property_interval.InitPropertyAsync(td.InitialState, defaultInterval);
             await Task.Delay(200);
@@ -43,11 +36,17 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Assert.Equal(203, Convert.ToInt32(intervalTwin["ac"]));
             Assert.Equal("Init from default value", Convert.ToString(intervalTwin["ad"]));
             Assert.Equal(defaultInterval, td.Property_interval.PropertyValue.Value);
+
+            await rm.RemoveDeviceAsync(deviceId);
         }
 
         [Fact]
         public async Task DeviceReadsSettingsAtStartup()
         {
+            
+            var deviceId = "memmon-test" + new Random().Next(100);
+            var device = await GetOrCreateDeviceAsync(deviceId);
+
             var twin = await rm.GetTwinAsync(deviceId);
             int interval = 5;
             var patch = new
@@ -60,7 +59,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                     }
                 }
             };
-            await rm.UpdateTwinAsync(deviceId, JsonSerializer.Serialize(patch), twin.ETag);
+            Task.WaitAll(rm.UpdateTwinAsync(deviceId, JsonSerializer.Serialize(patch), twin.ETag));
 
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             td.Property_interval.OnProperty_Updated = async m =>
@@ -74,7 +73,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                 });
             };
 
-            await td.InitState();
+            Task.WaitAll(td.InitState());
+
             await td.Property_interval.InitPropertyAsync(td.InitialState, defaultInterval);
             var serviceTwin = await rm.GetTwinAsync(deviceId);
             var intervalTwin = serviceTwin.Properties.Reported["interval"];
@@ -85,11 +85,17 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Assert.Equal("accepted from device", Convert.ToString(intervalTwin["ad"]));
             Assert.Equal("accepted from device", td.Property_interval.PropertyValue.Description);
             Assert.Equal(interval, td.Property_interval.PropertyValue.Value);
+
+            await rm.RemoveDeviceAsync(deviceId);
         }
 
         [Fact]
         public async Task UpdatesDesiredPropertyWhenOnline()
         {
+            
+            var deviceId = "memmon-test" + new Random().Next(100);
+            var device = await GetOrCreateDeviceAsync(deviceId);
+
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             td.Property_interval.OnProperty_Updated = async m =>
             {
@@ -130,11 +136,16 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Assert.Equal("accepted from device", Convert.ToString(intervalTwin["ad"]));
             Assert.Equal("accepted from device", td.Property_interval.PropertyValue.Description);
             Assert.Equal(interval, td.Property_interval.PropertyValue.Value);
+
+            await rm.RemoveDeviceAsync(deviceId);
         }
 
         [Fact]
         public async Task CommandsGetCalled()
         {
+            var deviceId = "memmon-test" + new Random().Next(100);
+            var device = await GetOrCreateDeviceAsync(deviceId);
+
             bool commandInvoked = false;
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             td.Command_getRuntimeStats.OnCmdDelegate = async m =>
@@ -155,6 +166,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Assert.True(commandInvoked);
             Assert.Equal("{\"diagnosticResults\":{\"test\":\"ok\"}}", dmRes.GetPayloadAsJson());
 
+            await rm.RemoveDeviceAsync(deviceId);
+
         }
 
         private async Task<Device> GetOrCreateDeviceAsync(string deviceId, bool x509 = false)
@@ -172,13 +185,9 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                 }
                 device = await rm.AddDeviceAsync(d);
             }
-            output.WriteLine($"Test Device Created: {hubName} {device.Id}");
             return device;
         }
 
-        public void Dispose()
-        {
-            rm.RemoveDeviceAsync(deviceId).Wait();
-        }
+        
     }
 }

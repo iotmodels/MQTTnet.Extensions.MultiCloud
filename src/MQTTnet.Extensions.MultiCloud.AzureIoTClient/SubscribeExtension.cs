@@ -15,11 +15,14 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             if (!subscriptions.Contains(topic))
             {
                 subscriptions.Add(topic);
-                Task.Run(async () => 
-                { 
-                    var subAck = await client.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter(topic).Build(), cancellationToken);
-                    subAck.TraceErrors();
-                });
+                //Task.Run(async () => 
+                //{ 
+                //    var subAck = await client.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter(topic).Build(), cancellationToken);
+                //    subAck.TraceErrors();
+                //});
+                var subAck = client.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter(topic).Build(), cancellationToken).Result;
+                subAck.TraceErrors();
+
             }
         }
 
