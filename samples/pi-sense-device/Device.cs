@@ -108,7 +108,7 @@ public class Device : BackgroundService
         }
     }
 
-    private async Task<PropertyAck<int>> Property_interval_UpdateHandler(PropertyAck<int> p)
+    private  PropertyAck<int> Property_interval_UpdateHandler(PropertyAck<int> p)
     {
         ArgumentNullException.ThrowIfNull(client);
         _logger.LogInformation($"New prop received");
@@ -132,10 +132,10 @@ public class Device : BackgroundService
                             default_interval;
         };
         client.Property_interval.PropertyValue = ack;
-        return await Task.FromResult(ack);
+        return ack;
     }
 
-    private async Task<PropertyAck<bool>> Property_combineTelemetry_UpdateHandler(PropertyAck<bool> p)
+    private PropertyAck<bool> Property_combineTelemetry_UpdateHandler(PropertyAck<bool> p)
     {
         ArgumentNullException.ThrowIfNull(client);
         var ack = new PropertyAck<bool>(p.Name);
@@ -145,11 +145,11 @@ public class Device : BackgroundService
         ack.Value = p.Value;
         ack.LastReported = p.Value;
         client.Property_combineTelemetry.PropertyValue = ack;
-        return await Task.FromResult(ack);
+        return ack;
     }
 
     string oldColor = "white";
-    private async Task<Cmd_ChangeLCDColor_Response> Cmd_ChangeLCDColor_Handler(Cmd_ChangeLCDColor_Request req)
+    private Cmd_ChangeLCDColor_Response Cmd_ChangeLCDColor_Handler(Cmd_ChangeLCDColor_Request req)
     {
         _logger.LogInformation($"New Command received");
         var color = Color.FromName(req.request);
@@ -166,7 +166,7 @@ public class Device : BackgroundService
             for (int i = 0; i < 10; i++)
             {
                 Console.WriteLine(" ");
-                await Task.Delay(100);
+                Task.Delay(100);
             }
             Console.BackgroundColor = orig;
 
@@ -176,7 +176,7 @@ public class Device : BackgroundService
             response = oldColor
         };
         oldColor = req.request;
-        return await Task.FromResult(result);
+        return result;
     }
 
     internal static string GetLocalIPv4()

@@ -65,7 +65,7 @@ internal class MemMonFactory
     {
         var cs = connectionString + ";ModelId=" + Imemmon.ModelId;
         var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
-        connectionSettings = HubDpsFactory.ConnectionSettings;
+        connectionSettings = HubDpsFactory.ComputedSettings;
         var client = new dtmi_rido_pnp_memmon.hub.memmon(hub);
         await client.InitState();
         return client;
