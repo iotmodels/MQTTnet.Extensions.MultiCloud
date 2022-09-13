@@ -23,13 +23,13 @@ public class Device : BackgroundService
 
     private double telemetryWorkingSet = 0;
     private const bool default_enabled = true;
-    private const int default_interval = 60;
+    private const int default_interval = 5;
 
     private string lastDiscconectReason = string.Empty;
 
     private Imemmon client;
+    private ConnectionSettings connectionSettings;
 
-    ConnectionSettings connectionSettings;
     private string infoVersion = string.Empty;
 
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
@@ -47,7 +47,7 @@ public class Device : BackgroundService
         var memmonFactory = new MemMonFactory(_configuration);
         client = await memmonFactory.CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
         client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
-        connectionSettings = MemMonFactory.computedSettings;
+        connectionSettings = MemMonFactory.connectionSettings;
         _logger.LogWarning("Connected");
 
         Type baseClient = client.GetType().BaseType;
@@ -94,7 +94,7 @@ public class Device : BackgroundService
 
 
 
-    private PropertyAck<bool> Property_enabled_UpdateHandler(PropertyAck<bool> p)
+    private async Task<PropertyAck<bool>> Property_enabled_UpdateHandler(PropertyAck<bool> p)
     {
         twinRecCounter++;
         _telemetryClient.TrackEvent("DesiredPropertyReceived", new Dictionary<string, string>()
@@ -111,10 +111,11 @@ public class Device : BackgroundService
             Value = p.Value
         };
         client.Property_enabled.PropertyValue = ack;
-        return ack;
+        await client.Property_enabled.ReportPropertyAsync();
+        return await Task.FromResult(ack);
     }
 
-    private PropertyAck<int> Property_interval_UpdateHandler(PropertyAck<int> p)
+    private async Task<PropertyAck<int>> Property_interval_UpdateHandler(PropertyAck<int> p)
     {
         ArgumentNullException.ThrowIfNull(client);
         twinRecCounter++;
@@ -143,10 +144,11 @@ public class Device : BackgroundService
                             default_interval;
         };
         client.Property_interval.PropertyValue = ack;
-        return ack;
+        await client.Property_interval.ReportPropertyAsync();
+        return await Task.FromResult(ack);
     }
 
-    private Cmd_getRuntimeStats_Response Command_getRuntimeStats_Handler(Cmd_getRuntimeStats_Request req)
+    private async Task<Cmd_getRuntimeStats_Response> Command_getRuntimeStats_Handler(Cmd_getRuntimeStats_Request req)
     {
         commandCounter++;
         _telemetryClient.TrackEvent("CommandReceived", new Dictionary<string, string>()
@@ -178,7 +180,7 @@ public class Device : BackgroundService
             result.diagnosticResults.Add("command: ", commandCounter.ToString());
             result.diagnosticResults.Add("reconnects: ", reconnectCounter.ToString());
         }
-        return result;
+        return await Task.FromResult(result);
     }
 
 #pragma warning disable IDE0052 // Remove unread private members

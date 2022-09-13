@@ -1,7 +1,4 @@
 ﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests
@@ -13,8 +10,8 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         {
             GenericPropertyAck ack = new GenericPropertyAck()
             {
-                Status =200,
-                Value = Json.Stringify(new {myProp = "myVal"})
+                Status = 200,
+                Value = Json.Stringify(new { myProp = "myVal" })
             };
             var jsonAck = ack.BuildAck();
             Assert.Equal("{\"myProp\":{\"ac\":200,\"av\":0,\"ad\":null,\"value\":\"myVal\"}}", jsonAck);

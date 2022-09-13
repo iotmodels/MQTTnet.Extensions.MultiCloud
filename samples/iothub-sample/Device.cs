@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
@@ -28,27 +27,9 @@ namespace iothub_sample
             var connectionString = _configuration.GetConnectionString("cs");
             _logger.LogInformation($"Connecting to: {new ConnectionSettings(connectionString)}");
 
-            //var mqtt = await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionString);
-
-            //int i = 0;
-            //mqtt.ApplicationMessageReceivedAsync += async m =>
-            //{
-            //    Console.WriteLine($"msg {i++} received");
-            //    Console.WriteLine(m.ApplicationMessage.Topic);
-            //    Console.WriteLine(m.ApplicationMessage.PayloadFormatIndicator);
-            //    Console.WriteLine(m.ApplicationMessage.Payload);
-            //    await Task.Yield();
-            //};
-            //await mqtt.SubscribeAsync("$iothub/twin/res/#", cancellationToken: stoppingToken);
-            //await mqtt.SubscribeAsync("$iothub/twin/res/#", cancellationToken: stoppingToken);
-            //await mqtt.PublishStringAsync("$iothub/twin/PATCH/properties/reported/?$rid=1", Json.Stringify(new { hey = "ho"}));
-
-
             var client = new HubMqttClient(await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionString, stoppingToken));
 
-            client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
-
-            var v = await client.ReportPropertyAsync(new { started = "DateTime.Now" }, stoppingToken);
+            var v = await client.ReportPropertyAsync(new { started = DateTime.Now }, stoppingToken);
 
             var twin = await client.GetTwinAsync(stoppingToken);
 
@@ -61,29 +42,21 @@ namespace iothub_sample
                 });
             };
 
-            client.OnPropertyUpdateReceived = m =>
+            client.OnPropertyUpdateReceived = async m =>
             {
-                _logger.LogInformation(m.ToJsonString());
-                return new GenericPropertyAck
+                return await Task.FromResult(new GenericPropertyAck
                 {
                     Value = m.ToJsonString(),
                     Status = 200,
                     Version = m["$version"].GetValue<int>()
-                };
+                });
             };
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                //var puback = await client.SendTelemetryAsync(new { workingSet = Environment.WorkingSet }, stoppingToken);
-                await Task.Delay(50000, stoppingToken);
+                var puback = await client.SendTelemetryAsync(new { workingSet = Environment.WorkingSet }, stoppingToken);
+                await Task.Delay(5000, stoppingToken);
             }
-        }
-
-        private async Task Connection_DisconnectedAsync(MQTTnet.Client.MqttClientDisconnectedEventArgs arg)
-        {
-            _logger.LogCritical($"Client Disconnected: {arg.ReasonString}");
-            await Task.Yield();
-
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests
@@ -13,7 +11,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         public void InferClientFromUserNameWhenNotSet()
         {
             MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder();
-            var cs = new ConnectionSettings { UserName = "user", Password="password" };
+            var cs = new ConnectionSettings { UserName = "user", Password = "password" };
             builder.WithConnectionSettings(cs);
             Assert.Equal(Environment.MachineName, cs.ClientId);
         }
