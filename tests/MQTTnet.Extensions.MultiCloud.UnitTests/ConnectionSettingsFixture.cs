@@ -35,7 +35,7 @@ namespace MQTTnet.Extensions.UnitTests
             Assert.Equal("<hubname>.azure-devices.net", dcs.HostName);
             Assert.Equal("<deviceId>", dcs.DeviceId);
             Assert.Equal("<SasKey>", dcs.SharedAccessKey);
-            Assert.Equal(Environment.MachineName, dcs.ClientId);
+            Assert.Empty(dcs.ClientId!);
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace MQTTnet.Extensions.UnitTests
             Assert.Equal(60, dcs.SasMinutes);
             Assert.Equal(60, dcs.KeepAliveInSeconds);
             Assert.Equal(8883, dcs.TcpPort);
-            Assert.Equal(Environment.MachineName, dcs.ClientId);
+            Assert.Empty(dcs.ClientId!);
             Assert.True(dcs.UseTls);
             Assert.False(dcs.DisableCrl);
         }

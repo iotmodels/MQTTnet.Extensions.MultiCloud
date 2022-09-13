@@ -8,6 +8,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient
 {
     public static class AwsClientFactory
     {
+        public static ConnectionSettings? ComputedSettings { get; private set; }
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, CancellationToken cancellationToken = default) =>
             await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectinString), cancellationToken);
 
@@ -19,6 +20,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient
             {
                 throw new ApplicationException($"Cannot connect to {cs}");
             }
+            ComputedSettings = cs;
             return mqtt;
         }
     }

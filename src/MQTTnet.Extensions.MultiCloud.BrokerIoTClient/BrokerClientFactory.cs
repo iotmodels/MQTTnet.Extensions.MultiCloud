@@ -8,6 +8,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
 {
     public static class BrokerClientFactory
     {
+        public static ConnectionSettings? ComputedSettings { get; private set; }
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, bool lwt = true, CancellationToken cancellationToken = default) =>
             await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectinString), lwt, cancellationToken);
 
@@ -15,6 +16,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         {
             MqttClient? mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
             var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs, lwt).Build());
+            ComputedSettings = cs;
             if (connAck.ResultCode != MqttClientConnectResultCode.Success)
             {
                 throw new ApplicationException($"Cannot connect to {cs}");

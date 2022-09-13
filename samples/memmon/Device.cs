@@ -28,8 +28,8 @@ public class Device : BackgroundService
     private string lastDiscconectReason = string.Empty;
 
     private Imemmon client;
-    private ConnectionSettings connectionSettings;
 
+    ConnectionSettings connectionSettings;
     private string infoVersion = string.Empty;
 
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
@@ -47,7 +47,7 @@ public class Device : BackgroundService
         var memmonFactory = new MemMonFactory(_configuration);
         client = await memmonFactory.CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
         client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
-        connectionSettings = MemMonFactory.connectionSettings;
+        connectionSettings = MemMonFactory.computedSettings;
         _logger.LogWarning("Connected");
 
         Type baseClient = client.GetType().BaseType;
