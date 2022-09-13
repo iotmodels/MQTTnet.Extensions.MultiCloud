@@ -42,20 +42,21 @@ namespace iothub_sample
                 });
             };
 
-            client.OnPropertyUpdateReceived = async m =>
+            client.OnPropertyUpdateReceived =  m =>
             {
-                return await Task.FromResult(new GenericPropertyAck
+                _logger.LogInformation(m.ToJsonString());
+                return new GenericPropertyAck
                 {
                     Value = m.ToJsonString(),
                     Status = 200,
                     Version = m["$version"].GetValue<int>()
-                });
+                };
             };
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 var puback = await client.SendTelemetryAsync(new { workingSet = Environment.WorkingSet }, stoppingToken);
-                await Task.Delay(5000, stoppingToken);
+                await Task.Delay(50000, stoppingToken);
             }
         }
     }

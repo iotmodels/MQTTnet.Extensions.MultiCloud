@@ -38,7 +38,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             set => command.OnCmdDelegate = value;
         }
 
-        public Func<JsonNode, Task<GenericPropertyAck>> OnPropertyUpdateReceived
+        public Func<JsonNode, GenericPropertyAck> OnPropertyUpdateReceived
         {
             get => genericDesiredUpdateProperty.OnProperty_Updated;
             set => genericDesiredUpdateProperty.OnProperty_Updated = value;
