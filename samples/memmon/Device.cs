@@ -94,7 +94,7 @@ public class Device : BackgroundService
 
 
 
-    private async Task<PropertyAck<bool>> Property_enabled_UpdateHandler(PropertyAck<bool> p)
+    private PropertyAck<bool> Property_enabled_UpdateHandler(PropertyAck<bool> p)
     {
         twinRecCounter++;
         _telemetryClient.TrackEvent("DesiredPropertyReceived", new Dictionary<string, string>()
@@ -111,11 +111,10 @@ public class Device : BackgroundService
             Value = p.Value
         };
         client.Property_enabled.PropertyValue = ack;
-        await client.Property_enabled.ReportPropertyAsync();
-        return await Task.FromResult(ack);
+        return ack;
     }
 
-    private async Task<PropertyAck<int>> Property_interval_UpdateHandler(PropertyAck<int> p)
+    private PropertyAck<int> Property_interval_UpdateHandler(PropertyAck<int> p)
     {
         ArgumentNullException.ThrowIfNull(client);
         twinRecCounter++;
@@ -144,8 +143,7 @@ public class Device : BackgroundService
                             default_interval;
         };
         client.Property_interval.PropertyValue = ack;
-        await client.Property_interval.ReportPropertyAsync();
-        return await Task.FromResult(ack);
+        return ack;
     }
 
     private Cmd_getRuntimeStats_Response Command_getRuntimeStats_Handler(Cmd_getRuntimeStats_Request req)
@@ -180,7 +178,7 @@ public class Device : BackgroundService
             result.diagnosticResults.Add("command: ", commandCounter.ToString());
             result.diagnosticResults.Add("reconnects: ", reconnectCounter.ToString());
         }
-        return await Task.FromResult(result);
+        return result;
     }
 
 #pragma warning disable IDE0052 // Remove unread private members
