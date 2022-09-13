@@ -12,12 +12,13 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
         public void ReceiveDesired()
         {
             var mqttClient = new MockMqttClient();
-            var desiredBinder = new DesiredUpdatePropertyBinder<int>(mqttClient, "myProp")
+            var updTwin = new UpdateTwinBinder(mqttClient);
+            var desiredBinder = new DesiredUpdatePropertyBinder<int>(mqttClient, updTwin, "myProp")
             {
-                OnProperty_Updated = async p =>
+                OnProperty_Updated = p =>
                 {
                     p.Status = 222;
-                    return await Task.FromResult(p);
+                    return p;
                 }
             };
 

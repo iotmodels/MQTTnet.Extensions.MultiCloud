@@ -9,7 +9,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
 {
     public class DesiredUpdatePropertyBinder<T>
     {
-        public Func<PropertyAck<T>, Task<PropertyAck<T>>>? OnProperty_Updated = null;
+        public Func<PropertyAck<T>, PropertyAck<T>>? OnProperty_Updated = null;
         public DesiredUpdatePropertyBinder(IMqttClient connection, string propertyName, string componentName = "")
         {
             var subAck = connection.SubscribeAsync($"$aws/things/{connection.Options.ClientId}/shadow/update/accepted").Result;
@@ -49,14 +49,15 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
                                  Value = desiredProperty.Deserialize<T>()!,
                                  Version = root["version"]?.GetValue<int>() ?? 0
                              };
-                             var ack = await OnProperty_Updated(property);
+                             var ack = OnProperty_Updated(property);
                              if (ack != null)
                              {
-                                 _ = updateShadow.ReportPropertyAsync(ack.ToAckDict());
+                                 updateShadow.ReportPropertyAsync(ack.ToAckDict()).RunSynchronously();
                              }
                          }
                      }
                  }
+                 await Task.Yield();
              };
         }
     }

@@ -34,6 +34,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             });
 
             await wp.InitPropertyAsync(twin, 0.2);
+            ((MockMqttClient)connection).SimulateNewMessage("$iothub/twin/res/204", string.Empty);
             Assert.Equal(0.2, wp.PropertyValue.Value);
             Assert.Equal(0, wp.PropertyValue.Version);
             Assert.Equal(203, wp.PropertyValue.Status);
@@ -96,11 +97,11 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             WritableProperty<double> wp = new WritableProperty<double>(connection, "myDouble");
             Assert.Equal(0, wp.PropertyValue.Value);
             bool received = false;
-            wp.OnProperty_Updated = async p =>
+            wp.OnProperty_Updated = p =>
             {
                 received = true;
                 p.Status = 200;
-                return await Task.FromResult(p);
+                return p;
             };
             string twin = Stringify(new
             {
@@ -118,7 +119,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             WritableProperty<double> wp = new WritableProperty<double>(connection, "myDouble");
             Assert.Equal(0, wp.PropertyValue.Value);
             bool received = false;
-            wp.OnProperty_Updated = async p =>
+            wp.OnProperty_Updated = p =>
             {
                 received = true;
                 if (p.Value < 0)
@@ -129,7 +130,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
                                    p.LastReported :
                                    1;
                 }
-                return await Task.FromResult(p);
+                return p;
             };
             string twin = Stringify(new
             {
@@ -149,7 +150,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             WritableProperty<double> wp = new WritableProperty<double>(connection, "myDouble");
             Assert.Equal(0, wp.PropertyValue.Value);
             bool received = false;
-            wp.OnProperty_Updated = async p =>
+            wp.OnProperty_Updated = p =>
             {
                 received = true;
                 if (p.Value < 0)
@@ -159,7 +160,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
                     p.Value = p.LastReported;
 
                 }
-                return await Task.FromResult(p);
+                return p;
             };
             string twin = Stringify(new
             {
@@ -179,10 +180,10 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
         {
             WritableProperty<AComplexObj> wp = new WritableProperty<AComplexObj>(connection, "myComplexObj");
             Assert.Null(wp.PropertyValue.Value);
-            wp.OnProperty_Updated = async p =>
+            wp.OnProperty_Updated = p =>
             {
                 p.Status = 200;
-                return await Task.FromResult(p);
+                return p;
             };
             string twin = Stringify(new
             {
@@ -221,7 +222,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
                     }
                 }
             });
-            await wpWithComp.InitPropertyAsync(twin, 0.2);
+          await wpWithComp.InitPropertyAsync(twin, 0.2);
             Assert.Equal(3.4, wpWithComp.PropertyValue.Value);
             Assert.Null(wpWithComp.PropertyValue.Description);
             Assert.Equal(0, wpWithComp.PropertyValue.Status);

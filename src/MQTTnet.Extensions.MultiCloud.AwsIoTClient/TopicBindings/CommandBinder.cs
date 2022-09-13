@@ -10,7 +10,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         where T : IBaseCommandRequest<T>, new()
         where TResponse : BaseCommandResponse
     {
-        public Func<T, Task<TResponse>>? OnCmdDelegate { get; set; }
+        public Func<T, TResponse>? OnCmdDelegate { get; set; }
 
         public Command(IMqttClient connection, string commandName, string componentName = "")
         {
@@ -29,10 +29,11 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
                     if (OnCmdDelegate != null && req != null)
                     {
                         //(int rid, _) = TopicParser.ParseTopic(topic);
-                        TResponse response = await OnCmdDelegate.Invoke(req);
-                        _ = connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", response);
+                        TResponse response = OnCmdDelegate.Invoke(req);
+                        connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", response).RunSynchronously();
                     }
                 }
+                await Task.Yield();
             };
         }
     }

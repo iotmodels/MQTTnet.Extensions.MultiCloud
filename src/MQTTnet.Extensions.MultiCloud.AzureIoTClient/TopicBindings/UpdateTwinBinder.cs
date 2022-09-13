@@ -55,18 +55,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         public async Task<int> ReportPropertyAsync(object payload, CancellationToken cancellationToken = default)
         {
             var rid = RidCounter.NextValue();
-
-            string jsonPayload;
-            if (payload is string)
-            {
-                jsonPayload = payload as string;
-            }
-            else
-            {
-                jsonPayload = Json.Stringify(payload);
-            }
-
-            var puback = await connection.PublishJsonAsync($"$iothub/twin/PATCH/properties/reported/?$rid={rid}", jsonPayload, MqttQualityOfServiceLevel.AtMostOnce, false, cancellationToken);
+            var puback = await connection.PublishJsonAsync($"$iothub/twin/PATCH/properties/reported/?$rid={rid}", payload, MqttQualityOfServiceLevel.AtMostOnce, false, cancellationToken);
             var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
             if (puback.ReasonCode == 0)
             {
