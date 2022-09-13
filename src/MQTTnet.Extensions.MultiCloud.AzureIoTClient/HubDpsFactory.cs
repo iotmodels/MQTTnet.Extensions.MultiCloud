@@ -11,7 +11,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
     public class HubDpsFactory
     {
         private static Timer reconnectTimer;
-        public static ConnectionSettings ConnectionSettings;
+        public static ConnectionSettings ComputedSettings { get; private set; }
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectionString, CancellationToken cancellationToken = default) =>
             await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectionString), cancellationToken);
 
@@ -25,7 +25,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
                 var dpsRes = await dpsClient.ProvisionDeviceIdentity();
                 cs.HostName = dpsRes.RegistrationState.AssignedHub;
                 cs.ClientId = dpsRes.RegistrationState.DeviceId;
-                ConnectionSettings = cs;
                 await dpsMqtt.DisconnectAsync(new MqttClientDisconnectOptions() { Reason = MqttClientDisconnectReason.NormalDisconnection }, cancellationToken);
             }
             var mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
@@ -38,11 +37,11 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             {
                 connAck = await mqtt.ConnectAsync(new MqttClientOptionsBuilder().WithAzureIoTHubCredentials(cs).Build());
             }
-            ConnectionSettings = cs;
             if (connAck.ResultCode != MqttClientConnectResultCode.Success)
             {
                 throw new ApplicationException($"Cannot connect to {cs}");
             }
+            ComputedSettings = cs;
             return mqtt;
         }
 

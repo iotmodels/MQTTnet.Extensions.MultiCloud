@@ -13,7 +13,7 @@ internal class MemMonFactory
 
     private readonly IConfiguration _configuration;
 
-    internal static ConnectionSettings connectionSettings;
+    internal static ConnectionSettings computedSettings;
 
     public MemMonFactory(IConfiguration configuration)
     {
@@ -23,15 +23,15 @@ internal class MemMonFactory
     public async Task<Imemmon> CreateMemMonClientAsync(string connectionString, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(connectionString, nameof(connectionString));
-        connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
         if (connectionString.Contains("IdScope") || connectionString.Contains("SharedAccessKey"))
         {
-            if (connectionSettings.IdScope != null && _configuration["masterKey"] != null)
+            var tempSettings = new ConnectionSettings(connectionString);
+            if (tempSettings.IdScope != null && _configuration["masterKey"] != null)
             {
                 var deviceId = Environment.MachineName;
                 var masterKey = _configuration.GetValue<string>("masterKey");
                 var deviceKey = ComputeDeviceKey(masterKey, deviceId);
-                var newCs = $"IdScope={connectionSettings.IdScope};DeviceId={deviceId};SharedAccessKey={deviceKey};SasMinutes={connectionSettings.SasMinutes}";
+                var newCs = $"IdScope={tempSettings.IdScope};DeviceId={deviceId};SharedAccessKey={deviceKey};SasMinutes={tempSettings.SasMinutes}";
                 return await CreateHubClientAsync(newCs, cancellationToken);
             }
             else
@@ -39,11 +39,11 @@ internal class MemMonFactory
                 return await CreateHubClientAsync(connectionString, cancellationToken);
             }
         }
-        else if (connectionSettings.HostName.Contains("amazonaws.com"))
+        else if (connectionString.Contains("amazonaws.com"))
         {
             return await CreateAwsClientAsync(connectionString, cancellationToken);
         }
-        else if (connectionSettings.HostName.Contains("azure-devices.net"))
+        else if (connectionString.Contains("azure-devices.net"))
         {
             return await CreateHubClientAsync(connectionString, cancellationToken);
         }
@@ -57,6 +57,7 @@ internal class MemMonFactory
     {
         var cs = new ConnectionSettings(connectionString) { ModelId = Imemmon.ModelId };
         var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
+        computedSettings = BrokerClientFactory.ComputedSettings;
         var client = new dtmi_rido_pnp_memmon.mqtt.memmon(mqtt);
         return client;
     }
@@ -65,7 +66,7 @@ internal class MemMonFactory
     {
         var cs = connectionString + ";ModelId=" + Imemmon.ModelId;
         var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
-        connectionSettings = HubDpsFactory.ConnectionSettings;
+        computedSettings = HubDpsFactory.ComputedSettings;
         var client = new dtmi_rido_pnp_memmon.hub.memmon(hub);
         await client.InitState();
         return client;
@@ -74,6 +75,7 @@ internal class MemMonFactory
     private static async Task<dtmi_rido_pnp_memmon.aws.memmon> CreateAwsClientAsync(string connectionString, CancellationToken cancellationToken = default)
     {
         var mqtt = await AwsClientFactory.CreateFromConnectionSettingsAsync(connectionString, cancellationToken);
+        computedSettings = AwsClientFactory.ComputedSettings;
         var client = new dtmi_rido_pnp_memmon.aws.memmon(mqtt);
         return client;
     }

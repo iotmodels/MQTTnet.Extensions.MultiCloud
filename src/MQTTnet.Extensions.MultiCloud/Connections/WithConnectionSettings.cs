@@ -10,7 +10,6 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             builder
                 .WithTimeout(TimeSpan.FromSeconds(30))
                 .WithTcpServer(cs.HostName, cs.TcpPort)
-                .WithClientId(cs.ClientId)
                 .WithKeepAlivePeriod(TimeSpan.FromSeconds(cs.KeepAliveInSeconds))
                 .WithCleanSession(cs.CleanSession)
                 .WithTlsSettings(cs);
@@ -18,7 +17,13 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             if (!string.IsNullOrEmpty(cs.Password))
             {
                 builder.WithCredentials(cs.UserName, cs.Password);
+                if (string.IsNullOrEmpty(cs.ClientId))
+                {
+                    cs.ClientId = cs.UserName;
+                }
             }
+
+            builder.WithClientId(cs.ClientId);
 
             if (withLWT)
             {
