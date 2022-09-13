@@ -24,7 +24,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             getTwinBinder = new GetTwinBinder(c);
             updateTwinBinder = new UpdateTwinBinder(c);
             command = new GenericCommand(c);
-            genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c);
+            genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c, updateTwinBinder);
         }
 
         public async Task InitState()
@@ -32,13 +32,13 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             InitialState = await GetTwinAsync();
         }
 
-        public Func<GenericCommandRequest, Task<CommandResponse>> OnCommandReceived
+        public Func<GenericCommandRequest, CommandResponse> OnCommandReceived
         {
             get => command.OnCmdDelegate;
             set => command.OnCmdDelegate = value;
         }
 
-        public Func<JsonNode, Task<GenericPropertyAck>> OnPropertyUpdateReceived
+        public Func<JsonNode, GenericPropertyAck> OnPropertyUpdateReceived
         {
             get => genericDesiredUpdateProperty.OnProperty_Updated;
             set => genericDesiredUpdateProperty.OnProperty_Updated = value;

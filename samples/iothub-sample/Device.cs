@@ -33,23 +33,23 @@ namespace iothub_sample
 
             var twin = await client.GetTwinAsync(stoppingToken);
 
-            client.OnCommandReceived = async m =>
+            client.OnCommandReceived = m =>
             {
-                return await Task.FromResult(new CommandResponse()
+                return new CommandResponse()
                 {
                     Status = 200,
                     ReponsePayload = JsonSerializer.Serialize(new { myResponse = "whatever" })
-                });
+                };
             };
 
-            client.OnPropertyUpdateReceived = async m =>
+            client.OnPropertyUpdateReceived = m =>
             {
-                return await Task.FromResult(new GenericPropertyAck
+                return new GenericPropertyAck
                 {
                     Value = m.ToJsonString(),
                     Status = 200,
                     Version = m["$version"].GetValue<int>()
-                });
+                };
             };
 
             while (!stoppingToken.IsCancellationRequested)
