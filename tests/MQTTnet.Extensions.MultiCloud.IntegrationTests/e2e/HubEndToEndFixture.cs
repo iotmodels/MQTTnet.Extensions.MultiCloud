@@ -32,7 +32,6 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         [Fact]
         public async Task NewDeviceSendDefaults()
         {
-
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             await td.Property_interval.InitPropertyAsync(td.InitialState, defaultInterval);
             await Task.Delay(200);
@@ -74,8 +73,9 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                     Description = "accepted from device"
                 });
             };
+
+            await td.InitState();
             await td.Property_interval.InitPropertyAsync(td.InitialState, defaultInterval);
-            await Task.Delay(200);
             var serviceTwin = await rm.GetTwinAsync(deviceId);
             var intervalTwin = serviceTwin.Properties.Reported["interval"];
             Assert.NotNull(intervalTwin);
@@ -103,6 +103,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                 td.Property_interval.PropertyValue = ack;
                 return await Task.FromResult(ack);
             };
+            await td.InitState();
 
             var twin = await rm.GetTwinAsync(deviceId);
             int interval = 9;

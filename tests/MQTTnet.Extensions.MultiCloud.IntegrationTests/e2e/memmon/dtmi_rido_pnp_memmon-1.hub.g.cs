@@ -11,8 +11,6 @@ namespace dtmi_rido_pnp_memmon.hub;
 
 public class memmon : HubMqttClient, Imemmon
 {
-    
-
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
@@ -26,6 +24,5 @@ public class memmon : HubMqttClient, Imemmon
         Property_enabled = new WritableProperty<bool>(c, "enabled");
         Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
         Command_getRuntimeStats = new Command<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response>(c, "getRuntimeStats");
-        
     }
 }

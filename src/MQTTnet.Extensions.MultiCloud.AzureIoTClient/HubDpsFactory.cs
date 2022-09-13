@@ -61,12 +61,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
                     .Build(),
                 cancellationToken).Result;
 
-            ReplySubscriptions.Get().ForEach(async t =>
-            {
-                Trace.TraceInformation($"Re-Subscribing to {t}");
-                var subAck = await mqtt.SubscribeAsync(t);
-                subAck.TraceErrors();
-            });
+            mqtt.ReSuscribe();
 
             reconnectTimer = new Timer(o =>
             {

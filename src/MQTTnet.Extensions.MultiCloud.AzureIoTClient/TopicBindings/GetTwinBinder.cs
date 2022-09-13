@@ -19,9 +19,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         public GetTwinBinder(IMqttClient conn)
         {
             connection = conn;
-            var subAck = connection.SubscribeAsync("$iothub/twin/res/#").Result;
-            ReplySubscriptions.Add("$iothub/twin/res/#");
-            subAck.TraceErrors();
+            connection.SubscribeWithReply("$iothub/twin/res/#");
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
