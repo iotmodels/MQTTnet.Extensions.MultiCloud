@@ -43,7 +43,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                 { name, payload }
             };
 
-            return await connection.PublishStringAsync(topic, Json.Stringify(typedPayload), Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, cancellationToken);
+            return await connection.PublishJsonAsync(topic, typedPayload, Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, cancellationToken);
         }
     }
 }

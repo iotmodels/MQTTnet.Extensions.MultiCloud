@@ -35,7 +35,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps
                         // TODO: ready retry-after
                         await Task.Delay(2500); //avoid throtling
                         var pollTopic = $"$dps/registrations/GET/iotdps-get-operationstatus/?$rid={rid++}&operationId={dpsRes.OperationId}";
-                        var puback = await mqttClient.PublishStringAsync(pollTopic, string.Empty);
+                        var puback = await mqttClient.PublishJsonAsync(pollTopic, string.Empty);
                     }
                     else
                     {
@@ -52,7 +52,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps
         {
             var putTopic = $"$dps/registrations/PUT/iotdps-register/?$rid={rid++}";
             var registrationId = mqttClient.Options.ClientId;
-            var puback = await mqttClient.PublishStringAsync(putTopic, Json.Stringify(new { registrationId, payload = new { modelId } }));
+            var puback = await mqttClient.PublishJsonAsync(putTopic, new { registrationId, payload = new { modelId } });
             if (puback.ReasonCode != MqttClientPublishReasonCode.Success)
             {
                 throw new ApplicationException("PubAck > 0 publishing DPS PUT");

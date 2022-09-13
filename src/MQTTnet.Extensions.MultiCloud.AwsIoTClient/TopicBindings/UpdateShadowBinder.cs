@@ -51,7 +51,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
                     }
                 }
             };
-            var puback = await connection.PublishStringAsync($"$aws/things/{connection.Options.ClientId}/shadow/update", Json.Stringify(data), Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, cancellationToken);
+            var puback = await connection.PublishJsonAsync($"$aws/things/{connection.Options.ClientId}/shadow/update", data, Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, cancellationToken);
             if (puback.ReasonCode != MqttClientPublishReasonCode.Success)
             {
                 Trace.TraceError("Error publishing message: " + puback);

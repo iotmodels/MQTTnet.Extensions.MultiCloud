@@ -15,12 +15,12 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient
         public AwsMqttClient(IMqttClient c, string modelId = "") //: base(c)
         {
             Connection = c;
-            _ = Connection.PublishStringAsync(
+            _ = Connection.PublishJsonAsync(
                 BirthConvention.BirthTopic(Connection.Options.ClientId),
                 new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
                 {
                     ModelId = modelId
-                }.ToJson(),
+                },
                 Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true);
 
             getShadowBinder = new GetShadowBinder(c);

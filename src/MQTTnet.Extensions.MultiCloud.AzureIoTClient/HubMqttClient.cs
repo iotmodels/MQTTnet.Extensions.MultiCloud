@@ -24,7 +24,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             getTwinBinder = new GetTwinBinder(c);
             updateTwinBinder = new UpdateTwinBinder(c);
             command = new GenericCommand(c);
-            genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c);
+            genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c, updateTwinBinder);
         }
 
         public async Task InitState()
@@ -46,8 +46,10 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 
         public Task<string> GetTwinAsync(CancellationToken cancellationToken = default) => getTwinBinder.ReadPropertiesDocAsync(cancellationToken);
         public Task<int> ReportPropertyAsync(object payload, CancellationToken cancellationToken = default) => updateTwinBinder.ReportPropertyAsync(payload, cancellationToken);
-        public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default) => Connection.PublishStringAsync($"devices/{Connection.Options.ClientId}/messages/events/", Json.Stringify(payload), Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, t);
-        public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, string componentName, CancellationToken t = default) => Connection.PublishStringAsync($"devices/{Connection.Options.ClientId}/messages/events/?$.sub={componentName}", Json.Stringify(payload), Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, t);
+        public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default) 
+            => Connection.PublishJsonAsync($"devices/{Connection.Options.ClientId}/messages/events/", payload, Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, t);
+        public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, string componentName, CancellationToken t = default) 
+            => Connection.PublishJsonAsync($"devices/{Connection.Options.ClientId}/messages/events/?$.sub={componentName}", payload, Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, t);
 
     }
 }

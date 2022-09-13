@@ -28,7 +28,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                 {
                     string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload);
                     (int rid, _) = TopicParser.ParseTopic(topic);
-                    if (pendingGetTwinRequests.TryRemove(rid, out var tcs))
+                    if (pendingGetTwinRequests.TryGetValue(rid, out var tcs))
                     {
                         tcs.SetResult(msg);
                     }
@@ -42,11 +42,11 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
             var rid = RidCounter.NextValue();
             lastRid = rid; // for testing
             var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-            var puback = await connection.PublishStringAsync($"$iothub/twin/GET/?$rid={rid}", string.Empty, MqttQualityOfServiceLevel.AtMostOnce, false, cancellationToken);
+            var puback = await connection.PublishJsonAsync($"$iothub/twin/GET/?$rid={rid}", string.Empty, MqttQualityOfServiceLevel.AtMostOnce, false, cancellationToken);
 
             if (puback.ReasonCode == 0)
             {
-                if (!pendingGetTwinRequests.TryAdd(rid, tcs))
+                if (!pendingGetTwinRequests.TryGetValue(rid, out tcs))
                 {
                     Trace.TraceWarning($"GetTwinBinder: RID {rid} not added to pending requests");
                 }

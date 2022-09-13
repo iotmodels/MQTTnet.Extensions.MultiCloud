@@ -25,8 +25,6 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             public DateTime When { get; set; }
             [JsonPropertyName("status")]
             public ConnectionStatus ConnectionStatus { get; set; }
-
-            public string ToJson() => Json.Stringify(this);
         }
 
         public static byte[] LastWillPayload() => Encoding.UTF8.GetBytes(Json.Stringify(new BirthMessage(ConnectionStatus.offline)));
