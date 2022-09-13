@@ -191,10 +191,10 @@ namespace MQTTnet.Extensions.UnitTests.HubClient
                 desired = new Dictionary<string, object>() { { "$version", 2 }, { "myComplexObj", new AComplexObj { MyProperty = "twinValue" } } }
             });
             await wp.InitPropertyAsync(twin, new AComplexObj());
-            Assert.Equal("twinValue", wp.PropertyValue.Value.MyProperty);
-            Assert.Equal(200, wp.PropertyValue.Status);
-            Assert.Equal(2, wp.PropertyValue.Version);
-            Assert.Equal(2, wp.PropertyValue.DesiredVersion);
+            Assert.Equal("twinValue", wp?.PropertyValue?.Value?.MyProperty);
+            Assert.Equal(200, wp?.PropertyValue.Status);
+            Assert.Equal(2, wp?.PropertyValue.Version);
+            Assert.Equal(2, wp?.PropertyValue.DesiredVersion);
         }
 
 
