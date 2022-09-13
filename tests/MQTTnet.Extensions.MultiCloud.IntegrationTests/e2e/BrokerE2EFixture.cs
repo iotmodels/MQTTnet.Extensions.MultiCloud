@@ -29,7 +29,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Password = "password"
         };
 
-        [Fact]
+        [Fact, Trait("e2e", "broker")]
         public async Task DeviceSendsBirth()
         {
             BirthConvention.BirthMessage? bm = null;
@@ -55,7 +55,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             // TODO simulate disconnection, or LWT
         }
 
-        [Fact]
+        [Fact, Trait("e2e", "broker")]
         public async Task DeviceReadsInitialProps()
         {
             PropertyAck<int> ack = new PropertyAck<int>("interval");
