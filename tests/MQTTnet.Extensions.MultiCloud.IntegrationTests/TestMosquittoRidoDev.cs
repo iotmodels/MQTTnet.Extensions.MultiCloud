@@ -5,7 +5,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 {
     public class TestMosquittoRidoDev
     {
-        readonly MqttClient? client;
+        private readonly MqttClient? client;
         public TestMosquittoRidoDev()
         {
             client = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
@@ -15,7 +15,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task NotFailsWithouCA()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = "mosquitto.rido.dev",
@@ -36,7 +40,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ConfiguredCA()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = "mosquitto.rido.dev",
@@ -55,7 +63,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ClientCert()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = "mosquitto.rido.dev",

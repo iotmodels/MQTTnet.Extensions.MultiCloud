@@ -1,9 +1,6 @@
 ﻿using MQTTnet.Client;
-
-using MQTTnet.Extensions.MultiCloud.Connections;
 using MQTTnet.Extensions.MultiCloud.AwsIoTClient;
-using System.Threading.Tasks;
-using Xunit;
+using MQTTnet.Extensions.MultiCloud.Connections;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 {

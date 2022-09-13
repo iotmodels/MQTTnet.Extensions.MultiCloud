@@ -3,21 +3,17 @@ using Microsoft.Azure.Devices;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using pnp_memmon;
 using System.Text.Json;
-using Xunit.Abstractions;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
 {
 
-    public class HubEndToEndFixture 
+    public class HubEndToEndFixture
     {
-        static string hubConnectionString = Environment.GetEnvironmentVariable("E2EHubConnectionString")!;
-        static string hubName = Environment.GetEnvironmentVariable("TestHubName")!;
-        
-        readonly string deviceId = string.Empty;
-
-        const int defaultInterval = 23;
-        
-        RegistryManager rm = RegistryManager.CreateFromConnectionString(hubConnectionString);
+        private static readonly string hubConnectionString = Environment.GetEnvironmentVariable("E2EHubConnectionString")!;
+        private static readonly string hubName = Environment.GetEnvironmentVariable("TestHubName")!;
+        private readonly string deviceId = string.Empty;
+        private const int defaultInterval = 23;
+        private readonly RegistryManager rm = RegistryManager.CreateFromConnectionString(hubConnectionString);
 
         [Fact, Trait("e2e", "hub")]
         public async Task NewDeviceSendDefaults()
@@ -43,7 +39,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         [Fact, Trait("e2e", "hub")]
         public async Task DeviceReadsSettingsAtStartup()
         {
-            
+
             var deviceId = "memmon-test" + new Random().Next(100);
             var device = await GetOrCreateDeviceAsync(deviceId);
 
@@ -92,7 +88,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         [Fact, Trait("e2e", "hub")]
         public async Task UpdatesDesiredPropertyWhenOnline()
         {
-            
+
             var deviceId = "memmon-test" + new Random().Next(100);
             var device = await GetOrCreateDeviceAsync(deviceId);
 
@@ -188,6 +184,6 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             return device;
         }
 
-        
+
     }
 }

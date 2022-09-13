@@ -1,6 +1,5 @@
 ﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace MQTTnet.Extensions.UnitTests.HubClient
@@ -23,7 +22,7 @@ namespace MQTTnet.Extensions.UnitTests.HubClient
             var rid = binder.lastRid;
             mockClient.SimulateNewMessage($"$iothub/twin/res/200/?$rid={rid}", SampleTwin);
             Assert.StartsWith("$iothub/twin/GET/?$rid=", mockClient.topicRecceived);
-            Assert.Equal(string.Empty, mockClient.payloadReceived); 
+            Assert.Equal(string.Empty, mockClient.payloadReceived);
             var twin = twinTask.Result;
             Assert.Equal(twin, SampleTwin);
         }

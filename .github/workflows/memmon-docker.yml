@@ -2,7 +2,7 @@ name: memmon-docker
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
     paths:
       - 'samples/memmon/**'
 

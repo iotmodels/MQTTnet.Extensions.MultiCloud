@@ -9,7 +9,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
 {
     public class BrokerE2EFixture
     {
-        ConnectionSettings cs = new ConnectionSettings()
+        private readonly ConnectionSettings cs = new ConnectionSettings()
         {
             HostName = "localhost",
             ClientId = "e2e-device",
@@ -18,8 +18,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             UserName = "user",
             Password = "password"
         };
-
-        ConnectionSettings scs = new ConnectionSettings()
+        private readonly ConnectionSettings scs = new ConnectionSettings()
         {
             HostName = "localhost",
             ClientId = "e2e-app",

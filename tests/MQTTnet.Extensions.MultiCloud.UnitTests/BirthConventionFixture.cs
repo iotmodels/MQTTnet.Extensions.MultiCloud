@@ -1,7 +1,4 @@
 ﻿using MQTTnet.Extensions.MultiCloud.Connections;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests

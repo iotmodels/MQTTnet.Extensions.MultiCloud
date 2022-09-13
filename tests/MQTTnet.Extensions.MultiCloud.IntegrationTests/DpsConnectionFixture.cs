@@ -1,15 +1,11 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Exceptions;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 {
     public class DpsConnectionFixture
     {
-        MqttClient? client;
+        private readonly MqttClient? client;
         public DpsConnectionFixture()
         {
             client = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
@@ -18,7 +14,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task SasAuth()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 IdScope = "0ne001F8884",
@@ -36,7 +36,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ClientCert()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 IdScope = "0ne001F8884",

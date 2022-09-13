@@ -1,16 +1,13 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Exceptions;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 {
     // docker run -it --rm -p 8080:8080 -p 1883:1883 -p 8883:8883 -p 8884:8884 -p 8443:8443  ridomin/mosquitto-local:dev
     public class TestMosquittoLocalhost
     {
-        MqttClient? client;
+        private readonly MqttClient? client;
         public TestMosquittoLocalhost()
         {
             client = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
@@ -20,7 +17,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task FailsWithouCA()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = "localhost",
@@ -43,7 +44,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ConfiguredCA()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = "localhost",
@@ -63,7 +68,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ClientCert()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = "localhost",
