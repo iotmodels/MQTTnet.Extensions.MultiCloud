@@ -7,7 +7,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
     internal static class SubscribeExtension
     {
-        private static readonly List<string> subscriptions = new List<string>();
+        private static List<string> subscriptions = new List<string>();
 
         public static void SubscribeWithReply(this IMqttClient client, string topic, CancellationToken cancellationToken = default)
         {

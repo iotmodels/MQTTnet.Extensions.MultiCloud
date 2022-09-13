@@ -7,7 +7,7 @@ namespace pi_sense_device
 {
     internal class SenseHatFactory
     {
-        private readonly IConfiguration _configuration;
+        IConfiguration _configuration;
         public SenseHatFactory(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -18,10 +18,7 @@ namespace pi_sense_device
 
         public async Task<Isensehat> CreateSenseHatClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new ArgumentNullException(nameof(connectionString));
-            }
+            if (string.IsNullOrEmpty(connectionString)) throw new ArgumentNullException(nameof(connectionString));
 
             if (connectionString.Contains("IdScope") || connectionString.Contains("SharedAccessKey"))
             {
@@ -46,7 +43,7 @@ namespace pi_sense_device
             }
         }
 
-        private static async Task<dtmi_rido_pnp_sensehat.mqtt.sensehat> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)
+        static async Task<dtmi_rido_pnp_sensehat.mqtt.sensehat> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
             var cs = new ConnectionSettings(connectionString) { ModelId = Isensehat.ModelId };
             var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
@@ -54,7 +51,7 @@ namespace pi_sense_device
             return client;
         }
 
-        private static async Task<dtmi_rido_pnp_sensehat.hub.sensehat> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
+        static async Task<dtmi_rido_pnp_sensehat.hub.sensehat> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
             var cs = connectionString + ";ModelId=" + Isensehat.ModelId;
             var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);

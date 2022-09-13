@@ -1,5 +1,4 @@
-﻿using MQTTnet.Extensions.MultiCloud;
-using System;
+﻿using System;
 using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests

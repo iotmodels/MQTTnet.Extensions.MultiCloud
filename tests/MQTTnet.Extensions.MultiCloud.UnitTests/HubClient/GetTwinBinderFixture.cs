@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.UnitTests;
 using System.Collections.Generic;
 using Xunit;
 

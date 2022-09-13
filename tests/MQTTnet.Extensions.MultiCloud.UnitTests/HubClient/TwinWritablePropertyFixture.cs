@@ -222,7 +222,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
                     }
                 }
             });
-          await wpWithComp.InitPropertyAsync(twin, 0.2);
+            await wpWithComp.InitPropertyAsync(twin, 0.2);
             Assert.Equal(3.4, wpWithComp.PropertyValue.Value);
             Assert.Null(wpWithComp.PropertyValue.Description);
             Assert.Equal(0, wpWithComp.PropertyValue.Status);
