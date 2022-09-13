@@ -3,49 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2E684562-6062-4BA5-A2FF-5A743D335EA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud", "src\MQTTnet.Extensions.MultiCloud\MQTTnet.Extensions.MultiCloud.csproj", "{1D1202C8-12C7-4A39-9945-5C0C4A83AF2A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.AwsIoTClient", "src\MQTTnet.Extensions.MultiCloud.AwsIoTClient\MQTTnet.Extensions.MultiCloud.AwsIoTClient.csproj", "{82D3E4FD-0A46-4B65-A2F7-C8CC56D87FEF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.AzureIoTClient", "src\MQTTnet.Extensions.MultiCloud.AzureIoTClient\MQTTnet.Extensions.MultiCloud.AzureIoTClient.csproj", "{B1991D1A-88E5-4968-92E2-D3CD8995A4FB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.BrokerIoTClient", "src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj", "{6ABB7BA7-FDC1-4A5D-950F-4621E2CEBB9C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5AC4450E-A695-4BDC-8BF4-3D1F08C40394}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.UnitTests", "tests\MQTTnet.Extensions.MultiCloud.UnitTests\MQTTnet.Extensions.MultiCloud.UnitTests.csproj", "{8795E98D-C53A-431F-88A5-768BC7013A55}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.IntegrationTests", "tests\MQTTnet.Extensions.MultiCloud.IntegrationTests\MQTTnet.Extensions.MultiCloud.IntegrationTests.csproj", "{64CEC6F9-5567-41FC-91F7-BD84E7853DD1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{22965CB2-1455-4938-9783-416B192B79D0}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		.gitignore = .gitignore
-		.runsettings = .runsettings
-		src\Directory.Build.props = src\Directory.Build.props
-		src\Directory.Build.targets = src\Directory.Build.targets
-		run-mosquitto.sh = run-mosquitto.sh
-		version.json = version.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{43263A3D-9530-4EE5-B019-F576A3ED2162}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{843305D5-575C-4BE9-85A5-64B2467E1C7C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "memmon", "samples\memmon\memmon.csproj", "{991F3F3F-3D0F-478D-9FAA-34A3FA196FF0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iothub-sample", "samples\iothub-sample\iothub-sample.csproj", "{65529DCD-4A9E-4F21-98AF-9C83B163927F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mosquitto-sample", "samples\mosquitto-sample\mosquitto-sample.csproj", "{25CDD7D6-6C3C-4C6C-A4D8-2314BEB72E9B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{CD56A1AA-4FF5-4116-BCF0-8AC0B062A6B3}"
-	ProjectSection(SolutionItems) = preProject
+		docs\arch.png = docs\arch.png
 		docs\ConnectionSettings.md = docs\ConnectionSettings.md
 		docs\feat-matrix.md = docs\feat-matrix.md
 		docs\iotpnp-128.png = docs\iotpnp-128.png
 		README.md = README.md
+		docs\tmo.gif = docs\tmo.gif
 		docs\X509Certificates.md = docs\X509Certificates.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud", "src\MQTTnet.Extensions.MultiCloud\MQTTnet.Extensions.MultiCloud.csproj", "{F9489CFC-354C-4235-9BC0-88CFC01AF7F5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.BrokerIoTClient", "src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj", "{A3A08059-040A-4668-8010-AE03758C4021}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.AwsIoTClient", "src\MQTTnet.Extensions.MultiCloud.AwsIoTClient\MQTTnet.Extensions.MultiCloud.AwsIoTClient.csproj", "{4AE3DB42-187B-416E-B0A1-521C6CFB7D26}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.AzureIoTClient", "src\MQTTnet.Extensions.MultiCloud.AzureIoTClient\MQTTnet.Extensions.MultiCloud.AzureIoTClient.csproj", "{4F3B1F6B-2848-4D3F-924D-215BBFE4C52A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.IntegrationTests", "tests\MQTTnet.Extensions.MultiCloud.IntegrationTests\MQTTnet.Extensions.MultiCloud.IntegrationTests.csproj", "{A3C58114-BB68-46E7-B43C-C621A29AEA54}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.UnitTests", "tests\MQTTnet.Extensions.MultiCloud.UnitTests\MQTTnet.Extensions.MultiCloud.UnitTests.csproj", "{DD0BE021-4D3B-4F36-A0FB-D2C87208C2C6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_actions", "_actions", "{59504C8B-83E5-4234-B834-1507253B10F5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_actions", "_actions", "{682EF4F8-4161-47F3-A03E-1784053AA957}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\cd.yml = .github\workflows\cd.yml
 		.github\workflows\ci.yml = .github\workflows\ci.yml
@@ -53,7 +36,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_actions", "_actions", "{59
 		.github\workflows\push2nuget.yml = .github\workflows\push2nuget.yml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pi-sense-device", "samples\pi-sense-device\pi-sense-device.csproj", "{B1A0A159-0673-4A0F-99CA-4B8E1722A898}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F618E3CF-0552-44BD-A92A-A926AF319D00}"
+	ProjectSection(SolutionItems) = preProject
+		.runsettings = .runsettings
+		src\Directory.Build.props = src\Directory.Build.props
+		src\Directory.Build.targets = src\Directory.Build.targets
+		version.json = version.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{F5E59EDE-6E77-484C-AB93-C4651F43B9A7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "memmon", "samples\memmon\memmon.csproj", "{0685EACE-A84C-48DE-A69F-0899651ECEDC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pi-sense-device", "samples\pi-sense-device\pi-sense-device.csproj", "{0E96AC9D-28FF-4E49-A518-E3DEE2E9DA77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iothub-sample", "samples\iothub-sample\iothub-sample.csproj", "{CF342B46-3B96-4270-8881-70FF105DE8E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,59 +58,54 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{991F3F3F-3D0F-478D-9FAA-34A3FA196FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{991F3F3F-3D0F-478D-9FAA-34A3FA196FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{991F3F3F-3D0F-478D-9FAA-34A3FA196FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{991F3F3F-3D0F-478D-9FAA-34A3FA196FF0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{65529DCD-4A9E-4F21-98AF-9C83B163927F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{65529DCD-4A9E-4F21-98AF-9C83B163927F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{65529DCD-4A9E-4F21-98AF-9C83B163927F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{65529DCD-4A9E-4F21-98AF-9C83B163927F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{25CDD7D6-6C3C-4C6C-A4D8-2314BEB72E9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{25CDD7D6-6C3C-4C6C-A4D8-2314BEB72E9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{25CDD7D6-6C3C-4C6C-A4D8-2314BEB72E9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{25CDD7D6-6C3C-4C6C-A4D8-2314BEB72E9B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9489CFC-354C-4235-9BC0-88CFC01AF7F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9489CFC-354C-4235-9BC0-88CFC01AF7F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9489CFC-354C-4235-9BC0-88CFC01AF7F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9489CFC-354C-4235-9BC0-88CFC01AF7F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3A08059-040A-4668-8010-AE03758C4021}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3A08059-040A-4668-8010-AE03758C4021}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3A08059-040A-4668-8010-AE03758C4021}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3A08059-040A-4668-8010-AE03758C4021}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4AE3DB42-187B-416E-B0A1-521C6CFB7D26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4AE3DB42-187B-416E-B0A1-521C6CFB7D26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4AE3DB42-187B-416E-B0A1-521C6CFB7D26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4AE3DB42-187B-416E-B0A1-521C6CFB7D26}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4F3B1F6B-2848-4D3F-924D-215BBFE4C52A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4F3B1F6B-2848-4D3F-924D-215BBFE4C52A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4F3B1F6B-2848-4D3F-924D-215BBFE4C52A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4F3B1F6B-2848-4D3F-924D-215BBFE4C52A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3C58114-BB68-46E7-B43C-C621A29AEA54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3C58114-BB68-46E7-B43C-C621A29AEA54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3C58114-BB68-46E7-B43C-C621A29AEA54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3C58114-BB68-46E7-B43C-C621A29AEA54}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD0BE021-4D3B-4F36-A0FB-D2C87208C2C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD0BE021-4D3B-4F36-A0FB-D2C87208C2C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD0BE021-4D3B-4F36-A0FB-D2C87208C2C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD0BE021-4D3B-4F36-A0FB-D2C87208C2C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1A0A159-0673-4A0F-99CA-4B8E1722A898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1A0A159-0673-4A0F-99CA-4B8E1722A898}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1A0A159-0673-4A0F-99CA-4B8E1722A898}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1A0A159-0673-4A0F-99CA-4B8E1722A898}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D1202C8-12C7-4A39-9945-5C0C4A83AF2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D1202C8-12C7-4A39-9945-5C0C4A83AF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D1202C8-12C7-4A39-9945-5C0C4A83AF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D1202C8-12C7-4A39-9945-5C0C4A83AF2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82D3E4FD-0A46-4B65-A2F7-C8CC56D87FEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82D3E4FD-0A46-4B65-A2F7-C8CC56D87FEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82D3E4FD-0A46-4B65-A2F7-C8CC56D87FEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82D3E4FD-0A46-4B65-A2F7-C8CC56D87FEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1991D1A-88E5-4968-92E2-D3CD8995A4FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1991D1A-88E5-4968-92E2-D3CD8995A4FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1991D1A-88E5-4968-92E2-D3CD8995A4FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1991D1A-88E5-4968-92E2-D3CD8995A4FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ABB7BA7-FDC1-4A5D-950F-4621E2CEBB9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ABB7BA7-FDC1-4A5D-950F-4621E2CEBB9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ABB7BA7-FDC1-4A5D-950F-4621E2CEBB9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ABB7BA7-FDC1-4A5D-950F-4621E2CEBB9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8795E98D-C53A-431F-88A5-768BC7013A55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8795E98D-C53A-431F-88A5-768BC7013A55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8795E98D-C53A-431F-88A5-768BC7013A55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8795E98D-C53A-431F-88A5-768BC7013A55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64CEC6F9-5567-41FC-91F7-BD84E7853DD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CEC6F9-5567-41FC-91F7-BD84E7853DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64CEC6F9-5567-41FC-91F7-BD84E7853DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64CEC6F9-5567-41FC-91F7-BD84E7853DD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0685EACE-A84C-48DE-A69F-0899651ECEDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0685EACE-A84C-48DE-A69F-0899651ECEDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0685EACE-A84C-48DE-A69F-0899651ECEDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0685EACE-A84C-48DE-A69F-0899651ECEDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E96AC9D-28FF-4E49-A518-E3DEE2E9DA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E96AC9D-28FF-4E49-A518-E3DEE2E9DA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E96AC9D-28FF-4E49-A518-E3DEE2E9DA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E96AC9D-28FF-4E49-A518-E3DEE2E9DA77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF342B46-3B96-4270-8881-70FF105DE8E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF342B46-3B96-4270-8881-70FF105DE8E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF342B46-3B96-4270-8881-70FF105DE8E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF342B46-3B96-4270-8881-70FF105DE8E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{991F3F3F-3D0F-478D-9FAA-34A3FA196FF0} = {843305D5-575C-4BE9-85A5-64B2467E1C7C}
-		{65529DCD-4A9E-4F21-98AF-9C83B163927F} = {843305D5-575C-4BE9-85A5-64B2467E1C7C}
-		{25CDD7D6-6C3C-4C6C-A4D8-2314BEB72E9B} = {843305D5-575C-4BE9-85A5-64B2467E1C7C}
-		{A3C58114-BB68-46E7-B43C-C621A29AEA54} = {43263A3D-9530-4EE5-B019-F576A3ED2162}
-		{DD0BE021-4D3B-4F36-A0FB-D2C87208C2C6} = {43263A3D-9530-4EE5-B019-F576A3ED2162}
-		{B1A0A159-0673-4A0F-99CA-4B8E1722A898} = {843305D5-575C-4BE9-85A5-64B2467E1C7C}
+		{8795E98D-C53A-431F-88A5-768BC7013A55} = {5AC4450E-A695-4BDC-8BF4-3D1F08C40394}
+		{64CEC6F9-5567-41FC-91F7-BD84E7853DD1} = {5AC4450E-A695-4BDC-8BF4-3D1F08C40394}
+		{0685EACE-A84C-48DE-A69F-0899651ECEDC} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
+		{0E96AC9D-28FF-4E49-A518-E3DEE2E9DA77} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
+		{CF342B46-3B96-4270-8881-70FF105DE8E4} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {5DDE4B3A-6908-44A1-84D8-91A86C8A3815}
+		SolutionGuid = {09914DD8-50B2-48E3-B9AB-7764AE36AD6B}
 	EndGlobalSection
 EndGlobal

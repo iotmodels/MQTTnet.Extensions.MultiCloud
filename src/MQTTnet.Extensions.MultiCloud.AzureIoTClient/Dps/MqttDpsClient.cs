@@ -8,10 +8,10 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps
 {
     public class MqttDpsClient
     {
-        readonly IMqttClient mqttClient;
-        int rid = 0;
-        readonly TaskCompletionSource<DpsStatus> tcs = new TaskCompletionSource<DpsStatus>();
-        string modelId;
+        private readonly IMqttClient mqttClient;
+        private int rid = 0;
+        private readonly TaskCompletionSource<DpsStatus> tcs = new TaskCompletionSource<DpsStatus>();
+        private readonly string modelId;
         public MqttDpsClient(IMqttClient c, string mid)
         {
             mqttClient = c;

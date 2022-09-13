@@ -17,8 +17,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         public UpdateTwinBinder(IMqttClient connection)
         {
             this.connection = connection;
-            var subAck = connection.SubscribeAsync("$iothub/twin/res/#").Result;
-            subAck.TraceErrors();
+            connection.SubscribeWithReply("$iothub/twin/res/#");
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
@@ -28,10 +27,10 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                     if (pendingRequests.TryRemove(rid, out var tcs))
                     {
                         tcs.SetResult(twinVersion);
-                    } 
+                    }
                     else
                     {
-                        Trace.TraceWarning($"RID: {rid} not found in pending requests. Actual : {string.Join(" ", pendingRequests.Keys.ToArray<int>())}");
+                        Trace.TraceWarning($"RID: UpdateTwinBinder {rid} not found in pending requests. Actual : {string.Join(" ", pendingRequests.Keys.ToArray<int>())}, topic: {topic}");
                     }
 
                 }

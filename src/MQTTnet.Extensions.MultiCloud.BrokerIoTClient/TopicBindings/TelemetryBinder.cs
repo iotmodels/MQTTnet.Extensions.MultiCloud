@@ -7,11 +7,11 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 {
     public class Telemetry<T> : ITelemetry<T>
     {
-        readonly IMqttClient connection;
-        readonly string deviceId;
-        readonly string moduleId;
-        readonly string name;
-        readonly string component;
+        private readonly IMqttClient connection;
+        private readonly string deviceId;
+        private readonly string moduleId;
+        private readonly string name;
+        private readonly string component;
 
         public Telemetry(IMqttClient connection, string name, string component = "", string moduleId = "")
         {

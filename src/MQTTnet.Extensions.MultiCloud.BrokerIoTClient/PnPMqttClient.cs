@@ -1,7 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
 {
@@ -21,7 +21,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
                 Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true).Result;
             InitialState = string.Empty;
         }
-        public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default) => 
+        public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default) =>
             Connection.PublishStringAsync($"pnp/{Connection.Options.ClientId}/telemetry", Json.Stringify(payload), Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, t);
     }
 }

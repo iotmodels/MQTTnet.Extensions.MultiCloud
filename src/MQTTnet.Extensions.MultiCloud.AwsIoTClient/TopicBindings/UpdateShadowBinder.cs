@@ -19,7 +19,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         {
             this.connection = connection;
             pendingRequests = new ConcurrentQueue<TaskCompletionSource<int>>();
-            var subAck  = connection.SubscribeAsync($"$aws/things/{connection.Options.ClientId}/shadow/update/accepted").Result;
+            var subAck = connection.SubscribeAsync($"$aws/things/{connection.Options.ClientId}/shadow/update/accepted").Result;
             subAck.TraceErrors();
             connection.ApplicationMessageReceivedAsync += async m =>
             {

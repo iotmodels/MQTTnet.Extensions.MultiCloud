@@ -62,6 +62,7 @@ namespace pi_sense_device
             var cs = connectionString + ";ModelId=" + Isensehat.ModelId;
             var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             var client = new dtmi_rido_pnp_sensehat.hub.sensehat(hub);
+            await client.InitState();
             return client;
         }
 
