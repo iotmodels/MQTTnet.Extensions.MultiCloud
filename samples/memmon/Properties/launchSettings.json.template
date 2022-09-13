@@ -1,0 +1,47 @@
+{
+  "profiles": {
+    "memmon-mosquitto-localhost": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings__cs": "HostName=localhost;TcpPort=1883;DeviceId=memmon01;UserName=user;Password=password"
+      }
+    },
+    "memmon-iothub": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings__cs": "HostName=<hub-name>.azure-devices.net;DeviceId=<deviceId>;SharedAccessKey=<SharedAccessKey>"
+      }
+    },
+    "memmon-central": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings__cs": "IdScope=<IdScope>;DeviceId=<deviceId>;SharedAccessKey=<SharedAccessKey>"
+      }
+    },
+    "memmon-dps-auto": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings__cs": "IdScope=<IdScope>",
+        "masterKey" :  "<enrollmentMasterKey>"
+      }
+    },
+    "memmon-aws": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings__cs": "HostName=<host.and.region>.amazonaws.com;X509Key=cert.pem|cert.key"
+      }
+    },
+    "memmon-ridohub-x509": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings__cs": "HostName=<hub=name>.azure-devices.net;X509Key=cert.pem|cert.key"
+      }
+    },
+    "memmon-broker-x509": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings__cs": "HostName=testmosquitto.org;tcpport=8884;X509Key=ca-device.pem|ca-device.key;cafile=mosquitto.org.crt"
+      }
+    }
+  }
+}

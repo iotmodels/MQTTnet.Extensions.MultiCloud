@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <EnvironmentVariables>
+      <E2EHubConnectionString>HostName=[hubName].azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=[SasKey]</E2EHubConnectionString>
+	  <TestHubName>[hubName].azure-devices.net</TestHubName>	
+    </EnvironmentVariables>
+  </RunConfiguration>
+</RunSettings>
