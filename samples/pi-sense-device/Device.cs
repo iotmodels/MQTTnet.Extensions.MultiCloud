@@ -107,7 +107,7 @@ public class Device : BackgroundService
         }
     }
 
-    private async Task<PropertyAck<int>> Property_interval_UpdateHandler(PropertyAck<int> p)
+    private PropertyAck<int> Property_interval_UpdateHandler(PropertyAck<int> p)
     {
         ArgumentNullException.ThrowIfNull(client);
         _logger.LogInformation($"New prop received");
@@ -131,10 +131,10 @@ public class Device : BackgroundService
                             default_interval;
         };
         client.Property_interval.PropertyValue = ack;
-        return await Task.FromResult(ack);
+        return ack;
     }
 
-    private async Task<PropertyAck<bool>> Property_combineTelemetry_UpdateHandler(PropertyAck<bool> p)
+    private PropertyAck<bool> Property_combineTelemetry_UpdateHandler(PropertyAck<bool> p)
     {
         ArgumentNullException.ThrowIfNull(client);
         var ack = new PropertyAck<bool>(p.Name)
@@ -146,7 +146,7 @@ public class Device : BackgroundService
             LastReported = p.Value
         };
         client.Property_combineTelemetry.PropertyValue = ack;
-        return await Task.FromResult(ack);
+        return ack;
     }
 
     private string oldColor = "white";
