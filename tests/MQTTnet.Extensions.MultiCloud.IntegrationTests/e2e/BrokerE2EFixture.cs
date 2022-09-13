@@ -70,7 +70,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             //};
             //await ta.SubscribeAsync("pnp/e2e-device/props/interval");
 
-            await ta.PublishStringAsync("pnp/e2e-device/props/interval/set", Json.Stringify(3), Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true);
+            await ta.PublishJsonAsync("pnp/e2e-device/props/interval/set", 3, Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true);
 
             cs.ModelId = Imemmon.ModelId;
             var td = new memmon(await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs));

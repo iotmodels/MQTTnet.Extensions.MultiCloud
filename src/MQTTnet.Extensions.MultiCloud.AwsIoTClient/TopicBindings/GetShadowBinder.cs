@@ -41,7 +41,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         {
             var pendingGetShadowRequest = new TaskCompletionSource<string>();
             pendingGetShadowRequests.Enqueue(pendingGetShadowRequest);
-            await connection.PublishStringAsync(topicBase + "/get", string.Empty, Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, cancellationToken);
+            await connection.PublishJsonAsync(topicBase + "/get", string.Empty, Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, cancellationToken);
             return await pendingGetShadowRequest.Task.TimeoutAfter(TimeSpan.FromSeconds(15));
         }
     }

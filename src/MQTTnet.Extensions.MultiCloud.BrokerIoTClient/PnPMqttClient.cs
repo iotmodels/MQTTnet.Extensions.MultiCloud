@@ -12,16 +12,16 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         public PnPMqttClient(IMqttClient c, string modelId = "")
         {
             Connection = c;
-            var pubAck = Connection.PublishStringAsync(
+            var pubAck = Connection.PublishJsonAsync(
                 BirthConvention.BirthTopic(Connection.Options.ClientId),
                 new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
                 {
                     ModelId = modelId
-                }.ToJson(),
+                },
                 Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true).Result;
             InitialState = string.Empty;
         }
         public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default) =>
-            Connection.PublishStringAsync($"pnp/{Connection.Options.ClientId}/telemetry", Json.Stringify(payload), Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, t);
+            Connection.PublishJsonAsync($"pnp/{Connection.Options.ClientId}/telemetry", payload, Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, t);
     }
 }

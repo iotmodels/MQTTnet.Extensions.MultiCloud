@@ -20,6 +20,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
                     using (Utf8JsonWriter writer = new Utf8JsonWriter(ms))
                     {
                         writer.WriteStartObject();
+                        //writer.WriteStartObject("properties");
+                        //writer.WriteStartObject("reported");
                         foreach (var el in doc.RootElement.EnumerateObject())
                         {
                             if (!el.Name.StartsWith("$"))
@@ -53,12 +55,15 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
                                 writer.WriteEndObject();
                             }
                         }
+                        //writer.WriteEndObject();
+                        //writer.WriteEndObject();
                         writer.WriteEndObject();
                         writer.Flush();
                         ms.Position = 0;
                         using (StreamReader sr = new StreamReader(ms))
                         {
-                            return sr.ReadToEnd();
+                            string res = sr.ReadToEnd();
+                            return res;
                         }
                     }
                 }

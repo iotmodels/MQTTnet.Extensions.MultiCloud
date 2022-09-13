@@ -16,7 +16,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 
         public async Task<int> ReportPropertyAsync(object payload, CancellationToken cancellationToken = default)
         {
-            await connection.PublishStringAsync($"pnp/{connection.Options.ClientId}/props/{name}", Json.Stringify(payload), Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true, cancellationToken);
+            await connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/props/{name}", payload, Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true, cancellationToken);
             return 0; //versions not supported on plain MQTT
         }
     }

@@ -30,7 +30,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
                     {
                         //(int rid, _) = TopicParser.ParseTopic(topic);
                         TResponse response = await OnCmdDelegate.Invoke(req);
-                        _ = connection.PublishStringAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", Json.Stringify(response));
+                        _ = connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", response);
                     }
                 }
             };

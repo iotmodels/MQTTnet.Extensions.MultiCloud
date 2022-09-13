@@ -41,7 +41,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
             {
                 { name, payload }
             };
-            return await connection.PublishStringAsync(topic, Json.Stringify(typedPayload), Protocol.MqttQualityOfServiceLevel.AtMostOnce, false, cancellationToken);
+            return await connection.PublishJsonAsync(topic, typedPayload, Protocol.MqttQualityOfServiceLevel.AtMostOnce, false, cancellationToken);
         }
     }
 }

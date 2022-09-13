@@ -30,7 +30,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                     {
                         (int rid, _) = TopicParser.ParseTopic(topic);
                         CommandResponse response = await OnCmdDelegate.Invoke(req);
-                        _ = connection.PublishStringAsync($"$iothub/methods/res/{response.Status}/?$rid={rid}", Json.Stringify(response));
+                        _ = connection.PublishJsonAsync($"$iothub/methods/res/{response.Status}/?$rid={rid}", Json.Stringify(response));
                     }
                 }
             };
