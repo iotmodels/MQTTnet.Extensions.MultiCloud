@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.UnitTests
+namespace MQTTnet.Extensions.MultiCloud.UnitTests
 {
     internal class MockMqttClient : IMqttClient
     {

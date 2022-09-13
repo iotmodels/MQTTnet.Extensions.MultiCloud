@@ -3,7 +3,7 @@ using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MQTTnet.Extensions.UnitTests.HubClient
+namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
 {
     public class CommandBinderFixture
     {

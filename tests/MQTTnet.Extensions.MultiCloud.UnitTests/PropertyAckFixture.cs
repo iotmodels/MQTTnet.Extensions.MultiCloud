@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace MQTTnet.Extensions.UnitTests
+namespace MQTTnet.Extensions.MultiCloud.UnitTests
 {
     internal class AComplexObj
     {

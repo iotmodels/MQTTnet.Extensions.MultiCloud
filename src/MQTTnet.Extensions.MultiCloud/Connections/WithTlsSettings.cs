@@ -19,7 +19,10 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
                 if (!string.IsNullOrEmpty(cs.X509Key))
                 {
                     var cert = X509ClientCertificateLocator.Load(cs.X509Key);
-                    cs.ClientId = X509CommonNameParser.GetCNFromCertSubject(cert.Subject);
+                    if (string.IsNullOrEmpty(cs.ClientId))
+                    {
+                        cs.ClientId = X509CommonNameParser.GetCNFromCertSubject(cert.Subject);
+                    }
                     certs.Add(cert);
                 }
 
