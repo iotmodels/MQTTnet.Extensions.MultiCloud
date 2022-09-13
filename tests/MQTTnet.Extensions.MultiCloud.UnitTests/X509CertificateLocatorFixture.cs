@@ -2,7 +2,7 @@
 using System.Security.Cryptography.X509Certificates;
 using Xunit;
 
-namespace MQTTnet.Extensions.UnitTests
+namespace MQTTnet.Extensions.MultiCloud.UnitTests
 {
     public class X509CertificateLocatorFixture
     {

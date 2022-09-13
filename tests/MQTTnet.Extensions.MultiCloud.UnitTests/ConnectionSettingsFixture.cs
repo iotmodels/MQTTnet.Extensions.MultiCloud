@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace MQTTnet.Extensions.UnitTests
+namespace MQTTnet.Extensions.MultiCloud.UnitTests
 {
     public class ConnectionSettingsFixture
     {
@@ -26,6 +26,21 @@ namespace MQTTnet.Extensions.UnitTests
             Assert.Equal(AuthType.Sas, new ConnectionSettings { SharedAccessKey = "key" }.Auth);
             Assert.Equal(AuthType.Basic, new ConnectionSettings { }.Auth);
         }
+
+        //[Fact]
+        //public void InferClientIdFromUserName()
+        //{
+        //    Assert.Equal("user", new ConnectionSettings { UserName = "user" }.ClientId);
+        //    Assert.Equal("client", new ConnectionSettings { UserName = "user", ClientId = "client" }.ClientId);
+        //}
+
+        //[Fact]
+        //public void InferClientIdFromCert()
+        //{
+        //    Assert.Equal("onething", new ConnectionSettings { X509Key = "onething.pem|onething.key" }.ClientId);
+        //    Assert.Equal("client", new ConnectionSettings { X509Key = "onething.pem|onething.key",  ClientId = "client" }.ClientId);
+        //}
+
 
         [Fact]
         public void ParseConnectionString()

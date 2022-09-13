@@ -1,11 +1,10 @@
-﻿
-using MQTTnet.Client;
+﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MQTTnet.Extensions.UnitTests.HubClient
+namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
 {
     internal class AComplexObj
     {
