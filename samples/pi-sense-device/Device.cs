@@ -1,6 +1,5 @@
 using dtmi_rido_pnp_sensehat;
 using Iot.Device.SenseHat;
-using Iot.Device.Tlc1543;
 using Microsoft.ApplicationInsights;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
@@ -16,11 +15,10 @@ public class Device : BackgroundService
 
     private readonly ILogger<Device> _logger;
     private readonly IConfiguration _configuration;
-    private TelemetryClient _telemetryClient;
+    private readonly TelemetryClient _telemetryClient;
 
     private const int default_interval = 5;
-
-    ConnectionSettings connectionSettings;
+    private readonly ConnectionSettings connectionSettings;
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
     {
         _logger = logger;
@@ -79,7 +77,7 @@ public class Device : BackgroundService
                     await client.Telemetry_p.SendTelemetryAsync(sh.Pressure.Pascals, stoppingToken);
                 }
 
-            }    
+            }
             else
             {
                 _telemetryClient.TrackMetric("temp1", 2);
@@ -93,7 +91,7 @@ public class Device : BackgroundService
                         t2 = GenerateSensorReading(t1, 5, 35),
                         h = Environment.WorkingSet / 1000000,
                         p = Environment.WorkingSet / 1000000
-                    }, stoppingToken);;
+                    }, stoppingToken); ;
                 }
                 else
                 {
@@ -139,17 +137,19 @@ public class Device : BackgroundService
     private async Task<PropertyAck<bool>> Property_combineTelemetry_UpdateHandler(PropertyAck<bool> p)
     {
         ArgumentNullException.ThrowIfNull(client);
-        var ack = new PropertyAck<bool>(p.Name);
-        ack.Description = "desired notification accepted";
-        ack.Status = 200;
-        ack.Version = p.Version;
-        ack.Value = p.Value;
-        ack.LastReported = p.Value;
+        var ack = new PropertyAck<bool>(p.Name)
+        {
+            Description = "desired notification accepted",
+            Status = 200,
+            Version = p.Version,
+            Value = p.Value,
+            LastReported = p.Value
+        };
         client.Property_combineTelemetry.PropertyValue = ack;
         return await Task.FromResult(ack);
     }
 
-    string oldColor = "white";
+    private string oldColor = "white";
     private async Task<Cmd_ChangeLCDColor_Response> Cmd_ChangeLCDColor_Handler(Cmd_ChangeLCDColor_Request req)
     {
         _logger.LogInformation($"New Command received");
@@ -171,7 +171,7 @@ public class Device : BackgroundService
             }
             Console.BackgroundColor = orig;
 
-        }    
+        }
         var result = new Cmd_ChangeLCDColor_Response()
         {
             response = oldColor
@@ -208,8 +208,9 @@ public class Device : BackgroundService
         return output;
     }
 
-    Random random = new Random();
-    double GenerateSensorReading(double currentValue, double min, double max)
+    private readonly Random random = new Random();
+
+    private double GenerateSensorReading(double currentValue, double min, double max)
     {
         double percentage = 15;
         double value = currentValue * (1 + (percentage / 100 * (2 * random.NextDouble() - 1)));

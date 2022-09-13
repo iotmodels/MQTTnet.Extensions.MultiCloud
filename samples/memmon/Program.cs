@@ -1,6 +1,6 @@
-using System.Diagnostics;
-using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using memmon;
+using Microsoft.ApplicationInsights.Extensibility.Implementation;
+using System.Diagnostics;
 
 TelemetryDebugWriter.IsTracingDisabled = Debugger.IsAttached;
 

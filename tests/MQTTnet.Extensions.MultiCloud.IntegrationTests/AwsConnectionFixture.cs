@@ -1,15 +1,11 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Exceptions;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 {
     public class TestAws
     {
-        MqttClient? client;
+        private readonly MqttClient? client;
         public TestAws()
         {
             client = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
@@ -18,7 +14,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact(Skip = "Tested with GetShadow")]
         public async Task ClientCert()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = "a38jrw6jte2l2x-ats.iot.us-west-1.amazonaws.com",

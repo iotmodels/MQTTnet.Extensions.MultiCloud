@@ -1,10 +1,8 @@
-﻿using MQTTnet;
-using MQTTnet.Client;
+﻿using MQTTnet.Client;
 using MQTTnet.Diagnostics;
 using MQTTnet.Packets;
 using System;
 using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 

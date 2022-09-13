@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
     internal static class SubscribeExtension
     {
-        private static List<string> subscriptions = new List<string>();
+        private static readonly List<string> subscriptions = new List<string>();
 
         public static void SubscribeWithReply(this IMqttClient client, string topic, CancellationToken cancellationToken = default)
         {

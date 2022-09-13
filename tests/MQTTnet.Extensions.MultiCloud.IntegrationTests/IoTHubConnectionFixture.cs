@@ -1,16 +1,12 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Exceptions;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System;
 using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 {
     public class IoTHubConnectionFixture
     {
-        MqttClient? client;
+        private readonly MqttClient? client;
         public IoTHubConnectionFixture()
         {
             client = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
@@ -19,7 +15,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task DeviceSas()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),
@@ -38,7 +38,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ModuleSas()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),
@@ -57,7 +61,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task DeviceCert()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),
@@ -74,7 +82,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ModuleCert()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),

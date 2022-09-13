@@ -12,7 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         public GenericCommand(IMqttClient connection)
         {
             connection.SubscribeWithReply("$iothub/methods/POST/#");
-            
+
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;

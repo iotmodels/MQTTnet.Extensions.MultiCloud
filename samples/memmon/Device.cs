@@ -1,12 +1,11 @@
-using System.Text;
-using System.Diagnostics;
-using Microsoft.ApplicationInsights;
-using Humanizer;
-
 using dtmi_rido_pnp_memmon;
-using System.Reflection;
-using MQTTnet.Extensions.MultiCloud.Connections;
+using Humanizer;
+using Microsoft.ApplicationInsights;
 using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.Connections;
+using System.Diagnostics;
+using System.Reflection;
+using System.Text;
 
 namespace memmon;
 
@@ -52,7 +51,7 @@ public class Device : BackgroundService
         _logger.LogWarning("Connected");
 
         Type baseClient = client.GetType().BaseType;
-        infoVersion = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion",BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";  
+        infoVersion = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
 
         client.Property_enabled.OnProperty_Updated = Property_enabled_UpdateHandler;
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
@@ -60,7 +59,7 @@ public class Device : BackgroundService
 
         await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
         await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-        
+
         await client.Property_interval.ReportPropertyAsync(stoppingToken);
 
         client.Property_enabled.PropertyValue.SetDefault(default_enabled);
@@ -93,7 +92,7 @@ public class Device : BackgroundService
         await Task.Yield();
     }
 
-    
+
 
     private async Task<PropertyAck<bool>> Property_enabled_UpdateHandler(PropertyAck<bool> p)
     {
@@ -165,7 +164,7 @@ public class Device : BackgroundService
         result.diagnosticResults.Add("machine name", Environment.MachineName);
         result.diagnosticResults.Add("os version", Environment.OSVersion.ToString());
         result.diagnosticResults.Add("started", TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3));
-        
+
         if (req.DiagnosticsMode == DiagnosticsMode.complete)
         {
             result.diagnosticResults.Add("sdk info:", infoVersion);

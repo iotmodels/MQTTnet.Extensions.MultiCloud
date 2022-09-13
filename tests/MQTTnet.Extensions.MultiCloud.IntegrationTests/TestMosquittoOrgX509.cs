@@ -1,15 +1,12 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Exceptions;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 {
     public class TestMosquittoOrg
     {
-        MqttClient? client;
+        private readonly MqttClient? client;
         public TestMosquittoOrg()
         {
             client = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
@@ -18,7 +15,10 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task LetsEncrypt()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
 
             var cs = new ConnectionSettings()
             {
@@ -37,7 +37,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task FailsWithouCA()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = "test.mosquitto.org",
@@ -57,10 +61,14 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             }
         }
 
-        [Fact(Skip ="Fails if called after let's encrypt")] // TODO invesigate. seems Cert Callback has state
+        [Fact(Skip = "Fails if called after let's encrypt")] // TODO invesigate. seems Cert Callback has state
         public async Task ConfiguredCA()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = "test.mosquitto.org",
@@ -79,7 +87,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ClientCert()
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             var cs = new ConnectionSettings()
             {
                 HostName = "test.mosquitto.org",

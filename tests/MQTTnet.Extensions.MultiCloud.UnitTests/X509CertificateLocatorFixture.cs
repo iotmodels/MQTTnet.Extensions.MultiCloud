@@ -15,7 +15,7 @@ namespace MQTTnet.Extensions.UnitTests
             Assert.Equal("CN=onething", cert.SubjectName.Name);
             Assert.Equal("8E983707D3F802E6717BBCD193129946573F31D4", cert.Thumbprint);
         }
-        
+
         [Fact]
         public void LoadCertFromStore()
         {
