@@ -1,14 +1,16 @@
 ﻿using MQTTnet.Client;
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 {
     public class GenericDesiredUpdatePropertyBinder
     {
-        public Func<JsonNode, Task<GenericPropertyAck>> OnProperty_Updated = null;
+        public Func<JsonNode, GenericPropertyAck> OnProperty_Updated = null;
         public GenericDesiredUpdatePropertyBinder(IMqttClient connection)
         {
             connection.SubscribeWithReply("$iothub/twin/PATCH/properties/desired/#");
@@ -25,10 +27,11 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                      {
                          if (OnProperty_Updated != null)
                          {
-                             var ack = await OnProperty_Updated(desired);
+                             var ack = OnProperty_Updated(desired);
                              if (ack != null)
                              {
-                                 _ = updateTwin.ReportPropertyAsync(ack.BuildAck());
+                                 var v = await updateTwin.ReportPropertyAsync(ack.BuildAck());
+                                 Trace.TraceInformation($"Ack updated to version: {v}");
                              }
                          }
                      }
