@@ -46,7 +46,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 
             if (puback.ReasonCode == 0)
             {
-                if (!pendingGetTwinRequests.TryGetValue(rid, out tcs))
+                if (!pendingGetTwinRequests.TryAdd(rid, tcs))
                 {
                     Trace.TraceWarning($"GetTwinBinder: RID {rid} not added to pending requests");
                 }

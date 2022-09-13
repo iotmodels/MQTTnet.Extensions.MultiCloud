@@ -48,9 +48,9 @@ namespace iothub_sample
 
             client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
 
-            //var v = await client.ReportPropertyAsync(new { started = DateTime.Now }, stoppingToken);
+            var v = await client.ReportPropertyAsync(new { started = "DateTime.Now" }, stoppingToken);
 
-            //var twin = await client.GetTwinAsync(stoppingToken);
+            var twin = await client.GetTwinAsync(stoppingToken);
 
             client.OnCommandReceived = async m =>
             {
