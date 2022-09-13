@@ -61,6 +61,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
                     .Build(),
                 cancellationToken).Result;
 
+            mqtt.ReSuscribe();
+
             reconnectTimer = new Timer(o =>
             {
                 ConnectWithTimer(mqtt, connectionSettings, cancellationToken);
