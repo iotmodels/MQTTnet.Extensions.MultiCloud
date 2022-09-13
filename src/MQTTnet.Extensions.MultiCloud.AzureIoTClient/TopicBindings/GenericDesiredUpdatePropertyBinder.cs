@@ -37,7 +37,5 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                  await Task.Yield();
              };
         }
-
-
     }
 }

@@ -17,7 +17,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
                 Value = Json.Stringify(new {myProp = "myVal"})
             };
             var jsonAck = ack.BuildAck();
-            Assert.Equal("", jsonAck);
+            Assert.Equal("{\"myProp\":{\"ac\":200,\"av\":0,\"ad\":null,\"value\":\"myVal\"}}", jsonAck);
         }
     }
 }
