@@ -1,5 +1,6 @@
 ﻿using MQTTnet.Client;
 using System;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -51,6 +52,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         {
             if (string.IsNullOrEmpty(twinJson))
             {
+                Trace.TraceWarning("InitFromTwin: Cannot initialize from empty twin");
                 return new PropertyAck<T>(propName, componentName) { Value = defaultValue };
             }
 

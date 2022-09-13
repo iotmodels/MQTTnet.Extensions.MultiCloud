@@ -201,7 +201,7 @@ public interface Imemmon
 }
 ```
 
-The `Imemmon` interface is implemented for Azure, AWS and Hive.
+The `Imemmon` interface is implemented for Azure, AWS and a generic Broker.
 
 ### X509 Support
 

@@ -6,8 +6,8 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 {
     public class UpdatePropertyBinder : IReportPropertyBinder
     {
-        readonly IMqttClient connection;
-        readonly string name;
+        private readonly IMqttClient connection;
+        private readonly string name;
         public UpdatePropertyBinder(IMqttClient connection, string propName)
         {
             this.connection = connection;

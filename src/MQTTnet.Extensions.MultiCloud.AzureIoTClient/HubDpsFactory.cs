@@ -10,7 +10,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
     public class HubDpsFactory
     {
-        static Timer reconnectTimer;
+        private static Timer reconnectTimer;
         public static ConnectionSettings ConnectionSettings;
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectionString, CancellationToken cancellationToken = default) =>
             await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectionString), cancellationToken);
@@ -32,7 +32,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             MqttClientConnectResult connAck;
             if (cs.Auth == AuthType.Sas)
             {
-                connAck = ConnectWithTimer(mqtt,cs, cancellationToken);
+                connAck = ConnectWithTimer(mqtt, cs, cancellationToken);
             }
             else
             {
@@ -45,9 +45,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             }
             return mqtt;
         }
-              
 
-        static MqttClientConnectResult ConnectWithTimer(IMqttClient mqtt, ConnectionSettings connectionSettings, CancellationToken cancellationToken = default)
+        private static MqttClientConnectResult ConnectWithTimer(IMqttClient mqtt, ConnectionSettings connectionSettings, CancellationToken cancellationToken = default)
         {
             if (mqtt.IsConnected)
             {
@@ -61,6 +60,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
                     .WithKeepAlivePeriod(TimeSpan.FromSeconds(connectionSettings.KeepAliveInSeconds))
                     .Build(),
                 cancellationToken).Result;
+
+            mqtt.ReSuscribe();
 
             reconnectTimer = new Timer(o =>
             {
