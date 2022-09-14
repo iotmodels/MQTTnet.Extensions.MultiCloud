@@ -60,6 +60,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             await Task.Delay(500);
 
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
+            await td.InitState();
+
             td.Property_interval.OnProperty_Updated = m =>
             {
                 return new PropertyAck<int>("interval")
@@ -71,7 +73,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                 };
             };
 
-            await td.InitState();
+           
+
             await td.Property_interval.InitPropertyAsync(td.InitialState, defaultInterval);
 
             await Task.Delay(500);
