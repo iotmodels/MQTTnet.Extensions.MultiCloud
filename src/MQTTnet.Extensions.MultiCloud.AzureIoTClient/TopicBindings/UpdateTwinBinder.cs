@@ -18,7 +18,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         public UpdateTwinBinder(IMqttClient connection)
         {
             this.connection = connection;
-            connection.SubscribeWithReply("$iothub/twin/res/#");
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
@@ -52,8 +51,11 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
             };
         }
 
+
+
         public async Task<int> ReportPropertyAsync(object payload, CancellationToken cancellationToken = default)
         {
+            await connection.SubscribeWithReplyAsync("$iothub/twin/res/#");
             var rid = RidCounter.NextValue();
             var puback = await connection.PublishJsonAsync($"$iothub/twin/PATCH/properties/reported/?$rid={rid}", payload, MqttQualityOfServiceLevel.AtMostOnce, false, cancellationToken);
             var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
