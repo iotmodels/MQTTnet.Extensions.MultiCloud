@@ -33,4 +33,4 @@ jobs:
       run: cd _nupkgs && dotnet nuget push * --api-key ${{ secrets.MYGET_TOKEN }} --source https://www.myget.org/F/ridopackages/api/v2/package --skip-duplicate --no-symbols
 
     - name: Annotate Versions
-      run: echo "Packages Pushed to MyGet with version {{ steps.nbgv.NuGetPackageVersion }}"
+      run: echo "Packages Pushed to MyGet with version {{ steps.nbgv.NuGetPackageVersion }}" >> $GITHUB_STEP_SUMMARY
