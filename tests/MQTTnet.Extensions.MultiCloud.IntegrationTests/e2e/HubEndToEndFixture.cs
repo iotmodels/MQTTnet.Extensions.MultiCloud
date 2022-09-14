@@ -11,7 +11,6 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
     {
         private static readonly string hubConnectionString = Environment.GetEnvironmentVariable("E2EHubConnectionString")!;
         private static readonly string hubName = Environment.GetEnvironmentVariable("TestHubName")!;
-        private readonly string deviceId = string.Empty;
         private const int defaultInterval = 23;
         private readonly RegistryManager rm = RegistryManager.CreateFromConnectionString(hubConnectionString);
 
@@ -42,7 +41,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
 
             var deviceId = "memmon-test" + new Random().Next(100);
             var device = await GetOrCreateDeviceAsync(deviceId);
-
+            while (device.Status != DeviceStatus.Enabled)
+            {
+                device = await GetOrCreateDeviceAsync(deviceId);
+            }
+            
             var twin = await rm.GetTwinAsync(deviceId);
             int interval = 5;
             var patch = new
@@ -55,6 +58,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                     }
                 }
             };
+
+
             await rm.UpdateTwinAsync(deviceId, JsonSerializer.Serialize(patch), twin.ETag);
 
             await Task.Delay(500);
@@ -162,6 +167,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                 result.diagnosticResults.Add("test", "ok");
                 return result;
             };
+            await Task.Delay(200);
             var sc = ServiceClient.CreateFromConnectionString(hubConnectionString);
             CloudToDeviceMethod c2dMethod = new CloudToDeviceMethod("getRuntimeStats");
             c2dMethod.SetPayloadJson(JsonSerializer.Serialize(1));

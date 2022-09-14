@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+using MQTTnet.Internal;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -10,13 +11,17 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 {
     public class DesiredUpdatePropertyBinder<T>
     {
+        IMqttClient connection;
+        string name;
+        string cName;
         public Func<PropertyAck<T>, PropertyAck<T>>? OnProperty_Updated = null;
-        public DesiredUpdatePropertyBinder(IMqttClient connection, string propertyName, string componentName = "")
+
+        public DesiredUpdatePropertyBinder(IMqttClient c, IReportPropertyBinder propertyBinder, string propertyName, string componentName = "")
         {
-            var subAck = connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/props/{propertyName}/+").Result;
-            subAck.TraceErrors();
-            IReportPropertyBinder propertyBinder = new UpdatePropertyBinder(connection, propertyName);
-            connection.ApplicationMessageReceivedAsync += async m =>
+            name = propertyName;
+            cName = componentName;
+            connection = c;
+            c.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
                 if (topic.StartsWith($"pnp/{connection.Options.ClientId}/props/{propertyName}/set"))
@@ -41,13 +46,19 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
                             if (ack != null)
                             {
                                 //_ = updateTwin.SendRequestWaitForResponse(ack);
-                                propertyBinder.ReportPropertyAsync(ack).RunSynchronously();
+                                _ = propertyBinder.ReportPropertyAsync(ack);
                             }
                         }
                     }
                 }
                 await Task.Yield();
             };
+        }
+
+        public async Task InitSubscriptions(IMqttClient connection)
+        {
+            var subAck = await connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/props/{name}/+");
+            subAck.TraceErrors();
         }
     }
 }

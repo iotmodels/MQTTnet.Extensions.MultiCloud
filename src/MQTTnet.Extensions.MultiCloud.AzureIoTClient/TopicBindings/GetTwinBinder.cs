@@ -19,7 +19,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         public GetTwinBinder(IMqttClient conn)
         {
             connection = conn;
-            connection.SubscribeWithReply("$iothub/twin/res/#");
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
@@ -39,6 +38,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 
         public async Task<string> ReadPropertiesDocAsync(CancellationToken cancellationToken = default)
         {
+            await connection.SubscribeWithReplyAsync("$iothub/twin/res/#");
             var rid = RidCounter.NextValue();
             lastRid = rid; // for testing
             var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
