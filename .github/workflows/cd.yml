@@ -25,6 +25,7 @@ jobs:
         dotnet-version: |
           6.0.x
           3.1.x
+
     - name: Restore dependencies
       run: dotnet restore
 
@@ -44,3 +45,4 @@ jobs:
         echo " with SemVer ${{ steps.nbgv.outputs.SemVer2 }}" >> $GITHUB_STEP_SUMMARY
         echo " with NuGet version ${{ steps.nbgv.outputs.NuGetPackageVersion }}" >> $GITHUB_STEP_SUMMARY
         echo " from Commit ${{ steps.nbgv.outputs.GitCommitId}}" >> $GITHUB_STEP_SUMMARY
+

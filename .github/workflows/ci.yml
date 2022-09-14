@@ -38,5 +38,10 @@ jobs:
         E2EHubConnectionString: ${{secrets.E2EHubConnectionString}}
         TestHubName: ${{secrets.TestHubName}} 
       run: dotnet test --no-build --verbosity normal --logger trx
-    - name: Pack
-      run: dotnet pack -c Release -o _nupkgs
+
+    - name: Process trx reports with default
+      if: always()
+      uses: im-open/process-dotnet-test-results@v2.1.3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
