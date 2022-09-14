@@ -25,20 +25,23 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 
         public string PropertyName => propertyName;
 
-        public WritableProperty(IMqttClient connection, string name, string component = "")
+        IMqttClient connection;
+
+        public WritableProperty(IMqttClient c, string name, string component = "")
         {
+            connection = c;
             propertyName = name;
             componentName = component;
-            //updateTwin = new UpdateTwinBinder(connection);
-            updatePropertyBinder = new UpdatePropertyBinder(connection, name);
+            updatePropertyBinder = new UpdatePropertyBinder(c, name);
             PropertyValue = new PropertyAck<T>(name, componentName);
-            desiredBinder = new DesiredUpdatePropertyBinder<T>(connection, name, componentName);
+            desiredBinder = new DesiredUpdatePropertyBinder<T>(c, updatePropertyBinder, name, componentName);
         }
 
         public async Task<int> ReportPropertyAsync(CancellationToken token = default) => await updatePropertyBinder.ReportPropertyAsync(PropertyValue, token);
 
         public async Task InitPropertyAsync(string twin, T defaultValue, CancellationToken cancellationToken = default)
         {
+            await desiredBinder!.InitSubscriptions(connection);
             if (!string.IsNullOrEmpty(twin))
             {
                 Trace.TraceWarning("twin not expected");
