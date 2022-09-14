@@ -35,9 +35,6 @@ jobs:
     - name: Push MyGet
       run: cd _nupkgs && dotnet nuget push * --api-key ${{ secrets.MYGET_TOKEN }} --source https://www.myget.org/F/ridopackages/api/v2/package --skip-duplicate --no-symbols
 
-    - uses: dotnet/nbgv@master
-      id: nbgv
-
     - name: Annotate Versions
       run: |
         echo " ## Packages Pushed to MyGet :gem: " >> $GITHUB_STEP_SUMMARY
