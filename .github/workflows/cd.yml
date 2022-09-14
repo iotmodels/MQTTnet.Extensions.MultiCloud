@@ -11,15 +11,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+
+    - uses: dotnet/nbgv@master
+      id: nbgv
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: |
           6.0.x
           3.1.x
+
     - name: Restore dependencies
       run: dotnet restore
 
@@ -31,3 +37,12 @@ jobs:
 
     - name: Push MyGet
       run: cd _nupkgs && dotnet nuget push * --api-key ${{ secrets.MYGET_TOKEN }} --source https://www.myget.org/F/ridopackages/api/v2/package --skip-duplicate --no-symbols
+
+  - name: Annotate Versions
+      run: |
+        echo " ## Packages Pushed to MyGet :gem: " >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo " with SemVer ${{ steps.nbgv.outputs.SemVer2 }}" >> $GITHUB_STEP_SUMMARY
+        echo " with NuGet version ${{ steps.nbgv.outputs.NuGetPackageVersion }}" >> $GITHUB_STEP_SUMMARY
+        echo " from Commit ${{ steps.nbgv.outputs.GitCommitId}}" >> $GITHUB_STEP_SUMMARY
+
