@@ -10,10 +10,11 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 {
     public class GenericDesiredUpdatePropertyBinder
     {
+        IMqttClient connection;
         public Func<JsonNode, GenericPropertyAck> OnProperty_Updated = null;
-        public GenericDesiredUpdatePropertyBinder(IMqttClient connection, IReportPropertyBinder updTwinBinder)
+        public GenericDesiredUpdatePropertyBinder(IMqttClient c, IReportPropertyBinder updTwinBinder)
         {
-            connection.SubscribeWithReply("$iothub/twin/PATCH/properties/desired/#");
+            connection = c;
             connection.ApplicationMessageReceivedAsync += async m =>
              {
                  var topic = m.ApplicationMessage.Topic;
@@ -37,5 +38,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                  await Task.Yield();
              };
         }
+        public async Task InitiSubscriptionsAsync() => await connection.SubscribeWithReplyAsync("$iothub/twin/PATCH/properties/desired/#");
     }
 }

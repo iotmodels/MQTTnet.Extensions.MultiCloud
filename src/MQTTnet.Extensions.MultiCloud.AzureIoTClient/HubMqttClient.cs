@@ -29,6 +29,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 
         public async Task InitState()
         {
+            await command.InitSubscriptionsAsync();
+            await genericDesiredUpdateProperty.InitiSubscriptionsAsync();
             InitialState = await GetTwinAsync();
         }
 

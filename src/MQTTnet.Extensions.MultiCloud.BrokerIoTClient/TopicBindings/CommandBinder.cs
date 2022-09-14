@@ -27,7 +27,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
                     if (OnCmdDelegate != null && req != null)
                     {
                         TResponse response = OnCmdDelegate.Invoke(req);
-                        connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", response).RunSynchronously();
+                        _ = connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", response);
                     }
                 }
                 await Task.Yield();
