@@ -87,6 +87,11 @@ public class Device : BackgroundService
     private async Task Connection_DisconnectedAsync(MQTTnet.Client.MqttClientDisconnectedEventArgs arg)
     {
         _telemetryClient.TrackTrace("Client Disconnected: " + arg.ReasonString);
+        if (arg.Exception != null)
+        {
+            _telemetryClient.TrackException(arg.Exception);
+        }
+
         lastDiscconectReason = arg.ReasonString;
         reconnectCounter++;
         await Task.Yield();

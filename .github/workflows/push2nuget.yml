@@ -46,6 +46,6 @@ jobs:
       run: |
         echo " ## Packages Pushed to MyGet :gem: " >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo " with SemVer ${{ steps.nbgv.SemVer2 }}" >> $GITHUB_STEP_SUMMARY
-        echo " with NuGet version ${{ steps.nbgv.NuGetPackageVersion }}" >> $GITHUB_STEP_SUMMARY
-        echo " from Commit ${{ steps.nbgv.GitCommitId}}" >> $GITHUB_STEP_SUMMARY
+        echo " with SemVer ${{ steps.nbgv.outputs.SemVer2 }}" >> $GITHUB_STEP_SUMMARY
+        echo " with NuGet version ${{ steps.nbgv.outputs.NuGetPackageVersion }}" >> $GITHUB_STEP_SUMMARY
+        echo " from Commit ${{ steps.nbgv.outputs.GitCommitId}}" >> $GITHUB_STEP_SUMMARY

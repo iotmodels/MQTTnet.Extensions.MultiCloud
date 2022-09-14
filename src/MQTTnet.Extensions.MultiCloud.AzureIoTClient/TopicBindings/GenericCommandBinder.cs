@@ -7,12 +7,12 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 {
     public class GenericCommand
     {
+        readonly IMqttClient connection;
         public Func<GenericCommandRequest, CommandResponse> OnCmdDelegate { get; set; }
 
-        public GenericCommand(IMqttClient connection)
+        public GenericCommand(IMqttClient c)
         {
-            connection.SubscribeWithReply("$iothub/methods/POST/#");
-
+            connection = c;
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
@@ -36,5 +36,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                 await Task.Yield();
             };
         }
+        public async Task InitSubscriptionsAsync() => await connection.SubscribeWithReplyAsync("$iothub/methods/POST/#");
     }
 }
