@@ -1,10 +1,10 @@
-name: memmon-docker
+name: samples-docker
 
 on:
   push:
     branches: [ "master", "dev" ]
     paths:
-      - 'samples/memmon/**'
+      - 'samples/**'
 
 jobs:
   build:
@@ -20,10 +20,20 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Build the Docker image
+
+    - name: memmon docker
       run: docker build . --file samples/memmon/Dockerfile --tag ghcr.io/iotmodels/memmon:x64
-    - name: push image
+
+    - name: memmon docker push 
       run: docker push ghcr.io/iotmodels/memmon:x64
+
+    - name: pi-sense docker
+      run: docker build . --file samples/pi-sense-device/Dockerfile --tag ghcr.io/iotmodels/pi-sense-device:x64
+
+    - name: pi-sense docker push 
+      run: docker push ghcr.io/iotmodels/pi-sense-device:x64
+
+
     #- name: Build the Docker image ARM
     #  run: docker build . --file samples/memmon/Dockerfile.pi --tag ghcr.io/ridomin/memmon:arm
     #- name: push image arm
