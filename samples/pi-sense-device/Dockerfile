@@ -5,14 +5,14 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["pi-sense-device/pi-sense-device.csproj", "pi-sense-device/"]
-RUN dotnet restore "pi-sense-device/pi-sense-device.csproj"
-COPY . .
+COPY samples/pi-sense-device/. pi-sense-device/
+RUN cd pi-sense-device && chmod +x ./proj2nupkg.sh && ./proj2nupkg.sh && cd ..
+
 WORKDIR "/src/pi-sense-device"
 RUN dotnet build "pi-sense-device.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "pi-sense-device.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "pi-sense-device.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
