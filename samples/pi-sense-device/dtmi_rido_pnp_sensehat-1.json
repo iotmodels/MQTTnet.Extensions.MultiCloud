@@ -13,6 +13,12 @@
     },
     {
       "@type": "Property",
+      "name": "sdkInfo",
+      "displayName": "SDK info",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
       "name": "ipaddr",
       "schema": "string"
     },
@@ -20,7 +26,7 @@
       "@type": "Property",
       "name": "combineTelemetry",
       "schema": "boolean",
-      "writable" :  true
+      "writable": true
     },
     {
       "@type": [ "Property", "TimeSpan" ],

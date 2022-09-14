@@ -10,8 +10,8 @@ namespace dtmi_rido_pnp_sensehat.mqtt;
 public class sensehat : PnPMqttClient, Isensehat
 {
     public IReadOnlyProperty<string> Property_piri { get; set; }
-
     public IReadOnlyProperty<string> Property_ipaddr { get; set; }
+    public IReadOnlyProperty<string> Property_sdkInfo { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public IWritableProperty<bool> Property_combineTelemetry { get; set; }
     public ITelemetry<double> Telemetry_t1 { get; set; }
@@ -22,11 +22,11 @@ public class sensehat : PnPMqttClient, Isensehat
 
     public ICommand<Cmd_ChangeLCDColor_Request, Cmd_ChangeLCDColor_Response> Command_ChangeLCDColor { get; set; }
 
-
     internal sensehat(IMqttClient c) : base(c, Isensehat.ModelId)
     {
         Property_piri = new ReadOnlyProperty<string>(c, "piri");
         Property_ipaddr = new ReadOnlyProperty<string>(c, "ipaddr");
+        Property_sdkInfo = new ReadOnlyProperty<string>(c, "sdkInfo");
         Property_combineTelemetry = new WritableProperty<bool>(c, "combineTelemetry");
         Property_interval = new WritableProperty<int>(c, "interval");
         Telemetry_t1 = new Telemetry<double>(c, "t1");

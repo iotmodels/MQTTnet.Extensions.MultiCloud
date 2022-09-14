@@ -11,6 +11,7 @@ public class sensehat : HubMqttClient, Isensehat
 {
     public IReadOnlyProperty<string> Property_piri { get; set; }
     public IReadOnlyProperty<string> Property_ipaddr { get; set; }
+    public IReadOnlyProperty<string> Property_sdkInfo { get; set; }
     public IWritableProperty<bool> Property_combineTelemetry { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_t1 { get; set; }
@@ -25,6 +26,7 @@ public class sensehat : HubMqttClient, Isensehat
     {
         Property_piri = new ReadOnlyProperty<string>(c, "piri");
         Property_ipaddr = new ReadOnlyProperty<string>(c, "ipaddr");
+        Property_sdkInfo = new ReadOnlyProperty<string>(c, "sdkInfo");
         Property_combineTelemetry = new WritableProperty<bool>(c, "combineTelemetry");
         Property_interval = new WritableProperty<int>(c, "interval");
         Telemetry_t1 = new Telemetry<double>(c, "t1");
