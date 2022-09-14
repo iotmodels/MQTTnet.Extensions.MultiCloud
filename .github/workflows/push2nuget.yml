@@ -41,3 +41,11 @@ jobs:
         git config user.email "<>"
         git tag "v${{ steps.nbgv.outputs.NugetPackageVersion }}"
         git push origin "v${{ steps.nbgv.outputs.NugetPackageVersion }}"
+
+  - name: Annotate Versions
+      run: |
+        echo " ## Packages Pushed to NuGet :gem: " >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo " with SemVer ${{ steps.nbgv.outputs.SemVer2 }}" >> $GITHUB_STEP_SUMMARY
+        echo " with NuGet version ${{ steps.nbgv.outputs.NuGetPackageVersion }}" >> $GITHUB_STEP_SUMMARY
+        echo " from Commit ${{ steps.nbgv.outputs.GitCommitId}}" >> $GITHUB_STEP_SUMMARY

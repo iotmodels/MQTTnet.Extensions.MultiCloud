@@ -36,6 +36,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 
         public async Task InitPropertyAsync(string twin, T defaultValue, CancellationToken cancellationToken = default)
         {
+            await desiredBinder.InitSusbscriptionsAsync();
             await Task.Yield();
             PropertyValue = InitFromTwin(twin, PropertyName, componentName, defaultValue);
             if (desiredBinder.OnProperty_Updated != null && PropertyValue.DesiredVersion > 1)

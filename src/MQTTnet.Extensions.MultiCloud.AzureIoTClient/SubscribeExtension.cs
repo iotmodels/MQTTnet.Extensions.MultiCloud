@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
@@ -9,17 +10,13 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
     {
         private static List<string> subscriptions = new List<string>();
 
-        public static void SubscribeWithReply(this IMqttClient client, string topic, CancellationToken cancellationToken = default)
+        public static async Task SubscribeWithReply(this IMqttClient client, string topic, CancellationToken cancellationToken = default)
         {
             if (!subscriptions.Contains(topic))
             {
                 subscriptions.Add(topic);
-                //Task.Run(async () => 
-                //{ 
-                //    var subAck = await client.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter(topic).Build(), cancellationToken);
-                //    subAck.TraceErrors();
-                //});
-                var subAck = client.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter(topic).Build(), cancellationToken).Result;
+                
+                var subAck = await client.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter(topic).Build(), cancellationToken);
                 subAck.TraceErrors();
 
             }
