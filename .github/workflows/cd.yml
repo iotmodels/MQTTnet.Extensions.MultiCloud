@@ -33,12 +33,12 @@ jobs:
       run: dotnet build --no-restore
 
     - name: Pack
-      run: dotnet pack -c Release -o _nupkgs
+      run: dotnet pack -c Debug -o _nupkgs
 
     - name: Push MyGet
       run: cd _nupkgs && dotnet nuget push * --api-key ${{ secrets.MYGET_TOKEN }} --source https://www.myget.org/F/ridopackages/api/v2/package --skip-duplicate --no-symbols
 
-  - name: Annotate Versions
+    - name: Annotate Versions
       run: |
         echo " ## Packages Pushed to MyGet :gem: " >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
