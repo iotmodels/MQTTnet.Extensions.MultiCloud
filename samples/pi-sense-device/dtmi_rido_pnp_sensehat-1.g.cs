@@ -13,6 +13,7 @@ public interface Isensehat
     public string InitialState { get; set; }
     public IReadOnlyProperty<string> Property_piri { get; set; }
     public IReadOnlyProperty<string> Property_ipaddr { get; set; }
+    public IReadOnlyProperty<string> Property_sdkInfo { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public IWritableProperty<bool> Property_combineTelemetry { get; set; }
     public ITelemetry<double> Telemetry_t1 { get; set; }
