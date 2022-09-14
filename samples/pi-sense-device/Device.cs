@@ -17,7 +17,7 @@ public class Device : BackgroundService
     private readonly IConfiguration _configuration;
     private TelemetryClient _telemetryClient;
 
-    private const int default_interval = 5;
+    private const int default_interval = 30;
 
     ConnectionSettings connectionSettings;
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)

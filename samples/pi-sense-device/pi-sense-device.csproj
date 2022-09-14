@@ -32,4 +32,12 @@
 			<DependentUpon>dtmi_rido_pnp_sensehat-1.json</DependentUpon>
 		</Compile>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Properties\launchSettings.json.template">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+	  </None>
+	</ItemGroup>
 </Project>
