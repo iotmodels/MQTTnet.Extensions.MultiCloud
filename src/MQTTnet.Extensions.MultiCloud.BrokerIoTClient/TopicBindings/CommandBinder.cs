@@ -7,7 +7,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 {
     public class Command<T, TResponse> : ICommand<T, TResponse>
         where T : IBaseCommandRequest<T>, new()
-        where TResponse : BaseCommandResponse
+        where TResponse : IBaseCommandResponse
     {
         public Func<T, TResponse>? OnCmdDelegate { get; set; }
 
@@ -27,7 +27,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
                     if (OnCmdDelegate != null && req != null)
                     {
                         TResponse response = OnCmdDelegate.Invoke(req);
-                        _ = connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", response);
+                        _ = connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", response.ReponsePayload);
                     }
                 }
                 await Task.Yield();

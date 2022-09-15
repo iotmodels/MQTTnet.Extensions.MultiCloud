@@ -81,8 +81,8 @@ public class Device : BackgroundService
         _logger.LogInformation($"Command echo received");
         return new Cmd_echo_Response 
         { 
-            Status = 200, 
-            ReponsePayload = req.request + req.request 
+            Status = 200,
+            ReponsePayload = req.request + req.request
         };
     }
 

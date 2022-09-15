@@ -22,7 +22,7 @@ public class AllTelemetries
     public double temp { get; set; }
 }
 
-public class Cmd_echo_Request : IBaseCommand<Cmd_echo_Request>
+public class Cmd_echo_Request : IBaseCommandRequest<Cmd_echo_Request>
 {
     public string request;
 
@@ -35,6 +35,8 @@ public class Cmd_echo_Request : IBaseCommand<Cmd_echo_Request>
     }
 }
 
-public class Cmd_echo_Response : CommandResponse
+public class Cmd_echo_Response : IBaseCommandResponse
 {
+    public int Status { get; set; }
+    public object ReponsePayload { get; set; }
 }
