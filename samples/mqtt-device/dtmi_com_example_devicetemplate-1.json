@@ -1,0 +1,43 @@
+﻿{
+	"@context": "dtmi:dtdl:context;2",
+	"@id": "dtmi:com:example:DeviceTemplate;1",
+	"@type": "Interface",
+	"displayName": "Sample MQTT Device",
+	"description": "Sample interface describing a MQTT device.",
+	"contents": [
+		{
+			"@type": "Property",
+			"name": "sdkInfo",
+			"displayName": "SDK info",
+			"schema": "string"
+		},
+		{
+			"@type": [ "Property", "TimeSpan" ],
+			"name": "interval",
+			"schema": "integer",
+			"writable": true,
+			"unit": "second"
+		},
+		{
+			"@type": [ "Telemetry", "Temperature" ],
+			"name": "temp",
+			"displayName": "Temperature",
+			"schema": "double",
+			"unit": "degreeCelsius"
+		},
+		{
+			"@type": "Command",
+			"name": "echo",
+			"request": {
+				"@type": "CommandPayload",
+				"name": "commandInput",
+				"schema": "string"
+			},
+			"response": {
+				"@type": "CommandPayload",
+				"name": "commandOutput",
+				"schema": "string"
+			}
+		}
+	]
+}

@@ -13,7 +13,8 @@ namespace MQTTnet.Extensions.MultiCloud
             MqttQualityOfServiceLevel qos = MqttQualityOfServiceLevel.AtLeastOnce,
             bool retained = false, CancellationToken stoppingToken = default)
         {
-            return await client.PublishStringAsync(topic, (payload is string) ? payload as string : Json.Stringify(payload!), qos, retained, stoppingToken);
+            string? jsonPayload = (payload is string) ? payload as string : Json.Stringify(payload!);
+            return await client.PublishStringAsync(topic, jsonPayload, qos, retained, stoppingToken);
         }
     }
 }

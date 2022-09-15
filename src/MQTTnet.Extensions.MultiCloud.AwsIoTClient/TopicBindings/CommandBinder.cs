@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
 {
-
     public class Command<T, TResponse> : ICommand<T, TResponse>
         where T : IBaseCommandRequest<T>, new()
-        where TResponse : BaseCommandResponse
+        where TResponse : IBaseCommandResponse
     {
         public Func<T, TResponse>? OnCmdDelegate { get; set; }
 
         public Command(IMqttClient connection, string commandName, string componentName = "")
         {
-            var subAck = connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/commands/#").Result;
+            var subAck = connection.SubscribeAsync($"pnp/{connection.Options.ClientId}/commands/{commandName}").Result;
             subAck.TraceErrors();
             connection.ApplicationMessageReceivedAsync += async m =>
             {
@@ -24,13 +23,11 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
 
                 if (topic.Equals($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}"))
                 {
-                    string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload);
-                    T req = new T().DeserializeBody(msg);
+                    T req = new T().DeserializeBody(Encoding.UTF8.GetString(m.ApplicationMessage.Payload));
                     if (OnCmdDelegate != null && req != null)
                     {
-                        //(int rid, _) = TopicParser.ParseTopic(topic);
                         TResponse response = OnCmdDelegate.Invoke(req);
-                        connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", response).RunSynchronously();
+                        _ = connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", response.ReponsePayload);
                     }
                 }
                 await Task.Yield();

@@ -50,8 +50,9 @@ public class Cmd_ChangeLCDColor_Request : IBaseCommandRequest<Cmd_ChangeLCDColor
     }
 }
 
-public class Cmd_ChangeLCDColor_Response : BaseCommandResponse
+public class Cmd_ChangeLCDColor_Response : IBaseCommandResponse
 {
     //public Dictionary<string, string> diagnosticResults { get; set; } = new Dictionary<string, string>();
-    public string response;
+    public int Status { get; set; }
+    public object ReponsePayload { get; set; }
 }

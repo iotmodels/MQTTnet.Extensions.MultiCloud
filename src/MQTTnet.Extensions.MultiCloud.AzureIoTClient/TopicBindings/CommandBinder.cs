@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 {
-    public class Command<T, TResponse> : ICommand<T, TResponse> where T : IBaseCommandRequest<T>, new()
-        where TResponse : BaseCommandResponse
+    public class Command<T, TResponse> : ICommand<T, TResponse> 
+        where T : IBaseCommandRequest<T>, new()
+        where TResponse : IBaseCommandResponse, new()
     {
         public Func<T, TResponse> OnCmdDelegate { get; set; }
         public Command(IMqttClient connection, string commandName, string componentName = "")
@@ -24,7 +25,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                     {
                         (int rid, _) = TopicParser.ParseTopic(topic);
                         TResponse response = OnCmdDelegate.Invoke(req);
-                        _ = connection.PublishJsonAsync($"$iothub/methods/res/{response.Status}/?$rid={rid}", response);
+                        string respPayload = Json.Stringify(response.ReponsePayload);
+                        _ = connection.PublishJsonAsync($"$iothub/methods/res/{response.Status}/?$rid={rid}", respPayload);
                     }
                 }
                 await Task.Yield();

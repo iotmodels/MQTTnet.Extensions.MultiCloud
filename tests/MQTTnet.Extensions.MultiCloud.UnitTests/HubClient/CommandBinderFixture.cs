@@ -11,9 +11,15 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             public CmdRequest DeserializeBody(string payload) => new CmdRequest();
         }
 
-        private class CmdResponse : BaseCommandResponse
+        private class CmdResponse : IBaseCommandResponse
         {
-            public static string Result => "result";
+            public CmdResponse()
+            {
+                ReponsePayload= "result";
+            }
+
+            public int Status { get; set; }
+            public object ReponsePayload { get; set; }
         }
 
 

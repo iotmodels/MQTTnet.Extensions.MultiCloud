@@ -41,7 +41,7 @@ public class Device : BackgroundService
         {
             Console.WriteLine(m.CommandName);
             Console.WriteLine(m.CommandPayload);
-            return new CommandResponse()
+            return new GenericCommandResponse()
             {
                 Status = 200,
                 ReponsePayload = JsonSerializer.Serialize(new { myResponse = "whatever" })

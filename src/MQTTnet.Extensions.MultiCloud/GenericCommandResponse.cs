@@ -2,7 +2,7 @@
 
 namespace MQTTnet.Extensions.MultiCloud
 {
-    public class CommandResponse : BaseCommandResponse
+    public class GenericCommandResponse : BaseCommandResponse
     {
         [JsonPropertyName("payload")]
         public string? ReponsePayload { get; set; }
