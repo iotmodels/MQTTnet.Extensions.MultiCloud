@@ -26,7 +26,7 @@ public enum DiagnosticsMode
     full = 2
 }
 
-public class Cmd_getRuntimeStats_Request : IBaseCommand<Cmd_getRuntimeStats_Request>
+public class Cmd_getRuntimeStats_Request : IBaseCommandRequest<Cmd_getRuntimeStats_Request>
 {
     public DiagnosticsMode DiagnosticsMode { get; set; }
 
@@ -39,8 +39,10 @@ public class Cmd_getRuntimeStats_Request : IBaseCommand<Cmd_getRuntimeStats_Requ
     }
 }
 
-public class Cmd_getRuntimeStats_Response : CommandResponse
+public class Cmd_getRuntimeStats_Response : IBaseCommandResponse
 {
     //ReponsePayload = new Dictionary<string, string>();
-    public Dictionary<string, string> diagnosticResults { get; set; } = new Dictionary<string, string>();
+    
+    public int Status { get; set; }
+    public object ReponsePayload { get; set; }
 }

@@ -35,7 +35,7 @@ public class AllTelemetries
     public double m { get; set; }
 }
 
-public class Cmd_ChangeLCDColor_Request : IBaseCommand<Cmd_ChangeLCDColor_Request>
+public class Cmd_ChangeLCDColor_Request : IBaseCommandRequest<Cmd_ChangeLCDColor_Request>
 {
     //public DiagnosticsMode DiagnosticsMode { get; set; }
     public string request;
@@ -50,7 +50,9 @@ public class Cmd_ChangeLCDColor_Request : IBaseCommand<Cmd_ChangeLCDColor_Reques
     }
 }
 
-public class Cmd_ChangeLCDColor_Response : CommandResponse
+public class Cmd_ChangeLCDColor_Response : IBaseCommandResponse
 {
     //public Dictionary<string, string> diagnosticResults { get; set; } = new Dictionary<string, string>();
+    public int Status { get; set; }
+    public object ReponsePayload { get; set; }
 }
