@@ -34,7 +34,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             InitialState = await GetTwinAsync();
         }
 
-        public Func<GenericCommandRequest, CommandResponse> OnCommandReceived
+        public Func<GenericCommandRequest, GenericCommandResponse> OnCommandReceived
         {
             get => command.OnCmdDelegate;
             set => command.OnCmdDelegate = value;

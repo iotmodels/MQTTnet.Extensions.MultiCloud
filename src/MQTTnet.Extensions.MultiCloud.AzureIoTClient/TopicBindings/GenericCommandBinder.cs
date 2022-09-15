@@ -8,7 +8,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
     public class GenericCommand
     {
         readonly IMqttClient connection;
-        public Func<GenericCommandRequest, CommandResponse> OnCmdDelegate { get; set; }
+        public Func<GenericCommandRequest, GenericCommandResponse> OnCmdDelegate { get; set; }
 
         public GenericCommand(IMqttClient c)
         {
@@ -29,7 +29,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                     if (OnCmdDelegate != null && req != null)
                     {
                         (int rid, _) = TopicParser.ParseTopic(topic);
-                        CommandResponse response = OnCmdDelegate.Invoke(req);
+                        GenericCommandResponse response = OnCmdDelegate.Invoke(req);
                         _ = connection.PublishStringAsync($"$iothub/methods/res/{response.Status}/?$rid={rid}", response.ReponsePayload);
                     }
                 }
