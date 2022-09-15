@@ -3,6 +3,7 @@
 
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
+using System.Runtime.CompilerServices;
 
 namespace dtmi_rido_pnp_memmon;
 
@@ -38,7 +39,10 @@ public class Cmd_getRuntimeStats_Request : IBaseCommandRequest<Cmd_getRuntimeSta
     }
 }
 
-public class Cmd_getRuntimeStats_Response : BaseCommandResponse
+public class Cmd_getRuntimeStats_Response : IBaseCommandResponse
 {
-    public Dictionary<string, string> diagnosticResults { get; set; } = new Dictionary<string, string>();
+    //ReponsePayload = new Dictionary<string, string>();
+    
+    public int Status { get; set; }
+    public object ReponsePayload { get; set; }
 }
