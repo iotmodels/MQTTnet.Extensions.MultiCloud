@@ -21,8 +21,9 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
             connection = conn;
             connection.ApplicationMessageReceivedAsync += async m =>
             {
-                var topic = m.ApplicationMessage.Topic;
+                await Task.Yield();
 
+                var topic = m.ApplicationMessage.Topic;
                 if (topic.StartsWith("$iothub/twin/res/200"))
                 {
                     string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload);
@@ -30,9 +31,13 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                     if (pendingGetTwinRequests.TryGetValue(rid, out var tcs))
                     {
                         tcs.SetResult(msg);
+                        Trace.TraceWarning($"GetTwinBinder: RID {rid} found in pending requests");
+                    }
+                    else
+                    {
+                        Trace.TraceWarning($"GetTwinBinder: RID {rid} not found pending requests");
                     }
                 }
-                await Task.Yield();
             };
         }
 
@@ -46,7 +51,11 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 
             if (puback.ReasonCode == 0)
             {
-                if (!pendingGetTwinRequests.TryAdd(rid, tcs))
+                if (pendingGetTwinRequests.TryAdd(rid, tcs))
+                {
+                    Trace.TraceWarning($"GetTwinBinder: RID {rid} added to pending requests");
+                }
+                else
                 {
                     Trace.TraceWarning($"GetTwinBinder: RID {rid} not added to pending requests");
                 }
