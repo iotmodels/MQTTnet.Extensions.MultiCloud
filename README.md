@@ -8,7 +8,7 @@
 [![Nuget](https://img.shields.io/nuget/v/MQTTnet.Extensions.MultiCloud.BrokerIoTClient?label=MQTTnet.Extensions.MultiCloud.BrokerIoTClient&style=plastic)](https://www.nuget.org/packages/MQTTnet.Extensions.MultiCloud.BrokerIoTClient)
 [![Nuget](https://img.shields.io/nuget/v/MQTTnet.Extensions.MultiCloud.AwsIoTClient?label=MQTTnet.Extensions.MultiCloud.AwsIoTClient&style=plastic)](https://www.nuget.org/packages/MQTTnet.Extensions.MultiCloud.AwsIoTClient)
 
-[![master-ci](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/ridomin/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml)
+[![ci](https://github.com/iotmodels/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/iotmodels/MQTTnet.Extensions.MultiCloud/actions/workflows/ci.yml)
 
 
 > Note: Pre-Release versions can be found in MyGet: https://www.myget.org/F/ridopackages/api/v3/index.json
@@ -27,29 +27,29 @@
 #### Next Steps
  - The same app can be executed with a local mosquitto server, you can use a pre-configured docker image like: [mosquitto-local](https://github.com/ridomin/mosquitto-local) 
  - Start mosquitto with `docker run -it --rm -p 8080:8080 -p 1883:1883 -p 8883:8883 -p 8884:8884 -p 8443:8443  ridomin/mosquitto-local:dev`
- - Update the connection settings: `dotnet run /ConnectionSettings:cs="HostName=localhost;TcpPort=8883;Username=user;Password=password"`
+ - Update the connection settings: `dotnet run /ConnectionSettings:cs="HostName=localhost;TcpPort=8883;Username=user;Password=password;CaFile=RidoFY23CA.crt"`
  - Connect [https://iotmodels.github.io/pnp-mqtt](https://iotmodels.github.io/pnp-mqtt) to `localhost:8443` to interact with your device
 
 ### Using `Azure IoT Central`
 
-The same application code works with Azure IoT, you can use IoT Hub and IoT Explorer, or IoT Central:
+The same application code works with Azure IoT, you can use [Azure IoT Hub and IoT Explorer](https://docs.microsoft.com/en-us/azure/iot-fundamentals/howto-use-iot-explorer), or [Azure IoT Central](https://apps.azureiotcentral.com/home):
 
-- Create a new IoT Central application
+- You will need an IoT Central application
 - Create a new device template importing the Memory Monitor interface: [samples/memmon/dtmi_rido_pnp_memmon-1.json](samples/memmon/dtmi_rido_pnp_memmon-1.json), customize the Views to edit the properties, an Publish the template.
 - Create a new Device Identity, select `Connect` to get the `IdScope`, `DeviceID` and `Key` 
-- Start the application with `dotnet run /ConnectionStrings:cs="IdScope=<dps-id-scope>;DeviceId=<deviceId>;SharedAccessKey=<deviceSasKey>"`
+- Start the sample with `dotnet run /ConnectionStrings:cs="IdScope=<dps-id-scope>;DeviceId=<deviceId>;SharedAccessKey=<deviceSasKey>"`
 - Interact with the device from the Central application.
 
 #### Next Steps
 - Connect to Azure IoT Hub by providing a device connection string
-- Use IoT Explorer to interact with the device. Must configure IoT Explorer to be able to resolve the DTDL model from a local or a custom repository.
+- Use IoT Explorer to interact with the device. Must configure IoT Explorer to be able to resolve the DTDL model from a local or a private model repository.
 - Configure DPS with Azure IoT Hub
 
 ### Create your own 
 
 1. Define your device interactions using the [DTDL](https://aka.ms/dtdl) language. Like this [DTDL interface](samples/memmon/dtmi_rido_pnp_memmon-1.json)
 2. Create the base libraries to implement the DTDL interface for each cloud vendor. See the [Memory Monitor sample](samples/memmon/dtmi_rido_pnp_memmon-1.g.cs)
-3. Implement the device logic, in a way that can be reused across different cloud vendor implementations. [Device Logic](samples/memmon/Device.cs)
+3. Implement the device logic, by using the interface, the device logic can be reused across different cloud vendor implementations. [Device Logic](samples/memmon/Device.cs)
 4. Connect the device using different [Connection Settings](docs/ConnectionSettings.md)
 5. Interact with the device with a DTDL enabled solution. Like [Azure IoT Central](https://www.azureiotcentral.com), [IoTExplorer](https://docs.microsoft.com/en-us/azure/iot-fundamentals/howto-use-iot-explorer) or [Pnp-Mqtt](https://iotmodels.github.io/pnp-mqtt/)
 
@@ -60,24 +60,22 @@ Any MQTT solution will have at least two parts: Devices and Solutions to interac
 
 This repo focuses on the first part: how to implement things/devices that can work with any cloud vendor supporting a MQTT service. 
 
-1. Connect the devices to the endpoint in a secure way, this can be done by using TLS with Basic-Auth-Credentials or X509 client certificates.
+1. Connect the devices to the endpoint in a secure way, this can be done by using Basic-Auth-Credentials, Shared Access Keys or X509 client certificates.
 
 2. Describe the _interaction patterns_ (basically Pub/Sub) in a way that can be implemented for different cloud vendors, these interaction patterns consist of:
    - Telemetry. Ephimeral data sent by device sensors, eg. the device temperature, aka _d2c messages_
    - Commands. To invoke specific actions in the device from the solution, acka _c2d messages_
    - Properties. To manage the device state, reported by the _device_ and optionally being managed from the _solution_. eg How often the telemetry must be sent. _d2c+c2d messages_
 
-3. Enable solutions to reflect those _interaction patterns_ to create UI experiences, IoT Central, IoTExplorer or PnP-MQTT are examples of PnP enabled solutions.
+3. Enable solutions to reflect those _interaction patterns_ to create UI experiences, IoT Central, IoTExplorer or [Pnp-Mqtt](https://iotmodels.github.io/pnp-mqtt/) are examples of PnP enabled solutions.
 
 Read the [IoT Plug and Play convention](https://docs.microsoft.com/azure/iot-develop/overview-iot-plug-and-play) for more details.
 
 ### Adapt the Telemetry/Property/Command pattern to different brokers
 
-Each cloud vendor offers different features to implement these patterns, see the [feature matrix](docs/feat-matrix.md).
-
 ## ConnectionSettings
 
-To simplify the connection, there is a `ConnectionSettings` class that can be configured with a connection string based on Key/Value pairs. 
+To simplify the connection by providing a single entry point, there is a `ConnectionSettings` class that can be configured with a connection string based on Key/Value pairs. 
 
 ```cs
 // connect to iot hub with Sas Key
@@ -134,27 +132,27 @@ var version = await client.ReportPropertyAsync(new { started = DateTime.Now });
 Properties Updates (aka Writable Properties) handling:
 
 ```cs
-client.OnPropertyUpdateReceived = async m =>
+client.OnPropertyUpdateReceived = m =>
 {
-      return await Task.FromResult(new GenericPropertyAck
+      return new GenericPropertyAck
       {
          Value = m.ToJsonString(),
          Status = 200,
          Version = m["$version"].GetValue<int>()
-      });
+      };
 };
 ```
 
 DirectMethods are available as Command Delegates:
 
 ```cs
-client.OnCommandReceived = async m =>
+client.OnCommandReceived =  m =>
 {
-   return await Task.FromResult(new CommandResponse()
+   return new CommandResponse()
    {
       Status = 200,
       ReponsePayload = JsonSerializer.Serialize(new { myResponse = "whatever" })
-   });
+   };
 };
 ```
 
@@ -162,9 +160,9 @@ client.OnCommandReceived = async m =>
 
 ## DTDL interfaces
 
-When using a typed interface, there are APIs to create APIs to interact with the broker, based on the DTDL language. Enabling  Solutions such as Azure IoT Central, see [MemoryMonitor sample](./samples/memmon/Device.cs)
+When using a typed interface, there are APIs to create the base types defining the device interaction, based on the DTDL language. 
 
-Memory Monitor interface
+A DTDL interface like:
 
 ```json
 {
@@ -189,7 +187,7 @@ Memory Monitor interface
 }
 ```
 
-Can be represented in C# as
+Can be represented in C# as:
 
 ```cs
 public interface Imemmon 
@@ -201,7 +199,25 @@ public interface Imemmon
 }
 ```
 
-The `Imemmon` interface is implemented for Azure, AWS and a generic Broker.
+And implemented for different cloud vendors as follows:
+
+for Azure IoT:
+
+```cs
+public class memmon : HubMqttClient, Imemmon
+```
+
+for AWS IoT Core:
+
+```cs
+public class memmon : AwsMqttClient, Imemmon
+```
+
+For any MQTT compatible broker
+
+```cs
+public class memmon : PnPMqttClient, Imemmon
+```
 
 ### X509 Support
 

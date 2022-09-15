@@ -2,7 +2,7 @@
 
 MQTT applications have different options to implement X509 security in the connection, these options are preconfigured at different ports by each MQTT Broker endpoint. 
 
-| Port | Server Auth| Client Auth |Protocol |
+| Port | Server Auth| Client Auth |Protocol | 
 |------|------------|-------------|---------|
 | 1883 | No TLS     | Basic       | mqtt:// |
 | 8883 | Trusted CA | Basic       | mqtts://|
@@ -16,7 +16,7 @@ This port/security configuration is implemented by the [mosquitto-local](https:/
 
 ## Referencing X509 certificates in the Connection Settings
 
-`ConnectionSettings` allow to load client certificates to establish the TLS connection, these certificates must have the private key, sometimes protected with a password.
+`ConnectionSettings` allows to load client certificates to establish the TLS connection, these certificates must have the private key, sometimes protected with a password.
 
 The `X509Key` setting allows 3 different options to load the certificate with the key.
 
