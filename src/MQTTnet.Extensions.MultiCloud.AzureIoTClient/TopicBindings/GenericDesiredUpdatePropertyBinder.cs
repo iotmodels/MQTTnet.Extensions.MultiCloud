@@ -30,7 +30,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                              var ack = OnProperty_Updated(desired);
                              if (ack != null)
                              {
-                                 updTwinBinder.ReportPropertyAsync(ack.BuildAck()).RunSynchronously();
+                                 _ = updTwinBinder.ReportPropertyAsync(ack.BuildAck());
                              }
                          }
                      }

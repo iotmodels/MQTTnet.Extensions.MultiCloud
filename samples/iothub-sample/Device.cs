@@ -28,6 +28,9 @@ namespace iothub_sample
             _logger.LogInformation($"Connecting to: {new ConnectionSettings(connectionString)}");
 
             var client = new HubMqttClient(await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionString, stoppingToken));
+            
+            await client.InitState();
+            Console.WriteLine(client.InitialState);
 
             var v = await client.ReportPropertyAsync(new { started = DateTime.Now }, stoppingToken);
 
@@ -35,6 +38,8 @@ namespace iothub_sample
 
             client.OnCommandReceived = m =>
             {
+                Console.WriteLine(m.CommandName);
+                Console.WriteLine(m.CommandPayload);
                 return new CommandResponse()
                 {
                     Status = 200,
@@ -44,6 +49,8 @@ namespace iothub_sample
 
             client.OnPropertyUpdateReceived = m =>
             {
+                Console.WriteLine(m.ToString());
+
                 return new GenericPropertyAck
                 {
                     Value = m.ToJsonString(),
