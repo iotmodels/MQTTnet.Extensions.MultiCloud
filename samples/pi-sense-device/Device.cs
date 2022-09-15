@@ -31,9 +31,11 @@ public class Device : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogWarning("Connecting..");
-        client = await new SenseHatFactory(_configuration).CreateSenseHatClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
-        _logger.LogWarning($"Connected to {connectionSettings}");
+        var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+        _logger.LogWarning($"Connecting to .. {cs}");
+        var factory = new SenseHatFactory(_configuration);
+        client = await factory.CreateSenseHatClientAsync(_configuration.GetConnectionString("cs"));
+        _logger.LogWarning($"Connected to {SenseHatFactory.computedSettings}");
 
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
         client.Property_combineTelemetry.OnProperty_Updated = Property_combineTelemetry_UpdateHandler;
