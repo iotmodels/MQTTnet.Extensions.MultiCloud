@@ -12,12 +12,12 @@ Connection settings can be established using the API or parsing a connection str
 - `ModuleId` IoTHub Device Module Identity
 - `UserName` Username to be used to authenticate with MQTT Brokers
 - `Password` Username to be used to authenticate with MQTT Brokers
-- `ClientId` Client ID used when connecting to MQTT Brokers (IoT Hub requires used deviceId as clientId)
+- `ClientId` Client ID used when connecting to MQTT Brokers (IoT Hub requires used deviceId as clientId), if not provided it will be inferred.
 - `KeepAliveInSeconds` Seconds to send keep alive packets, default to `60`
 - `CleanSession` Establish the connection with a clean session, default to `true`
 - `TcpPort` Sets the TCP port for the MQTT connection, defaults to `8883`
 - `UseTls` Enable/Disable Server TLS connection, defaults to `true`
-- `CaFile` Path to CA certificate
+- `CaFile` Path to the CA certificate required to stablish the TLS session
 
 ## Sample Connection Strings
 
@@ -27,7 +27,7 @@ Azure IoT Hub
 HostName=<hubName>.azure-devices.net;DeviceId=<deviceId>;SharedAccessKey=<deviceSasKey>
 ```
 
-Azure Device Provisioning Service
+Azure Device Provisioning Service/Azure IoT Central
 
 ```
 IdScope=<dps-id-scope>;DeviceId=<deviceId>;SharedAccessKey=<deviceSasKey>
