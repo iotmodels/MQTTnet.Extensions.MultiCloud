@@ -180,7 +180,8 @@ public class Device : BackgroundService
         }
         var result = new Cmd_ChangeLCDColor_Response()
         {
-            response = oldColor
+            Status = 200,
+            ReponsePayload = oldColor
         };
         oldColor = req.request;
         return result;
