@@ -2,7 +2,12 @@
 
 This folder contains sample projects with devices that can be connected to multiple MQTT endpoints
 
->Note: All samples must be run with the `ConnectionStrings__cs` envvar, or as CLI argument `/ConnectionStrings:cs` . There are sample connection strings in the launchSettings.json.template to use as `dotnet run --launch-profile`
+All samples must be run with the `ConnectionStrings__cs` envvar, or as CLI argument `/ConnectionStrings:cs` . 
+
+There are sample connection strings in the `launchSettings.json.template` to use as `dotnet run --launch-profile`:
+
+- Rename the file to `launchSettings.json` 
+- Set device credentials (this file is .gitignored)
 
 ## memmon
 
