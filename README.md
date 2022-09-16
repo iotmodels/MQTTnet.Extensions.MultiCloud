@@ -47,6 +47,8 @@ The same application code works with Azure IoT, you can use [Azure IoT Hub and I
 
 ### Create your own 
 
+Start from this [device-template](https://github.com/iotmodels/device-template/generate) (repo template)
+
 1. Define your device interactions using the [DTDL](https://aka.ms/dtdl) language. Like this [DTDL interface](samples/memmon/dtmi_rido_pnp_memmon-1.json)
 2. Create the base libraries to implement the DTDL interface for each cloud vendor. See the [Memory Monitor sample](samples/memmon/dtmi_rido_pnp_memmon-1.g.cs)
 3. Implement the device logic, by using the interface, the device logic can be reused across different cloud vendor implementations. [Device Logic](samples/memmon/Device.cs)
