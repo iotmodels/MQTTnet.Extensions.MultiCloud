@@ -12,7 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
     {
         IMqttClient connection;
         public Func<PropertyAck<T>, PropertyAck<T>> OnProperty_Updated = null;
-        public DesiredUpdatePropertyBinder(IMqttClient c, IReportPropertyBinder updTwinBinder, string propertyName, string componentName = "")
+        public DesiredUpdatePropertyBinder(IMqttClient c, IPropertyStoreWriter updTwinBinder, string propertyName, string componentName = "")
         {
             connection = c;
             connection.ApplicationMessageReceivedAsync += async m =>

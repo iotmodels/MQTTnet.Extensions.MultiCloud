@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 {
-    public class UpdatePropertyBinder : IReportPropertyBinder
+    public class UpdatePropertyBinder : IPropertyStoreWriter
     {
         private readonly IMqttClient connection;
         private readonly string name;

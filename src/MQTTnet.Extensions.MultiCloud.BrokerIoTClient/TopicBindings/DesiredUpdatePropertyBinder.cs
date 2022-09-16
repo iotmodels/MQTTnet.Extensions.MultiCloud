@@ -16,7 +16,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
         string cName;
         public Func<PropertyAck<T>, PropertyAck<T>>? OnProperty_Updated = null;
 
-        public DesiredUpdatePropertyBinder(IMqttClient c, IReportPropertyBinder propertyBinder, string propertyName, string componentName = "")
+        public DesiredUpdatePropertyBinder(IMqttClient c, IPropertyStoreWriter propertyBinder, string propertyName, string componentName = "")
         {
             name = propertyName;
             cName = componentName;
