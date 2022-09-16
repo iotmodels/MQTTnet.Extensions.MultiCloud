@@ -17,13 +17,9 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             if (!string.IsNullOrEmpty(cs.Password))
             {
                 builder.WithCredentials(cs.UserName, cs.Password);
-                if (string.IsNullOrEmpty(cs.ClientId))
-                {
-                    cs.ClientId = cs.UserName;
-                }
             }
 
-            if (string.IsNullOrEmpty(cs.ClientId))
+            if (cs.ClientId=="{machineName}")
             {
                 cs.ClientId = Environment.MachineName;
             }

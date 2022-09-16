@@ -12,7 +12,7 @@ Connection settings can be established using the API or parsing a connection str
 - `ModuleId` IoTHub Device Module Identity
 - `UserName` Username to be used to authenticate with MQTT Brokers
 - `Password` Username to be used to authenticate with MQTT Brokers
-- `ClientId` Client ID used when connecting to MQTT Brokers (IoT Hub requires used deviceId as clientId), if not provided it will be inferred.
+- `ClientId` Client ID used when connecting to MQTT Brokers (IoT Hub requires used deviceId as clientId). Use `{machineName}` to override
 - `KeepAliveInSeconds` Seconds to send keep alive packets, default to `60`
 - `CleanSession` Establish the connection with a clean session, default to `true`
 - `TcpPort` Sets the TCP port for the MQTT connection, defaults to `8883`
