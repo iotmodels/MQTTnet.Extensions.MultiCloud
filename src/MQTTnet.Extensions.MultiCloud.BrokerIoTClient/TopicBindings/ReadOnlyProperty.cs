@@ -6,7 +6,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 {
     public class ReadOnlyProperty<T> : IReadOnlyProperty<T>
     {
-        private readonly IReportPropertyBinder updateBinder;
+        private readonly IPropertyStoreWriter updateBinder;
         public string PropertyName { get; }
         //readonly string component;
 

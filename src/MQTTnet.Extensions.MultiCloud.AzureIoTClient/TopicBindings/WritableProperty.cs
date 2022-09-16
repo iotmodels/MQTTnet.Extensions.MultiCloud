@@ -14,7 +14,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 
         public string PropertyName { get; set; }
         private readonly string componentName;
-        private readonly IReportPropertyBinder updateTwin;
+        private readonly IPropertyStoreWriter updateTwin;
         private readonly DesiredUpdatePropertyBinder<T> desiredBinder;
 
         public Func<PropertyAck<T>, PropertyAck<T>> OnProperty_Updated

@@ -12,7 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
     {
         IMqttClient connection;
         public Func<JsonNode, GenericPropertyAck> OnProperty_Updated = null;
-        public GenericDesiredUpdatePropertyBinder(IMqttClient c, IReportPropertyBinder updTwinBinder)
+        public GenericDesiredUpdatePropertyBinder(IMqttClient c, IPropertyStoreWriter updTwinBinder)
         {
             connection = c;
             connection.ApplicationMessageReceivedAsync += async m =>

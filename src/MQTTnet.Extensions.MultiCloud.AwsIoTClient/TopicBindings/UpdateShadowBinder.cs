@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
 {
-    public class UpdateShadowBinder : IReportPropertyBinder, IPropertyStoreWriter
+    public class UpdateShadowBinder : IPropertyStoreWriter
     {
         private readonly ConcurrentQueue<TaskCompletionSource<int>> pendingRequests;
         private readonly IMqttClient connection;
