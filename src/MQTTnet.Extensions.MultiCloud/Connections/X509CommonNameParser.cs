@@ -1,16 +1,30 @@
-﻿namespace MQTTnet.Extensions.MultiCloud.Connections
+﻿using System;
+using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
+
+namespace MQTTnet.Extensions.MultiCloud.Connections
 {
     public static class X509CommonNameParser
     {
-        public static string GetCNFromCertSubject(string subject)
+        public static string GetCNFromCertSubject(X509Certificate2 cert)
         {
-            var result = subject.Substring(3);
-            if (subject.Contains(','))
+            string result;
+            string subject = cert.Subject;
+            var dict = subject.ToDictionary(',', '=');
+            if (dict.ContainsKey("CN"))
             {
-                var posComma = result.IndexOf(',');
-                result = result.Substring(0, result.Length - posComma);
+                result = dict["CN"];
             }
-            return result.Replace(" ", "");
+            else if (dict.ContainsKey(" CN"))
+            {
+                result = dict[" CN"];
+            }
+            else
+            {
+                Trace.TraceWarning("CN not found in Subject, using thumbprint");
+                result = cert.Thumbprint;
+            }
+            return result;
         }
     }
 }
