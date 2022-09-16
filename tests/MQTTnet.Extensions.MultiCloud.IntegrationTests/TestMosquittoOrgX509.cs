@@ -77,7 +77,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)
                 .Build());
-            Assert.Equal(Environment.MachineName, cs.ClientId);
+            Assert.Null(cs.ClientId);
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
             Assert.True(client.IsConnected);
             await client.DisconnectAsync();
