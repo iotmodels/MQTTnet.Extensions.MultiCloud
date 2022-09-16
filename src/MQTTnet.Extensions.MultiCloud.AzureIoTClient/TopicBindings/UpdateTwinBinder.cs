@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 {
-    public class UpdateTwinBinder : IReportPropertyBinder, IPropertyStoreWriter
+    public class UpdateTwinBinder : IPropertyStoreWriter
     {
         private readonly ConcurrentDictionary<int, TaskCompletionSource<int>> pendingRequests = new ConcurrentDictionary<int, TaskCompletionSource<int>>();
         private readonly IMqttClient connection;

@@ -14,7 +14,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
         private readonly string componentName;
 
         //readonly UpdateTwinBinder updateTwin;
-        private readonly IReportPropertyBinder updatePropertyBinder;
+        private readonly IPropertyStoreWriter updatePropertyBinder;
         private readonly DesiredUpdatePropertyBinder<T>? desiredBinder;
 
         public Func<PropertyAck<T>, PropertyAck<T>> OnProperty_Updated

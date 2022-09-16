@@ -8,7 +8,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
 {
     public class ReadOnlyProperty<T> : IReadOnlyProperty<T>
     {
-        private readonly IReportPropertyBinder updateBinder;
+        private readonly IPropertyStoreWriter updateBinder;
         public string PropertyName { get; }
 
         private readonly string component;
