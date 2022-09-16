@@ -8,12 +8,12 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
     public class ConnectionOptionsBuilderExtensionsFixture
     {
         [Fact]
-        public void InferClientFromUserNameWhenNotSet()
+        public void DoNotInferClientFromUserNameWhenNotSet()
         {
             MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder();
             var cs = new ConnectionSettings { UserName = "user", Password = "password" };
             builder.WithConnectionSettings(cs);
-            Assert.Equal("user", cs.ClientId);
+            Assert.Null(cs.ClientId);
         }
 
         [Fact]
