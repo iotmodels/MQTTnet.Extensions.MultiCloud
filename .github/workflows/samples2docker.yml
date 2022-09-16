@@ -1,11 +1,11 @@
 name: samples-docker
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "master", "dev" ]
     paths:
       - 'samples/**'
-    workflow_dispatch:
 
 jobs:
   build:
