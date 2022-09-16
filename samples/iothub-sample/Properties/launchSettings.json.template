@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "iothub": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings__cs": "HostName=<hub-name>.azure-devices.net;DeviceId=<deviceId>;SharedAccessKey=<SharedAccessKey>"
+      }
+    },
+    "central": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings__cs": "IdScope=<IdScope>;DeviceId=<deviceId>;SharedAccessKey=<SharedAccessKey>"
+      }
+    }
+  }
+}

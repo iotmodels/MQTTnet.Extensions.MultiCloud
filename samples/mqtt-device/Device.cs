@@ -27,25 +27,25 @@ public class Device : BackgroundService
         client = await new ClientFactory(_configuration).CreateDeviceTemplateClientAsync(stoppingToken);
         _logger.LogWarning("Connected to {settings}",ClientFactory.computedSettings );
 
-        //client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
+        client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
         client.Command_echo.OnCmdDelegate = Cmd_echo_Handler;
 
-        //Type baseClient = client.GetType().BaseType!;
-        //client.Property_sdkInfo.PropertyValue = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
-        //await client.Property_sdkInfo.ReportPropertyAsync(stoppingToken);
+        Type baseClient = client.GetType().BaseType!;
+        client.Property_sdkInfo.PropertyValue = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
+        await client.Property_sdkInfo.ReportPropertyAsync(stoppingToken);
 
-        //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-        //await client.Property_interval.ReportPropertyAsync(stoppingToken);
+        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
+        await client.Property_interval.ReportPropertyAsync(stoppingToken);
 
         double lastTemp = 21;
         while (!stoppingToken.IsCancellationRequested)
         {
             lastTemp = GenerateSensorReading(lastTemp, 12, 45);
-            //await client!.Telemetry_temp.SendTelemetryAsync(lastTemp, stoppingToken);
+            await client!.Telemetry_temp.SendTelemetryAsync(lastTemp, stoppingToken);
             var interval = client!.Property_interval.PropertyValue?.Value;
             _logger.LogInformation("Waiting {interval} s to send telemetry", interval);
-            //await Task.Delay(interval.HasValue ? interval.Value * 1000 : 1000, stoppingToken);
-            await Task.Delay(50000);
+            await Task.Delay(interval.HasValue ? interval.Value * 1000 : 1000, stoppingToken);
+            //await Task.Delay(50000);
         }
     }
 

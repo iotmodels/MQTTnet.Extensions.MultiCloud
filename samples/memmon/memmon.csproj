@@ -1,23 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-	<IsPackable>false</IsPackable>
-	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<IsPackable>false</IsPackable>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="Properties\launchSettings.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Remove="Properties\launchSettings.json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <_WebToolingArtifacts Remove="Properties\launchSettings.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<_WebToolingArtifacts Remove="Properties\launchSettings.json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="Properties\launchSettings.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="Properties\launchSettings.json" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
@@ -27,40 +27,28 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="../../src/MQTTnet.Extensions.MultiCloud.AwsIoTClient/MQTTnet.Extensions.MultiCloud.AwsIoTClient.csproj" />
-	  <ProjectReference Include="../../src/MQTTnet.Extensions.MultiCloud.AzureIoTClient/MQTTnet.Extensions.MultiCloud.AzureIoTClient.csproj" />
-	  <ProjectReference Include="../../src/MQTTnet.Extensions.MultiCloud.BrokerIoTClient/MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
+		<ProjectReference Include="../../src/MQTTnet.Extensions.MultiCloud.AwsIoTClient/MQTTnet.Extensions.MultiCloud.AwsIoTClient.csproj" />
+		<ProjectReference Include="../../src/MQTTnet.Extensions.MultiCloud.AzureIoTClient/MQTTnet.Extensions.MultiCloud.AzureIoTClient.csproj" />
+		<ProjectReference Include="../../src/MQTTnet.Extensions.MultiCloud.BrokerIoTClient/MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Update="dtmi_rido_pnp_memmon-1.aws.g.cs">
-		  <DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
-		</Compile>
-		<Compile Update="dtmi_rido_pnp_memmon-1.mqtt.g.cs">
-			<DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
-		</Compile>
-		<Compile Update="dtmi_rido_pnp_memmon-1.hub.g.cs">
-			<DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
-		</Compile>
-		<Compile Update="dtmi_rido_pnp_memmon-1.g.cs">
+		<Compile Update="*.g.cs">
 			<DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
 		</Compile>
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<None Update="*.pfx">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-	  <None Update="*.key">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="*.pem">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <None Update="RidoFY23CA.crt">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+		<None Update="*.key">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="*.pem">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="*.crt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 </Project>
