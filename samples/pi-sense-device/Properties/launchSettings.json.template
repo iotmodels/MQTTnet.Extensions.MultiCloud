@@ -3,7 +3,7 @@
     "mosquitto-localhost": {
       "commandName": "Project",
       "environmentVariables": {
-        "ConnectionStrings__cs": "HostName=localhost;TcpPort=1883;DeviceId=memmon01;UserName=user;Password=password"
+        "ConnectionStrings__cs": "HostName=localhost;TcpPort=1883;DeviceId=pi-sense-device;UserName=user;Password=password"
       }
     },
     "iothub": {
@@ -40,7 +40,7 @@
     "broker-x509": {
       "commandName": "Project",
       "environmentVariables": {
-        "ConnectionStrings__cs": "HostName=testmosquitto.org;tcpport=8884;X509Key=ca-device.pem|ca-device.key;cafile=mosquitto.org.crt"
+        "ConnectionStrings__cs": "HostName=test.mosquitto.org;tcpport=8884;X509Key=client.pfx|1234;CaFile=mosquitto.org.crt"
       }
     }
   }
