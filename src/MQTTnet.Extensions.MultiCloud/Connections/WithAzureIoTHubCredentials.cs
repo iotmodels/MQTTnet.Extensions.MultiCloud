@@ -17,7 +17,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             else if (cs?.Auth == AuthType.X509)
             {
                 var cert = X509ClientCertificateLocator.Load(cs.X509Key!);
-                string clientId = X509CommonNameParser.GetCNFromCertSubject(cert.Subject);
+                string clientId = X509CommonNameParser.GetCNFromCertSubject(cert);
                 if (clientId.Contains("/")) //is a module
                 {
                     var segmentsId = clientId.Split('/');
@@ -60,9 +60,9 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             return builder;
         }
 
-        public static MqttClientOptionsBuilder WithAzureIoTHubCredentialsX509(this MqttClientOptionsBuilder builder, string hostName, X509Certificate cert, string modelId, int tcpPort)
+        public static MqttClientOptionsBuilder WithAzureIoTHubCredentialsX509(this MqttClientOptionsBuilder builder, string hostName, X509Certificate2 cert, string modelId, int tcpPort)
         {
-            string clientId = X509CommonNameParser.GetCNFromCertSubject(cert.Subject);
+            string clientId = X509CommonNameParser.GetCNFromCertSubject(cert);
 
             builder
                 .WithTcpServer(hostName, tcpPort)

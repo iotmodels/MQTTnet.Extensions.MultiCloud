@@ -28,7 +28,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             else if (cs?.Auth == AuthType.X509)
             {
                 var cert = X509ClientCertificateLocator.Load(cs.X509Key!);
-                string registrationId = X509CommonNameParser.GetCNFromCertSubject(cert.Subject);
+                string registrationId = X509CommonNameParser.GetCNFromCertSubject(cert);
                 var resource = $"{cs.IdScope}/registrations/{registrationId}";
                 var username = $"{resource}/api-version=2019-03-31";
 
