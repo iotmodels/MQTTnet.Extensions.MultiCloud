@@ -19,8 +19,13 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
                 builder.WithCredentials(cs.UserName, cs.Password);
                 if (string.IsNullOrEmpty(cs.ClientId))
                 {
-                    cs.ClientId = Environment.MachineName;
+                    cs.ClientId = cs.UserName;
                 }
+            }
+
+            if (string.IsNullOrEmpty(cs.ClientId))
+            {
+                cs.ClientId = Environment.MachineName;
             }
 
             builder.WithClientId(cs.ClientId);

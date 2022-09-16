@@ -13,7 +13,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder();
             var cs = new ConnectionSettings { UserName = "user", Password = "password" };
             builder.WithConnectionSettings(cs);
-            Assert.Equal(Environment.MachineName, cs.ClientId);
+            Assert.Equal("user", cs.ClientId);
         }
 
         [Fact]

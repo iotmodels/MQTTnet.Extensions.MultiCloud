@@ -61,7 +61,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             }
         }
 
-        [Fact(Skip = "Fails if called after let's encrypt")] // TODO invesigate. seems Cert Callback has state
+        [Fact] // TODO invesigate. seems Cert Callback has state
         public async Task ConfiguredCA()
         {
             if (client == null)
@@ -72,13 +72,12 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             var cs = new ConnectionSettings()
             {
                 HostName = "test.mosquitto.org",
-                TcpPort = 8883,
-                ClientId = "test-client",
                 CaFile = "mosquitto.org.crt"
             };
             var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)
                 .Build());
+            Assert.Equal(Environment.MachineName, cs.ClientId);
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
             Assert.True(client.IsConnected);
             await client.DisconnectAsync();
@@ -96,7 +95,6 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             {
                 HostName = "test.mosquitto.org",
                 TcpPort = 8884,
-                ClientId = "test-client",
                 CaFile = "mosquitto.org.crt",
                 X509Key = "client.pfx|1234"
             };
@@ -104,6 +102,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
+            Assert.Equal("client", cs.ClientId);
             Assert.True(client.IsConnected);
             await client.DisconnectAsync();
         }
