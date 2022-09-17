@@ -27,7 +27,7 @@
 #### Next Steps
  - The same app can be executed with a local mosquitto server, you can use a pre-configured docker image like: [mosquitto-local](https://github.com/ridomin/mosquitto-local) 
  - Start mosquitto with `docker run -it --rm -p 8080:8080 -p 1883:1883 -p 8883:8883 -p 8884:8884 -p 8443:8443  ridomin/mosquitto-local:dev`
- - Update the connection settings: `dotnet run /ConnectionSettings:cs="HostName=localhost;TcpPort=8883;Username=user;Password=password;CaFile=RidoFY23CA.crt"`
+ - Update the connection settings: `dotnet run /ConnectionSettings:cs="HostName=localhost;TcpPort=8883;ClientId=memmon-device;Username=user;Password=password;CaFile=RidoFY23CA.crt"`
  - Connect [https://iotmodels.github.io/pnp-mqtt](https://iotmodels.github.io/pnp-mqtt) to `localhost:8443` to interact with your device
 
 ### Using `Azure IoT Central`
