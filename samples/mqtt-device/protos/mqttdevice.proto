@@ -1,0 +1,22 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "mqttdevice";
+import "google/protobuf/timestamp.proto";
+
+message Telemetry {
+	double temperature = 1; 
+}
+
+message Properties {
+	string sdkInfo = 1;
+	int32 interval = 2;
+	google.protobuf.Timestamp started = 3;
+}
+
+message echoRequest {
+	string inEcho =1;
+}
+
+message echoResponse {
+	string outEcho = 1;
+}
