@@ -32,29 +32,15 @@ public class Device : BackgroundService
         _logger.LogWarning("Connected to {settings}",ClientFactory.computedSettings );
 
         client.Command_echo.OnCmdDelegate = Cmd_echo_Handler;
-        //client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
+        client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
 
-        System.Type baseClient = client.GetType().BaseType!;
         var prop = new mqttdevice.Properties
         {
-            SdkInfo = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}",
+            SdkInfo = ClientFactory.NuGetPackageVersion,
             Started = DateTime.UtcNow.ToTimestamp()
         };
         //client.Property_sdkInfo.PropertyValue = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
         await client.Property_sdkInfo.ReportPropertyAsync(prop.ToByteArray(), stoppingToken);
-
-        
-
-        var prop2 = new mqttdevice.Properties();
-        prop2.Started = DateTime.Now.ToUniversalTime().ToTimestamp();
-        await client.Connection.PublishAsync(
-            new MQTTnet.MqttApplicationMessageBuilder()
-                .WithTopic($"device/{client.Connection.Options.ClientId}/props/started")
-                .WithRetainFlag()
-                .WithPayload(prop2.ToByteArray())
-                .Build(), stoppingToken);
-
-
 
         //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
         //await client.Property_interval.ReportPropertyAsync(stoppingToken);
@@ -64,8 +50,9 @@ public class Device : BackgroundService
         {
             lastTemp = GenerateSensorReading(lastTemp, 12, 45);
             //await client!.Telemetry_temp.SendTelemetryAsync(lastTemp, stoppingToken);
-            var tel = new Telemetry();
+            var tel = new Telemetries();
             tel.Temperature = lastTemp;
+            tel.WorkingSet = Environment.WorkingSet;
             _logger.LogWarning("lastTemp {lastTemp}", lastTemp);
 
             await client.Telemetry_temp.SendTelemetryAsync(tel.ToByteArray(), stoppingToken);
@@ -79,7 +66,7 @@ public class Device : BackgroundService
             //var interval = client!.Property_interval.PropertyValue?.Value;
             //_logger.LogInformation("Waiting {interval} s to send telemetry", interval);
             //await Task.Delay(interval.HasValue ? interval.Value * 1000 : 1000, stoppingToken);
-            await Task.Delay(10000, stoppingToken);
+            await Task.Delay(20000, stoppingToken);
         }
     }
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace mqtt_device
 {
-    internal class EchoService : Command_echo.Command_echoBase
+    internal class EchoService : Commands.CommandsBase
     {
         public override Task<echoResponse> echo(echoRequest req, ServerCallContext context)
         {

@@ -1,6 +1,7 @@
 ﻿using dtmi_com_example_devicetemplate;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
+using System.Reflection;
 
 namespace mqtt_device
 {
@@ -8,7 +9,7 @@ namespace mqtt_device
     {
         //internal static string ComputeDeviceKey(string masterKey, string deviceId) =>
         //    Convert.ToBase64String(new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(masterKey)).ComputeHash(System.Text.Encoding.UTF8.GetBytes(deviceId)));
-
+        static string nuGetPackageVersion = String.Empty;
         static internal ConnectionSettings computedSettings = new ConnectionSettings();
         IConfiguration _configuration;
 
@@ -50,7 +51,20 @@ namespace mqtt_device
             var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
             var client = new dtmi_com_example_devicetemplate.mqtt.devicetemplate(mqtt);
             computedSettings = cs;
+
+            System.Type baseClient = client.GetType().BaseType!;
+            string nugetVersion = baseClient.Assembly
+                .GetType("ThisAssembly")!
+                .GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!
+                .GetValue(null)!
+                .ToString()!;
+            nuGetPackageVersion = $"{baseClient.Namespace} {nugetVersion}";
             return client;
+        }
+
+        static internal string NuGetPackageVersion
+        {
+           get => nuGetPackageVersion;
         }
 
         //static async Task<dtmi_com_example_devicetemplate.hub.devicetemplate> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
