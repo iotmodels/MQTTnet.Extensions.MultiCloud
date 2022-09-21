@@ -5,6 +5,7 @@ import "google/protobuf/timestamp.proto";
 
 message Telemetry {
 	double temperature = 1; 
+	double workingSet = 2;
 }
 
 message Properties {
@@ -13,8 +14,12 @@ message Properties {
 	google.protobuf.Timestamp started = 3;
 }
 
+service Command_echo {
+	rpc echo(echoRequest) returns (echoResponse) {}
+}
+
 message echoRequest {
-	string inEcho =1;
+	string inEcho = 1;
 }
 
 message echoResponse {

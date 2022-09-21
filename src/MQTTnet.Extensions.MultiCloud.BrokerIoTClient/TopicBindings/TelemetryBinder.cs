@@ -12,6 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
         private readonly string moduleId;
         private readonly string name;
         private readonly string component;
+        private readonly string topic;
 
         public Telemetry(IMqttClient connection, string name, string component = "", string moduleId = "")
         {
@@ -20,28 +21,26 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
             this.component = component;
             deviceId = connection.Options.ClientId;
             this.moduleId = moduleId;
+
+            topic = $"pnp/{deviceId}";
+
+            if (!string.IsNullOrEmpty(component))
+            {
+                topic += $"*{component}";
+            }
+            topic += "/telemetry";
         }
 
         public async Task<MqttClientPublishResult> SendTelemetryAsync(T payload, CancellationToken cancellationToken = default)
         {
-            string topic = $"pnp/{deviceId}";
-
-            if (!string.IsNullOrEmpty(component))
-            {
-                topic += $"/{component}";
-            }
-            if (!string.IsNullOrEmpty(moduleId))
-            {
-                topic += $"/modules/{moduleId}";
-            }
-            topic += "/telemetry";
-
-
             Dictionary<string, T> typedPayload = new Dictionary<string, T>
             {
                 { name, payload }
             };
             return await connection.PublishJsonAsync(topic, typedPayload, Protocol.MqttQualityOfServiceLevel.AtMostOnce, false, cancellationToken);
         }
+
+        public async Task<MqttClientPublishResult> SendTelemetryAsync(byte[] bytes, CancellationToken cancellationToken = default) =>
+            await connection.PublishBytesAsync(topic, bytes, Protocol.MqttQualityOfServiceLevel.AtMostOnce, false, cancellationToken);
     }
 }

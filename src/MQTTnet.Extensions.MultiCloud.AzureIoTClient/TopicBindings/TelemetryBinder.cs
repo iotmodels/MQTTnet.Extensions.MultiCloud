@@ -45,5 +45,10 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 
             return await connection.PublishJsonAsync(topic, typedPayload, Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, cancellationToken);
         }
+
+        public Task<MqttClientPublishResult> SendTelemetryAsync(byte[] payload, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException(); //TODO implement
+        }
     }
 }

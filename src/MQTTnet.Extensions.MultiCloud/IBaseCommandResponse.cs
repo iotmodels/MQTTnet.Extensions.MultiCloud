@@ -4,5 +4,6 @@
     {
         public int Status { get; set; }
         public object ReponsePayload { get; set; }
+        public byte[] ResponseBytes { get; set; }
     }
 }

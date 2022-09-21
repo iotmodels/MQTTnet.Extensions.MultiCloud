@@ -7,5 +7,6 @@ namespace MQTTnet.Extensions.MultiCloud
     public interface ITelemetry<T>
     {
         Task<MqttClientPublishResult> SendTelemetryAsync(T payload, CancellationToken cancellationToken = default);
+        Task<MqttClientPublishResult> SendTelemetryAsync(byte[] payload, CancellationToken cancellationToken = default);
     }
 }

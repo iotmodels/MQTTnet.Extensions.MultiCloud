@@ -30,8 +30,8 @@ public class Device : BackgroundService
         client = await new ClientFactory(_configuration).CreateDeviceTemplateClientAsync(stoppingToken);
         _logger.LogWarning("Connected to {settings}",ClientFactory.computedSettings );
 
+        client.Command_echo.OnCmdDelegate = Cmd_echo_Handler;
         //client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
-        //client.Command_echo.OnCmdDelegate = Cmd_echo_Handler;
 
         //client.Property_sdkInfo.PropertyValue = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
         //await client.Property_sdkInfo.ReportPropertyAsync(stoppingToken);
@@ -39,12 +39,8 @@ public class Device : BackgroundService
         var prop = new mqttdevice.Properties();
         System.Type baseClient = client.GetType().BaseType!;
         prop.SdkInfo = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
-        await client.Connection.PublishAsync(
-            new MQTTnet.MqttApplicationMessageBuilder()
-                .WithTopic($"device/{client.Connection.Options.ClientId}/props/sdkInfo")
-                .WithRetainFlag()
-                .WithPayload(prop.ToByteArray())
-                .Build(), stoppingToken);
+        
+        //client.Property_sdkInfo.PropertyValue= p
 
         var prop2 = new mqttdevice.Properties();
         prop2.Started = DateTime.Now.ToUniversalTime().ToTimestamp();
@@ -68,16 +64,19 @@ public class Device : BackgroundService
             var tel = new Telemetry();
             tel.Temperature = lastTemp;
             _logger.LogWarning($"lastTemp {lastTemp}");
-            await client.Connection.PublishAsync(
-            new MQTTnet.MqttApplicationMessageBuilder()
-                .WithTopic($"device/{client.Connection.Options.ClientId}/telemetry")
-                .WithPayload(tel.ToByteArray())
-                .Build(), stoppingToken);
+
+            await client.Telemetry_temp.SendTelemetryAsync(tel.ToByteArray(), stoppingToken);
+
+            //await client.Connection.PublishAsync(
+            //    new MQTTnet.MqttApplicationMessageBuilder()
+            //        .WithTopic($"device/{client.Connection.Options.ClientId}/telemetry")
+            //        .WithPayload(tel.ToByteArray())
+            //        .Build(), stoppingToken);
 
             //var interval = client!.Property_interval.PropertyValue?.Value;
             //_logger.LogInformation("Waiting {interval} s to send telemetry", interval);
             //await Task.Delay(interval.HasValue ? interval.Value * 1000 : 1000, stoppingToken);
-            await Task.Delay(2000);
+            await Task.Delay(10000);
         }
     }
 
@@ -111,10 +110,13 @@ public class Device : BackgroundService
     private Cmd_echo_Response Cmd_echo_Handler(Cmd_echo_Request req)
     {
         _logger.LogInformation($"Command echo received");
+        EchoService es = new EchoService();
+        var resp = es.echo(req.EchoRequest, null).Result;
         return new Cmd_echo_Response 
         { 
             Status = 200,
-            ReponsePayload = req.request + req.request
+            ReponsePayload = resp.OutEcho,
+            ResponseBytes = resp.ToByteArray()
         };
     }
 

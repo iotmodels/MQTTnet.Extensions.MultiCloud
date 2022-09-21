@@ -23,11 +23,14 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
 
                 if (topic.Equals($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}"))
                 {
-                    T req = new T().DeserializeBody(Encoding.UTF8.GetString(m.ApplicationMessage.Payload));
+                    //T req = new T().DeserializeBody(Encoding.UTF8.GetString(m.ApplicationMessage.Payload));
+                    // TODO use payloadFormatIdicator
+                    T req = new T().DeserializeBody(m.ApplicationMessage.Payload);
                     if (OnCmdDelegate != null && req != null)
                     {
                         TResponse response = OnCmdDelegate.Invoke(req);
-                        _ = connection.PublishJsonAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", response.ReponsePayload);
+                        _ = connection.PublishBytesAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", 
+                            response.ResponseBytes);
                     }
                 }
                 await Task.Yield();
