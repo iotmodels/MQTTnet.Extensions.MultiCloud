@@ -33,6 +33,12 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
             return -1;
         }
 
+        public async Task<int> ReportPropertyAsync(byte[] payload, CancellationToken cancellationToken = default)
+        {
+            await updateBinder.ReportPropertyAsync(payload, cancellationToken);
+            return -1;
+        }
+
         //Dictionary<string, object> ToJsonDict(bool asComponent = false)
         //{
         //    Dictionary<string, object> result;

@@ -33,14 +33,14 @@ public class Device : BackgroundService
         client.Command_echo.OnCmdDelegate = Cmd_echo_Handler;
         //client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
 
-        //client.Property_sdkInfo.PropertyValue = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
-        //await client.Property_sdkInfo.ReportPropertyAsync(stoppingToken);
-
-        var prop = new mqttdevice.Properties();
         System.Type baseClient = client.GetType().BaseType!;
+        var prop = new mqttdevice.Properties();
         prop.SdkInfo = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
+        prop.Started = DateTime.UtcNow.ToTimestamp();
+        //client.Property_sdkInfo.PropertyValue = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
+        await client.Property_sdkInfo.ReportPropertyAsync(prop.ToByteArray(), stoppingToken);
+
         
-        //client.Property_sdkInfo.PropertyValue= p
 
         var prop2 = new mqttdevice.Properties();
         prop2.Started = DateTime.Now.ToUniversalTime().ToTimestamp();

@@ -9,5 +9,6 @@ namespace MQTTnet.Extensions.MultiCloud
         T PropertyValue { get; set; }
         int Version { get; set; }
         Task<int> ReportPropertyAsync(CancellationToken cancellationToken = default);
+        Task<int> ReportPropertyAsync(byte[] payload, CancellationToken cancellationToken = default);
     }
 }
