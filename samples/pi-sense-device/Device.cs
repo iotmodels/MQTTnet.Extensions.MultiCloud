@@ -156,7 +156,7 @@ public class Device : BackgroundService
     }
 
     string oldColor = "white";
-    private Cmd_ChangeLCDColor_Response Cmd_ChangeLCDColor_Handler(Cmd_ChangeLCDColor_Request req)
+    private async Task<Cmd_ChangeLCDColor_Response> Cmd_ChangeLCDColor_Handler(Cmd_ChangeLCDColor_Request req)
     {
         _logger.LogInformation($"New Command received");
         var color = Color.FromName(req.request);
@@ -173,7 +173,7 @@ public class Device : BackgroundService
             for (int i = 0; i < 10; i++)
             {
                 Console.WriteLine(" ");
-                Task.Delay(100);
+                await Task.Delay(100);
             }
             Console.BackgroundColor = orig;
 

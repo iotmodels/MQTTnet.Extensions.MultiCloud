@@ -9,7 +9,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         where T : IBaseCommandRequest<T>, new()
         where TResponse : IBaseCommandResponse, new()
     {
-        public Func<T, TResponse> OnCmdDelegate { get; set; }
+        public Func<T, Task<TResponse>> OnCmdDelegate { get; set; }
         public Command(IMqttClient connection, string commandName, string componentName = "")
         {
             var fullCommandName = string.IsNullOrEmpty(componentName) ? commandName : $"{componentName}*{commandName}";
@@ -24,7 +24,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                     if (OnCmdDelegate != null && req != null)
                     {
                         (int rid, _) = TopicParser.ParseTopic(topic);
-                        TResponse response = OnCmdDelegate.Invoke(req);
+                        TResponse response = await OnCmdDelegate.Invoke(req);
                         string respPayload = Json.Stringify(response.ReponsePayload);
                         _ = connection.PublishJsonAsync($"$iothub/methods/res/{response.Status}/?$rid={rid}", respPayload);
                     }

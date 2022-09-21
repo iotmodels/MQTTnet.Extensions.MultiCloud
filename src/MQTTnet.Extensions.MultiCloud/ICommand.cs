@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud
 {
@@ -6,6 +7,6 @@ namespace MQTTnet.Extensions.MultiCloud
         where T : IBaseCommandRequest<T>, new()
         where TResponse : IBaseCommandResponse
     {
-        Func<T, TResponse>? OnCmdDelegate { get; set; }
+        Func<T, Task<TResponse>>? OnCmdDelegate { get; set; }
     }
 }

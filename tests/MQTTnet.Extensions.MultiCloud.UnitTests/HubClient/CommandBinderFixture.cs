@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
@@ -35,10 +36,10 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             var mqttClient = new MockMqttClient();
             var command = new Command<CmdRequest, CmdResponse>(mqttClient, "myCmd");
             bool cmdCalled = false;
-            command.OnCmdDelegate = m =>
+            command.OnCmdDelegate = async m =>
             {
                 cmdCalled = true;
-                return new CmdResponse();
+                return await Task.FromResult(new CmdResponse());
             };
             mqttClient.SimulateNewMessage("$iothub/methods/POST/myCmd", "{}");
             Assert.True(cmdCalled);
@@ -50,10 +51,10 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             var mqttClient = new MockMqttClient();
             var command = new Command<CmdRequest, CmdResponse>(mqttClient, "myCmd", "myComp");
             bool cmdCalled = false;
-            command.OnCmdDelegate = m =>
+            command.OnCmdDelegate = async m =>
             {
                 cmdCalled = true;
-                return new CmdResponse();
+                return await Task.FromResult(new CmdResponse());
             };
             mqttClient.SimulateNewMessage("$iothub/methods/POST/myComp*myCmd", "{}");
             Assert.True(cmdCalled);

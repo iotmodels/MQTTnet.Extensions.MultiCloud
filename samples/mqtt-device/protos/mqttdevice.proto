@@ -10,8 +10,11 @@ message Telemetry {
 
 message Properties {
 	string sdkInfo = 1;
-	int32 interval = 2;
-	google.protobuf.Timestamp started = 3;
+	google.protobuf.Timestamp started = 2;
+}
+
+message WProperties {
+	int32 interval = 1;
 }
 
 service Command_echo {

@@ -151,7 +151,7 @@ public class Device : BackgroundService
         return ack;
     }
 
-    private Cmd_getRuntimeStats_Response Command_getRuntimeStats_Handler(Cmd_getRuntimeStats_Request req)
+    private async Task<Cmd_getRuntimeStats_Response> Command_getRuntimeStats_Handler(Cmd_getRuntimeStats_Request req)
     {
         commandCounter++;
         _telemetryClient.TrackEvent("CommandReceived", new Dictionary<string, string>()
@@ -163,10 +163,12 @@ public class Device : BackgroundService
         {
             Status = 200
         };
-       Dictionary<string, string> diagnosticResults = new Dictionary<string, string>();
-        diagnosticResults.Add("machine name", Environment.MachineName);
-        diagnosticResults.Add("os version", Environment.OSVersion.ToString());
-        diagnosticResults.Add("started", TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3));
+        Dictionary<string, string> diagnosticResults = new Dictionary<string, string>
+        {
+            { "machine name", Environment.MachineName },
+            { "os version", Environment.OSVersion.ToString() },
+            { "started", TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3) }
+        };
 
         if (req.DiagnosticsMode == DiagnosticsMode.complete)
         {
@@ -184,7 +186,7 @@ public class Device : BackgroundService
             diagnosticResults.Add("reconnects: ", reconnectCounter.ToString());
         }
         result.ReponsePayload = Json.Stringify(diagnosticResults);
-        return result;
+        return await Task.FromResult(result);
     }
 
 #pragma warning disable IDE0052 // Remove unread private members

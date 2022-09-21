@@ -163,11 +163,11 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                 Dictionary<string, string> diagResults = new Dictionary<string, string>();
                 diagResults.Add("test", "ok");
                 commandInvoked = true;
-                var result = new Cmd_getRuntimeStats_Response()
+                var result = Task.FromResult(new Cmd_getRuntimeStats_Response()
                 {
                     Status = 200,
                     ReponsePayload = Json.Stringify(diagResults)
-                };
+                });
 
                 return result;
             };

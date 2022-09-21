@@ -9,7 +9,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
         where T : IBaseCommandRequest<T>, new()
         where TResponse : IBaseCommandResponse
     {
-        public Func<T, TResponse>? OnCmdDelegate { get; set; }
+        public Func<T, Task<TResponse>>? OnCmdDelegate { get; set; }
 
         public Command(IMqttClient connection, string commandName, string componentName = "")
         {
@@ -28,7 +28,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
                     T req = new T().DeserializeBody(m.ApplicationMessage.Payload);
                     if (OnCmdDelegate != null && req != null)
                     {
-                        TResponse response = OnCmdDelegate.Invoke(req);
+                        TResponse response = await OnCmdDelegate.Invoke(req);
                         _ = connection.PublishBytesAsync($"pnp/{connection.Options.ClientId}/commands/{fullCommandName}/resp/{response.Status}", 
                             response.ResponseBytes);
                     }
