@@ -9,6 +9,11 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
         {
 
             public CmdRequest DeserializeBody(string payload) => new CmdRequest();
+
+            public CmdRequest DeserializeBody(byte[] payload)
+            {
+                throw new System.NotImplementedException();
+            }
         }
 
         private class CmdResponse : IBaseCommandResponse
@@ -20,6 +25,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
 
             public int Status { get; set; }
             public object ReponsePayload { get; set; }
+            public byte[] ResponseBytes { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
         }
 
 

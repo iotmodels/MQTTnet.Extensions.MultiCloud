@@ -9,7 +9,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 {
     public class ReadOnlyProperty<T> : IReadOnlyProperty<T>
     {
-        private readonly IPropertyStoreWriter updateTwin;
+        private readonly IPropertyStoreWriter updateBinder;
         public string PropertyName { get; }
         private readonly string component;
         public T PropertyValue { get; set; }
@@ -17,7 +17,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
 
         public ReadOnlyProperty(IMqttClient connection, string name, string component = "")
         {
-            updateTwin = new UpdateTwinBinder(connection);
+            updateBinder = new UpdateTwinBinder(connection);
             PropertyName = name;
             this.component = component;
         }
@@ -25,7 +25,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
         public async Task<int> ReportPropertyAsync(CancellationToken cancellationToken = default)
         {
             bool asComponent = !string.IsNullOrEmpty(component);
-            Version = await updateTwin.ReportPropertyAsync(ToJsonDict(asComponent), cancellationToken);
+            Version = await updateBinder.ReportPropertyAsync(ToJsonDict(asComponent), cancellationToken);
             return Version;
         }
 
@@ -49,5 +49,9 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
             return result;
         }
 
+        public async Task<int> ReportPropertyAsync(byte[] payload, CancellationToken cancellationToken = default)
+        {
+            return await updateBinder.ReportPropertyAsync(payload, cancellationToken);
+        }
     }
 }

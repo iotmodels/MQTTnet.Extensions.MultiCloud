@@ -37,6 +37,11 @@ public class Cmd_getRuntimeStats_Request : IBaseCommandRequest<Cmd_getRuntimeSta
             DiagnosticsMode = Json.FromString<DiagnosticsMode>(payload)
         };
     }
+
+    public Cmd_getRuntimeStats_Request DeserializeBody(byte[] payload)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class Cmd_getRuntimeStats_Response : IBaseCommandResponse
@@ -45,4 +50,5 @@ public class Cmd_getRuntimeStats_Response : IBaseCommandResponse
     
     public int Status { get; set; }
     public object ReponsePayload { get; set; }
+    public byte[] ResponseBytes { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 }

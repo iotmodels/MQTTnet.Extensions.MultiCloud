@@ -22,6 +22,15 @@
 		<Protobuf Include="Protos\*.proto" GrpcServices="Server" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Content Remove="Properties\launchSettings.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <_WebToolingArtifacts Remove="Properties\launchSettings.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="Properties\launchSettings.json" />
+	</ItemGroup>
+	<ItemGroup>
 		<Compile Update="*.g.cs">
 			<DependentUpon>dtmi_com_example_devicetemplate-1.json</DependentUpon>
 		</Compile>

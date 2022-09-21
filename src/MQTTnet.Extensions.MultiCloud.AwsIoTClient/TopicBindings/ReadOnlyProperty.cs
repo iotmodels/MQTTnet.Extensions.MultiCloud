@@ -50,5 +50,10 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
             }
             return result;
         }
+
+        public async Task<int> ReportPropertyAsync(byte[] payload, CancellationToken cancellationToken = default)
+        {
+            return await updateBinder.ReportPropertyAsync(payload, cancellationToken);
+        }
     }
 }

@@ -48,6 +48,11 @@ public class Cmd_ChangeLCDColor_Request : IBaseCommandRequest<Cmd_ChangeLCDColor
             request = System.Text.Json.JsonSerializer.Deserialize<string>(payload)
         };
     }
+
+    public Cmd_ChangeLCDColor_Request DeserializeBody(byte[] payload)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class Cmd_ChangeLCDColor_Response : IBaseCommandResponse
@@ -55,4 +60,5 @@ public class Cmd_ChangeLCDColor_Response : IBaseCommandResponse
     //public Dictionary<string, string> diagnosticResults { get; set; } = new Dictionary<string, string>();
     public int Status { get; set; }
     public object ReponsePayload { get; set; }
+    public byte[] ResponseBytes { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 }
