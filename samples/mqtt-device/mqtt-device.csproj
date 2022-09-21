@@ -19,7 +19,7 @@
     <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
   </ItemGroup>
 	<ItemGroup>
-		<Protobuf Include="Protos\*.proto" GrpcServices="Server" />
+		<Protobuf Include="protos\*.proto" GrpcServices="Server" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="*.g.cs">
