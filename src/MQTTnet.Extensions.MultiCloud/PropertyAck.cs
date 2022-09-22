@@ -13,6 +13,7 @@ namespace MQTTnet.Extensions.MultiCloud
             Name = "";
             ComponentName = "";
             LastReported = default!;
+            ValueBytes = default!;
 
         }
         public PropertyAck(string name) : this(name, "") { }
@@ -22,6 +23,7 @@ namespace MQTTnet.Extensions.MultiCloud
             Name = name;
             ComponentName = component;
             LastReported = default!;
+            ValueBytes = default!;
         }
 
         [JsonIgnore]
@@ -43,6 +45,11 @@ namespace MQTTnet.Extensions.MultiCloud
 
         [JsonPropertyName("value")]
         public T Value { get; set; } = default!;
+
+        
+        [JsonIgnore]
+        public byte[] ValueBytes { get; set; }
+        
 
         public void SetDefault(T defaultValue)
         {

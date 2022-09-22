@@ -53,5 +53,11 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
             };
             await updatePropertyBinder.ReportPropertyAsync(PropertyValue, cancellationToken);
         }
+
+        public async Task InitPropertyAsync(byte[] initialValue, CancellationToken cancellationToken = default)
+        {
+            await desiredBinder!.InitSubscriptions(connection);
+            await updatePropertyBinder.ReportPropertyAsync(initialValue, cancellationToken);
+        }
     }
 }

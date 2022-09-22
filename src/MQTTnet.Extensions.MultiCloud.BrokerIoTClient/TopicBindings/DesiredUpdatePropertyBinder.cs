@@ -1,10 +1,7 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Internal;
 using System;
 using System.Diagnostics;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
@@ -26,9 +23,12 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
                 var topic = m.ApplicationMessage.Topic;
                 if (topic.StartsWith($"pnp/{connection.Options.ClientId}/props/{propertyName}/set"))
                 {
-                    JsonNode desiredProperty = JsonNode.Parse(Encoding.UTF8.GetString(m.ApplicationMessage.Payload))!;
+                    //JsonNode desiredProperty = JsonNode.Parse(Encoding.UTF8.GetString(m.ApplicationMessage.Payload))!;
                     //JsonNode desiredProperty = PropertyParser.ReadPropertyFromDesired(desired, propertyName, componentName);
                     //var desiredProperty = desired?[propertyName];
+                    
+                    var desiredProperty =  m.ApplicationMessage.Payload;
+
                     if (desiredProperty != null)
                     {
                         if (OnProperty_Updated == null)
@@ -39,14 +39,14 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
                         {
                             var property = new PropertyAck<T>(propertyName, componentName)
                             {
-                                Value = desiredProperty.Deserialize<T>()!,
+                                ValueBytes = m.ApplicationMessage.Payload
+                                //Value = desiredProperty.Deserialize<T>()!,
                                 //Version = desired?["$version"]?.GetValue<int>() ?? 0
                             };
                             var ack = OnProperty_Updated(property);
                             if (ack != null)
                             {
-                                //_ = updateTwin.SendRequestWaitForResponse(ack);
-                                _ = propertyBinder.ReportPropertyAsync(ack);
+                                _ = propertyBinder.ReportPropertyAsync(ack.ValueBytes);
                             }
                         }
                     }

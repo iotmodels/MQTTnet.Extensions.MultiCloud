@@ -13,7 +13,7 @@ public class Device : BackgroundService
 {
     private Idevicetemplate? client;
 
-    private const int default_interval = 30;
+    private const int default_interval = 5;
 
     private readonly ILogger<Device> _logger;
     private readonly IConfiguration _configuration;
@@ -34,39 +34,37 @@ public class Device : BackgroundService
         client.Command_echo.OnCmdDelegate = Cmd_echo_Handler;
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
 
+        var wProps = new mqttdevice.WProperties();
+        wProps.Interval = default_interval;
+        await client.Property_interval.InitPropertyAsync(wProps.ToByteArray(), stoppingToken);
+        
+        client.Property_interval.PropertyValue.Value = default_interval;
         var prop = new mqttdevice.Properties
         {
             SdkInfo = ClientFactory.NuGetPackageVersion,
-            Started = DateTime.UtcNow.ToTimestamp()
+            Started = DateTime.UtcNow.ToTimestamp(),
+            Interval = default_interval
         };
-        //client.Property_sdkInfo.PropertyValue = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
         await client.Property_sdkInfo.ReportPropertyAsync(prop.ToByteArray(), stoppingToken);
 
-        //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-        //await client.Property_interval.ReportPropertyAsync(stoppingToken);
+        
 
         double lastTemp = 21;
         while (!stoppingToken.IsCancellationRequested)
         {
             lastTemp = GenerateSensorReading(lastTemp, 12, 45);
-            //await client!.Telemetry_temp.SendTelemetryAsync(lastTemp, stoppingToken);
-            var tel = new Telemetries();
-            tel.Temperature = lastTemp;
-            tel.WorkingSet = Environment.WorkingSet;
             _logger.LogWarning("lastTemp {lastTemp}", lastTemp);
 
+            var tel = new Telemetries()
+            {
+                Temperature = lastTemp,
+                WorkingSet = Environment.WorkingSet
+            };
             await client.Telemetry_temp.SendTelemetryAsync(tel.ToByteArray(), stoppingToken);
 
-            //await client.Connection.PublishAsync(
-            //    new MQTTnet.MqttApplicationMessageBuilder()
-            //        .WithTopic($"device/{client.Connection.Options.ClientId}/telemetry")
-            //        .WithPayload(tel.ToByteArray())
-            //        .Build(), stoppingToken);
-
-            //var interval = client!.Property_interval.PropertyValue?.Value;
-            //_logger.LogInformation("Waiting {interval} s to send telemetry", interval);
-            //await Task.Delay(interval.HasValue ? interval.Value * 1000 : 1000, stoppingToken);
-            await Task.Delay(20000, stoppingToken);
+            var interval = client!.Property_interval.PropertyValue?.Value;
+            _logger.LogInformation("Waiting {interval} s to send telemetry", interval);
+            await Task.Delay(interval.HasValue ? interval.Value * 1000 : 1000, stoppingToken);
         }
     }
 
@@ -75,7 +73,8 @@ public class Device : BackgroundService
         ArgumentNullException.ThrowIfNull(client);
         _logger.LogInformation("New prop {name} received", p.Name);
         var ack = new PropertyAck<int>(p.Name);
-
+        var propValue = mqttdevice.WProperties.Parser.ParseFrom(p.ValueBytes);
+        p.Value = propValue.Interval;
         if (p.Value > 0)
         {
             ack.Description = "desired notification accepted";
@@ -94,6 +93,9 @@ public class Device : BackgroundService
                             default_interval;
         };
         client.Property_interval.PropertyValue = ack;
+        var props = new mqttdevice.Properties();
+        props.Interval = ack.Value;
+        ack.ValueBytes = props.ToByteArray();
         return ack;
     }
 

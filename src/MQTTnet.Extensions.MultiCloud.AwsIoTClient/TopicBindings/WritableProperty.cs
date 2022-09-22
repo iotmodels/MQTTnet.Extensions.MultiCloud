@@ -49,6 +49,11 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
             }
         }
 
+        public Task InitPropertyAsync(byte[] defaultValue, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         private PropertyAck<T> InitFromTwin(string twinJson, string propName, string componentName, T defaultValue)
         {
             if (string.IsNullOrEmpty(twinJson))
@@ -133,5 +138,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
 
             return result;
         }
+
+     
     }
 }

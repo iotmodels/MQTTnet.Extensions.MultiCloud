@@ -49,7 +49,10 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
             }
             _ = updateTwin.ReportPropertyAsync(PropertyValue.ToAckDict(), cancellationToken).ConfigureAwait(false);
         }
-
+        public Task InitPropertyAsync(byte[] defaultValue, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
         private PropertyAck<T> InitFromTwin(string twinJson, string propName, string componentName, T defaultValue)
         {
             if (string.IsNullOrEmpty(twinJson))
@@ -169,5 +172,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
             }
             return result;
         }
+
+
     }
 }
