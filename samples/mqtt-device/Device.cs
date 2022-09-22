@@ -1,11 +1,9 @@
 using dtmi_com_example_devicetemplate;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
 using mqttdevice;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System.Reflection;
 
 namespace mqtt_device;
 
@@ -32,6 +30,7 @@ public class Device : BackgroundService
         _logger.LogWarning("Connected to {settings}",ClientFactory.computedSettings );
 
         client.Command_echo.OnCmdDelegate = Cmd_echo_Handler;
+        client.Command_getRuntimeStats.OnCmdDelegate = Cmd_getRuntimeStats_Handler;
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
 
         var wProps = new mqttdevice.WProperties();
@@ -110,6 +109,18 @@ public class Device : BackgroundService
             ReponsePayload = resp.OutEcho,
             ResponseBytes = resp.ToByteArray()
         };
+    }
+
+    private async Task<Cmd_getRuntimeStats_Response> Cmd_getRuntimeStats_Handler(Cmd_getRuntimeStats_Request req)
+    {
+        var grs = new GetRuntimeStatsService();
+        var gResp = await grs.getRuntimeStats(req.Request, null);
+        var response = new Cmd_getRuntimeStats_Response()
+        {
+            Status = 200,
+            ResponseBytes = gResp.ToByteArray()
+        };
+        return response;
     }
 
     readonly Random random = new();

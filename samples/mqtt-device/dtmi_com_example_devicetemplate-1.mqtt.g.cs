@@ -14,6 +14,7 @@ public class devicetemplate : PnPMqttClient, Idevicetemplate
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_temp { get; set; }
     public ICommand<Cmd_echo_Request, Cmd_echo_Response> Command_echo { get; set; }
+    public ICommand<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response> Command_getRuntimeStats { get; set; }
 
     public devicetemplate(IMqttClient c) : base(c, Idevicetemplate.ModelId)
     {
@@ -21,6 +22,7 @@ public class devicetemplate : PnPMqttClient, Idevicetemplate
         Property_interval = new WritableProperty<int>(c, "interval");
         Telemetry_temp = new Telemetry<double>(c, "temp");
         Command_echo = new Command<Cmd_echo_Request, Cmd_echo_Response>(c, "echo");
+        Command_getRuntimeStats = new Command<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response>(c, "getRuntimeStats");
     }
 
     public async Task<MqttClientPublishResult> SendTelemetryAsync(AllTelemetries payload, CancellationToken t) =>

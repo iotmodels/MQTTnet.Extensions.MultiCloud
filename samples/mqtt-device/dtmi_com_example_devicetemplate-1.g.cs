@@ -15,6 +15,7 @@ public interface Idevicetemplate
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_temp{ get; set; }
     public ICommand<Cmd_echo_Request, Cmd_echo_Response> Command_echo { get; set; }
+    public ICommand<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response> Command_getRuntimeStats { get; set; }
     public Task<MqttClientPublishResult> SendTelemetryAsync(AllTelemetries payload, CancellationToken t);
 }
 
@@ -53,4 +54,39 @@ public class Cmd_echo_Response : IBaseCommandResponse
     public object ReponsePayload { get; set; }
     public echoResponse EchoResponse { get; set; }
     public byte[] ResponseBytes { get;set; }
+}
+
+public enum DiagnosticsMode
+{
+    minimal = 0,
+    complete = 1,
+    full = 2
+}
+
+public class Cmd_getRuntimeStats_Request : IBaseCommandRequest<Cmd_getRuntimeStats_Request>
+{
+    public getRuntimeStatsRequest Request { get; set; }
+
+    public Cmd_getRuntimeStats_Request DeserializeBody(string payload)
+    {
+        
+        throw new NotImplementedException();
+    }
+
+    public Cmd_getRuntimeStats_Request DeserializeBody(byte[] payload)
+    {
+        return new Cmd_getRuntimeStats_Request()
+        {
+            Request = mqttdevice.getRuntimeStatsRequest.Parser.ParseFrom(payload)
+        };
+    }
+}
+
+public class Cmd_getRuntimeStats_Response : IBaseCommandResponse
+{
+    //ReponsePayload = new Dictionary<string, string>();
+
+    public int Status { get; set; }
+    public object ReponsePayload { get; set; }
+    public byte[] ResponseBytes { get; set; }
 }

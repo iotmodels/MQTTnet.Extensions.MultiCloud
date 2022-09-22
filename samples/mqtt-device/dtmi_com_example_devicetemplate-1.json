@@ -38,6 +38,47 @@
 				"name": "commandOutput",
 				"schema": "string"
 			}
+		},
+		{
+			"@type": "Command",
+			"name": "getRuntimeStats",
+			"request": {
+				"@type": "CommandPayload",
+				"name": "diagnosticsMode",
+				"schema": {
+					"@type": "Enum",
+					"enumValues": [
+						{
+							"name": "minimal",
+							"enumValue": 0
+						},
+						{
+							"enumValue": 1,
+							"name": "complete"
+						},
+						{
+							"name": "full",
+							"enumValue": 2
+						}
+					],
+					"valueSchema": "integer"
+				}
+			},
+			"response": {
+				"@type": "CommandPayload",
+				"name": "diagnosticResults",
+				"schema": {
+					"@type": "Map",
+					"mapKey": {
+						"name": "key",
+						"schema": "string"
+					},
+					"mapValue": {
+						"name": "val",
+						"schema": "string"
+					}
+				}
+			}
 		}
 	]
 }

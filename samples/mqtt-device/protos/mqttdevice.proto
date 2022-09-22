@@ -18,15 +18,28 @@ message WProperties {
 	int32 interval = 1;
 }
 
-service Commands {
-	rpc echo(echoRequest) returns (echoResponse);
-	rpc echo2(echoRequest) returns (echoResponse);
-}
-
 message echoRequest {
 	string inEcho = 1;
 }
 
 message echoResponse {
 	string outEcho = 1;
+}
+
+enum getRuntimeStatsMode {
+	BASIC = 0;
+	NORMAL = 1;
+	FULL = 2;
+}
+message getRuntimeStatsRequest {
+	getRuntimeStatsMode mode = 1;
+}
+
+message getRuntimeStatsResponse {
+	map<string,string> diagResults = 1;
+}
+
+service Commands {
+	rpc echo(echoRequest) returns (echoResponse);
+	rpc getRuntimeStats(getRuntimeStatsRequest) returns (getRuntimeStatsResponse);
 }
