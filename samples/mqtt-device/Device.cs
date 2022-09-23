@@ -30,9 +30,9 @@ public class Device : BackgroundService
         //client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
         client.Command_echo.OnCmdDelegate = Cmd_echo_Handler;
 
-        //Type baseClient = client.GetType().BaseType!;
-        //client.Property_sdkInfo.PropertyValue = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
-        //await client.Property_sdkInfo.ReportPropertyAsync(stoppingToken);
+
+        client.Property_sdkInfo.PropertyValue = ClientFactory.NuGetPackageVersion;
+        await client.Property_sdkInfo.ReportPropertyAsync(stoppingToken);
 
         //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
         //await client.Property_interval.ReportPropertyAsync(stoppingToken);

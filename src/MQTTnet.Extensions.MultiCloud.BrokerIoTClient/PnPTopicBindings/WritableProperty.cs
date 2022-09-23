@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
+namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings
 {
     public class WritableProperty<T> : IWritableProperty<T>
     {
