@@ -9,15 +9,15 @@ message Telemetries {
 	double temperature = 1; 
 	double workingSet = 2;
 }
-// @topic: -> grpc/{clientId}/props[/{propName}]
+// @topic: -> grpc/{clientId}/props[/{propName}] (r)
 message Properties {
 	string sdkInfo = 1;
 	google.protobuf.Timestamp started = 2;
 	int32 interval = 3;
 }
 
-// @topic: <- grpc/{clientId}/props[/{propName}]/set
-// @topic: -> grpc/{clientId}/props[/{propName}]/ack
+// @topic: <- grpc/{clientId}/props[/{propName}]/set (r)
+// @topic: -> grpc/{clientId}/props[/{propName}]/ack (r)
 service PropertiesSetter {
 	rpc set_interval(Properties) returns (ack);
 }
