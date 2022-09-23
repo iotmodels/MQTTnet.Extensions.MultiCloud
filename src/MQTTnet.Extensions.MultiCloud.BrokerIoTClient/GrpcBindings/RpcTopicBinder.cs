@@ -1,5 +1,4 @@
-﻿using MQTTnet.Client;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.GrpcBindings

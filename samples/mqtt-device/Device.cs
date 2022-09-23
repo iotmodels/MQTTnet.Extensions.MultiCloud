@@ -1,7 +1,6 @@
 using dtmi_com_example_devicetemplate;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System.Reflection;
 
 namespace mqtt_device;
 
@@ -34,8 +33,8 @@ public class Device : BackgroundService
         client.Property_sdkInfo.PropertyValue = ClientFactory.NuGetPackageVersion;
         await client.Property_sdkInfo.ReportPropertyAsync(stoppingToken);
 
-        //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-        //await client.Property_interval.ReportPropertyAsync(stoppingToken);
+        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
+        await client.Property_interval.ReportPropertyAsync(stoppingToken);
 
         double lastTemp = 21;
         while (!stoppingToken.IsCancellationRequested)

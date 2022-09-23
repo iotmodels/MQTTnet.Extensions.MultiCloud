@@ -8,7 +8,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient
 {
     public static class AwsClientFactory
     {
-        public static string NugetPackageVersion => ThisAssembly.NuGetPackageVersion;
+        public static string NuGetPackageVersion => ThisAssembly.NuGetPackageVersion;
         public static ConnectionSettings? ComputedSettings { get; private set; }
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, CancellationToken cancellationToken = default) =>
             await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectinString), cancellationToken);

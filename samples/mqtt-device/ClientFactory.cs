@@ -7,8 +7,8 @@ namespace mqtt_device
 {
     internal class ClientFactory
     {
-        static string nugetPackaveVersion = string.Empty;
-        public static string NuGetPackageVersion => nugetPackaveVersion;
+        static string nugetPackageVersion = string.Empty;
+        public static string NuGetPackageVersion => nugetPackageVersion;
         internal static string ComputeDeviceKey(string masterKey, string deviceId) =>
             Convert.ToBase64String(new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(masterKey)).ComputeHash(System.Text.Encoding.UTF8.GetBytes(deviceId)));
 
@@ -52,7 +52,7 @@ namespace mqtt_device
             var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
             var client = new dtmi_com_example_devicetemplate.mqtt.devicetemplate(mqtt);
             computedSettings = cs;
-            nugetPackaveVersion = BrokerClientFactory.NugetPackageVersion;
+            nugetPackageVersion = BrokerClientFactory.NuGetPackageVersion;
             return client;
         }
 
@@ -62,7 +62,7 @@ namespace mqtt_device
             var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             var client = new dtmi_com_example_devicetemplate.hub.devicetemplate(hub);
             computedSettings = HubDpsFactory.ComputedSettings;
-            nugetPackaveVersion = HubDpsFactory.NugetPackageVersion;
+            nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;
             await client.InitState();
             return client;
         }

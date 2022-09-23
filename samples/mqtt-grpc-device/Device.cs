@@ -1,35 +1,33 @@
-using Google.Protobuf;
+﻿using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using mqtt_grpc_device_protos;
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace mqtt_grpc_device
 {
-    public class Device : BackgroundService
+    internal class Device : BackgroundService
     {
         private readonly ILogger<Device> _logger;
         private readonly IConfiguration _configuration;
-
-        mqtt_grpc_sample_device? client;
-        
-
         public Device(ILogger<Device> logger, IConfiguration config)
         {
             _logger = logger;
             _configuration = config;
         }
 
+        private mqtt_grpc_sample_device? client;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            IMqttClient connection = await BrokerClientFactory.CreateFromConnectionSettingsAsync(_configuration.GetConnectionString("cs"), stoppingToken);
+            IMqttClient connection = await BrokerClientFactory.CreateFromConnectionSettingsAsync(_configuration.GetConnectionString("cs"), true, stoppingToken);
+
             client = new mqtt_grpc_sample_device(connection);
 
             connection.DisconnectedAsync += MqttClient_DisconnectedAsync;
@@ -39,20 +37,18 @@ namespace mqtt_grpc_device
             client.CommandEcho.OnCallbackDelegate = OnMqttCommandEchoReceivedHandler;
 
             client.Props.Interval = 30;
-            //client.Props.SdkInfo = GrpcMqttClientFactory.NuGetPackageVersion;
+            client.Props.SdkInfo = BrokerClientFactory.NuGetPackageVersion;
             client.Props.Started = DateTime.UtcNow.ToTimestamp();
             await client.ReportPropertiesAsync(stoppingToken);
-
-           
 
             var lastTemperature = 21.0;
             while (!stoppingToken.IsCancellationRequested)
             {
                 lastTemperature = SensorReadings.GenerateSensorReading(lastTemperature, 12, 42);
-                var telemetries = new Telemetries() 
-                { 
-                    Temperature = lastTemperature, 
-                    WorkingSet = Environment.WorkingSet 
+                var telemetries = new Telemetries()
+                {
+                    Temperature = lastTemperature,
+                    WorkingSet = Environment.WorkingSet
                 };
                 await client.SendTelemetryAsync(telemetries, stoppingToken);
                 _logger.LogInformation("LastTemp {lastTemp}. Waiting {interval}s", lastTemperature, client.Props.Interval);
@@ -76,7 +72,7 @@ namespace mqtt_grpc_device
             await Task.Yield();
         }
 
-        async Task<byte[]> OnMqttCommandEchoReceivedHandler(byte[] requestPayload)
+        private async Task<byte[]> OnMqttCommandEchoReceivedHandler(byte[] requestPayload)
         {
             var request = echoRequest.Parser.ParseFrom(requestPayload);
             _logger.LogInformation("Cmd echo Received: {req}", request.InEcho);
@@ -87,7 +83,7 @@ namespace mqtt_grpc_device
             return await Task.FromResult(responsePayload.ToByteArray());
         }
 
-        async Task<byte[]> OnPropIntervalReceivedHandler(byte[] requestPayload)
+        private async Task<byte[]> OnPropIntervalReceivedHandler(byte[] requestPayload)
         {
             ArgumentNullException.ThrowIfNull(client);
             var response = new ack()

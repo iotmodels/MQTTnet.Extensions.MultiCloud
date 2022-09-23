@@ -25,7 +25,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings
 
         public string PropertyName => propertyName;
 
-        readonly IMqttClient connection;
+        private readonly IMqttClient connection;
 
         public WritableProperty(IMqttClient c, string name, string component = "")
         {

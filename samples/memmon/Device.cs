@@ -4,7 +4,6 @@ using Microsoft.ApplicationInsights;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Diagnostics;
-using System.Reflection;
 using System.Text;
 
 namespace memmon;
@@ -50,8 +49,8 @@ public class Device : BackgroundService
         connectionSettings = MemMonFactory.connectionSettings;
         _logger.LogWarning("Connected");
 
-        Type baseClient = client.GetType().BaseType;
-        infoVersion = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
+
+        infoVersion = MemMonFactory.NuGetPackageVersion;
 
         client.Property_enabled.OnProperty_Updated = Property_enabled_UpdateHandler;
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
