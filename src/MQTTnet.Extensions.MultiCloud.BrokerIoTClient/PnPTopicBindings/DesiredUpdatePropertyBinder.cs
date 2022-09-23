@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
+namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings
 {
     public class DesiredUpdatePropertyBinder<T>
     {

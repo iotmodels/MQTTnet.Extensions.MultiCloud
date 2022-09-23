@@ -3,7 +3,7 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings;
 
 namespace dtmi_rido_pnp_sensehat.mqtt;
 

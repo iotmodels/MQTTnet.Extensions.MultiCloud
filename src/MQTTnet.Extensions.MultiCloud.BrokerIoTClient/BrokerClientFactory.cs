@@ -1,6 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,13 +10,13 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
     public static class BrokerClientFactory
     {
         public static ConnectionSettings? ComputedSettings { get; private set; }
-        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, bool lwt = true, CancellationToken cancellationToken = default) =>
-            await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectinString), lwt, cancellationToken);
+        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, bool withBirth = true, CancellationToken cancellationToken = default) =>
+            await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectinString), withBirth, cancellationToken);
 
-        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(ConnectionSettings cs, bool lwt = true, CancellationToken cancellationToken = default)
+        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(ConnectionSettings cs, bool withBirth = true, CancellationToken cancellationToken = default)
         {
             MqttClient? mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
-            var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs, lwt).Build());
+            var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs, withBirth).Build());
             ComputedSettings = cs;
             if (connAck.ResultCode != MqttClientConnectResultCode.Success)
             {
@@ -23,5 +24,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             }
             return mqtt;
         }
+
+        public static string NugetPackageVersion => ThisAssembly.NuGetPackageVersion;
     }
 }

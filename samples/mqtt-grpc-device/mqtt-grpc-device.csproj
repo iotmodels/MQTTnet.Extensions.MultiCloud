@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>mqtt_grpc_device</RootNamespace>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Grpc.Core" Version="2.46.3" />
+		<PackageReference Include="Google.Protobuf" Version="3.21.6" />
+		<PackageReference Include="Grpc.Tools" Version="2.48.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+	</ItemGroup>
+	<ItemGroup>
+		<Protobuf Include="protos\*.proto" GrpcServices="None" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
+	</ItemGroup>
+  <ItemGroup>
+    <None Update="ca.pem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
