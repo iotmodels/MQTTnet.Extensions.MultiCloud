@@ -8,8 +8,8 @@ namespace memmon;
 
 internal class MemMonFactory
 {
-    static string nugetPackaveVersion = string.Empty;
-    public static string NuGetPackageVersion => nugetPackaveVersion;
+    static string nugetPackageVersion = string.Empty;
+    public static string NuGetPackageVersion => nugetPackageVersion;
     internal static string ComputeDeviceKey(string masterKey, string deviceId) =>
             Convert.ToBase64String(new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(masterKey)).ComputeHash(System.Text.Encoding.UTF8.GetBytes(deviceId)));
 
@@ -61,7 +61,7 @@ internal class MemMonFactory
         var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
         connectionSettings = BrokerClientFactory.ComputedSettings;
         var client = new dtmi_rido_pnp_memmon.mqtt.memmon(mqtt);
-        nugetPackaveVersion = BrokerClientFactory.NugetPackageVersion;
+        nugetPackageVersion = BrokerClientFactory.NuGetPackageVersion;
         return client;
     }
 
@@ -71,7 +71,7 @@ internal class MemMonFactory
         var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
         connectionSettings = HubDpsFactory.ComputedSettings;
         var client = new dtmi_rido_pnp_memmon.hub.memmon(hub);
-        nugetPackaveVersion = HubDpsFactory.NugetPackageVersion;
+        nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;
         await client.InitState();
         return client;
     }
@@ -80,7 +80,7 @@ internal class MemMonFactory
     {
         var mqtt = await AwsClientFactory.CreateFromConnectionSettingsAsync(connectionString, cancellationToken);
         var client = new dtmi_rido_pnp_memmon.aws.memmon(mqtt);
-        nugetPackaveVersion = AwsClientFactory.NugetPackageVersion;
+        nugetPackageVersion = AwsClientFactory.NuGetPackageVersion;
         return client;
     }
 }

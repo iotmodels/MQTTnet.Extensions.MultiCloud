@@ -1,7 +1,6 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,6 +8,8 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
 {
     public static class BrokerClientFactory
     {
+        public static string NuGetPackageVersion => ThisAssembly.NuGetPackageVersion;
+
         public static ConnectionSettings? ComputedSettings { get; private set; }
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, bool withBirth = true, CancellationToken cancellationToken = default) =>
             await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectinString), withBirth, cancellationToken);
@@ -25,6 +26,6 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             return mqtt;
         }
 
-        public static string NugetPackageVersion => ThisAssembly.NuGetPackageVersion;
+
     }
 }

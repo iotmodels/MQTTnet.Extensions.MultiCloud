@@ -7,6 +7,9 @@ namespace pi_sense_device
 {
     internal class SenseHatFactory
     {
+        static string nugetPackageVersion = string.Empty;
+        public static string NuGetPackageVersion => nugetPackageVersion;
+
         IConfiguration _configuration;
         public SenseHatFactory(IConfiguration configuration)
         {
