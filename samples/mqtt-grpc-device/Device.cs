@@ -35,6 +35,7 @@ namespace mqtt_grpc_device
 
             client.PropSetterInterval.OnCallbackDelegate = OnPropIntervalReceivedHandler;
             client.CommandEcho.OnCallbackDelegate = OnMqttCommandEchoReceivedHandler;
+            client.CommandGetRuntimeStats.OnCallbackDelegate = OnCommandGetRuntimeStatsHanlder;
 
             client.Props.Interval = 30;
             client.Props.SdkInfo = BrokerClientFactory.NuGetPackageVersion;
@@ -56,7 +57,7 @@ namespace mqtt_grpc_device
             }
         }
 
-        private async Task<byte[]> OnMqttCommandEchoReceivedHandler(byte[] requestPayload)
+        async Task<byte[]> OnMqttCommandEchoReceivedHandler(byte[] requestPayload)
         {
             var request = echoRequest.Parser.ParseFrom(requestPayload);
             _logger.LogInformation("Cmd echo Received: {req}", request.InEcho);
@@ -67,7 +68,30 @@ namespace mqtt_grpc_device
             return await Task.FromResult(responsePayload.ToByteArray());
         }
 
-        private async Task<byte[]> OnPropIntervalReceivedHandler(byte[] requestPayload)
+        async Task<byte[]> OnCommandGetRuntimeStatsHanlder(byte[] payload)
+        {
+            var request = getRuntimeStatsRequest.Parser.ParseFrom(payload);
+            _logger.LogInformation("Cmd getRuntimeStats Received: {req}", request.Mode.ToString());
+            var responsePayload = new getRuntimeStatsResponse();
+            if (request.Mode == getRuntimeStatsMode.Basic)
+            {
+                responsePayload.DiagResults.Add("machineName", Environment.MachineName);
+            }
+            if (request.Mode == getRuntimeStatsMode.Normal)
+            {
+                responsePayload.DiagResults.Add("machineName", Environment.MachineName);
+                responsePayload.DiagResults.Add("OsVersion", Environment.OSVersion.ToString());
+            }
+            if (request.Mode == getRuntimeStatsMode.Full)
+            {
+                responsePayload.DiagResults.Add("machineName", Environment.MachineName);
+                responsePayload.DiagResults.Add("OsVersion", Environment.OSVersion.ToString());
+                responsePayload.DiagResults.Add("SDKInfo", BrokerClientFactory.NuGetPackageVersion);
+            }
+            return await Task.FromResult(responsePayload.ToByteArray());
+        }
+
+        async Task<byte[]> OnPropIntervalReceivedHandler(byte[] requestPayload)
         {
             ArgumentNullException.ThrowIfNull(client);
             var response = new ack()

@@ -11,18 +11,20 @@ namespace mqtt_grpc_device;
 
 internal class mqtt_grpc_sample_device 
 {
-    internal GrpcCommand CommandEcho;
-    internal GrpcPropertySetter PropSetterInterval;
-
     internal IMqttClient Connection;
     internal Properties Props;
+
+    internal GrpcPropertySetter PropSetterInterval;
+    internal GrpcCommand CommandEcho;
+    internal GrpcCommand CommandGetRuntimeStats;
 
     public mqtt_grpc_sample_device(IMqttClient client) 
     {
         Connection = client;
         Props = new Properties();
-        CommandEcho = new GrpcCommand(client, "echo");
         PropSetterInterval = new GrpcPropertySetter(client, "interval");
+        CommandEcho = new GrpcCommand(client, "echo");
+        CommandGetRuntimeStats = new GrpcCommand(client, "getRuntimeStats");
     }
 
     public async Task<MqttClientPublishResult> SendTelemetryAsync(Telemetries telemetries, CancellationToken cancellationToken = default) =>
