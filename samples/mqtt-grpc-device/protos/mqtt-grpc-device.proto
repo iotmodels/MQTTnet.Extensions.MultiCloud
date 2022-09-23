@@ -2,6 +2,7 @@
 
 option csharp_namespace = "mqtt_grpc_device_protos";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
 
 // @topic: -> grpc/{clientId}/tel[/{telName}]
 message Telemetries {
@@ -31,6 +32,7 @@ service Commands {
 message ack {
 	int32 status = 1;
 	string description = 2;
+	google.protobuf.Any value =3;
 }
 
 message echoRequest {
