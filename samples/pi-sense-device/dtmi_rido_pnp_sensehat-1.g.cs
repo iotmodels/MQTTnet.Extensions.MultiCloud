@@ -21,10 +21,10 @@ public interface Isensehat
     public ITelemetry<double> Telemetry_h { get; set; }
     public ITelemetry<double> Telemetry_p { get; set; }
     public ITelemetry<double> Telemetry_m { get; set; }
-
     public ICommand<Cmd_ChangeLCDColor_Request, Cmd_ChangeLCDColor_Response> Command_ChangeLCDColor { get; set; }
-    public Task<MqttClientPublishResult> SendTelemetryAsync(AllTelemetries payload, CancellationToken t);
+    Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default);
 }
+
 
 public class AllTelemetries
 {

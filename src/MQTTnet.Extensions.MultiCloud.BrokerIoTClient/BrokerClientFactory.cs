@@ -23,9 +23,18 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             {
                 throw new ApplicationException($"Cannot connect to {cs}");
             }
+            var pubAck = await mqtt.PublishJsonAsync(
+               BirthConvention.BirthTopic(mqtt.Options.ClientId),
+               new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
+               {
+                   ModelId = cs.ModelId
+               },
+               Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true);
+            if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
+            {
+                throw new ApplicationException($"Error publishing Birth {cs}");
+            }
             return mqtt;
         }
-
-
     }
 }
