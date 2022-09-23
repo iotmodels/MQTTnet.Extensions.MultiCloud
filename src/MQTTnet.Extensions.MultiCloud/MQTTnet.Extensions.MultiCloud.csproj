@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
 	  <Nullable>enable</Nullable>
-    <Title>MQTTnet Abstraction to create Mqtt clients.</Title>
-    <Description>Provides abstraction APIs to create PnP Devices</Description>
+    <Title>MQTTnet extensions to create Mqtt clients.</Title>
+    <Description>Provides APIs to create MQTT Devices</Description>
     <PackageIcon>iotpnp-128.png</PackageIcon>
     
   </PropertyGroup>
