@@ -56,22 +56,6 @@ namespace mqtt_grpc_device
             }
         }
 
-        private async Task MqttClient_ConnectedAsync(MqttClientConnectedEventArgs arg)
-        {
-            _logger.LogWarning("Client Connected {reason}", arg.ConnectResult);
-            await Task.Yield();
-        }
-
-        private async Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
-        {
-            _logger.LogError("Client Disconnected {reason}", arg.ReasonString);
-            if (arg.Exception != null)
-            {
-                _logger.LogCritical(arg.Exception, "Connection Exception");
-            }
-            await Task.Yield();
-        }
-
         private async Task<byte[]> OnMqttCommandEchoReceivedHandler(byte[] requestPayload)
         {
             var request = echoRequest.Parser.ParseFrom(requestPayload);
@@ -101,14 +85,33 @@ namespace mqtt_grpc_device
                     await client.ReportPropertiesAsync();
                     response.Description = "property accepted";
                     response.Status = 200;
+                    response.Value = Google.Protobuf.WellKnownTypes.Any.Pack(request);
                 }
                 else
                 {
+                    response.Value = Google.Protobuf.WellKnownTypes.Any.Pack(client.Props);
                     response.Description = "negative values not accepted";
                     response.Status = 403;
                 }
             }
+            await Task.Delay(1500);
             return response.ToByteArray();
+        }
+
+        private async Task MqttClient_ConnectedAsync(MqttClientConnectedEventArgs arg)
+        {
+            _logger.LogWarning("Client Connected {reason}", arg.ConnectResult);
+            await Task.Yield();
+        }
+
+        private async Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
+        {
+            _logger.LogError("Client Disconnected {reason}", arg.ReasonString);
+            if (arg.Exception != null)
+            {
+                _logger.LogCritical(arg.Exception, "Connection Exception");
+            }
+            await Task.Yield();
         }
     }
 }
