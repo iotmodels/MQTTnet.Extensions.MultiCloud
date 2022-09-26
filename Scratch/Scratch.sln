@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.IoT", "..\..\..\MQTTnet.Extensions.MultiCloud\src\MQTTnet.Extensions.IoT\MQTTnet.Extensions.IoT.csproj", "{0EBAB825-13F6-4DD8-B304-FDECF9535B84}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{34CF7DDE-6EEE-40E2-8FAB-E0ED33A125B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iot-device", "..\samples\iot-device\iot-device.csproj", "{3A64C9B4-66D0-4599-AC4C-D17F64B7A314}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0EBAB825-13F6-4DD8-B304-FDECF9535B84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EBAB825-13F6-4DD8-B304-FDECF9535B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EBAB825-13F6-4DD8-B304-FDECF9535B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EBAB825-13F6-4DD8-B304-FDECF9535B84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A64C9B4-66D0-4599-AC4C-D17F64B7A314}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A64C9B4-66D0-4599-AC4C-D17F64B7A314}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A64C9B4-66D0-4599-AC4C-D17F64B7A314}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A64C9B4-66D0-4599-AC4C-D17F64B7A314}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3A64C9B4-66D0-4599-AC4C-D17F64B7A314} = {34CF7DDE-6EEE-40E2-8FAB-E0ED33A125B5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FFF7B2AA-9609-4E09-8318-6961383DFBBC}
+	EndGlobalSection
+EndGlobal
