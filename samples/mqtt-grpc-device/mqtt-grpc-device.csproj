@@ -7,8 +7,6 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Grpc.Core" Version="2.46.3" />
-		<PackageReference Include="Google.Protobuf" Version="3.21.6" />
 		<PackageReference Include="Grpc.Tools" Version="2.48.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,16 +17,11 @@
 		<Protobuf Include="protos\*.proto" GrpcServices="None" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
+	  <ProjectReference Include="..\..\src\MQTTnet.Extensions.IoT\MQTTnet.Extensions.IoT.csproj" />
 	</ItemGroup>
   <ItemGroup>
     <None Update="ca.pem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Properties\launchSettings.json.template">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
   </ItemGroup>
 </Project>

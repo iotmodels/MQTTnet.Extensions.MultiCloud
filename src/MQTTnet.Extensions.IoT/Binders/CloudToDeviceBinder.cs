@@ -1,21 +1,27 @@
 ﻿using MQTTnet.Client;
+using System.Xml.Linq;
 
 namespace MQTTnet.Extensions.IoT.Binders;
 
 public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 {
-    protected string topicTemplate = "device/{clientId}/commands/{name}";
-    protected string topicResponseSuffix = "resp";
+    string _name;
+    IMqttClient _connection;
+
+    protected string topicResponseSuffix = string.Empty;
+    
+    protected bool nameInTopic = true;
     public Func<T, Task<TResp>>? OnMessage { get; set; }
 
     public CloudToDeviceBinder(IMqttClient connection, string name, IMessageSerializer serializer)
     {
-        string topic = topicTemplate.Replace("{clientId}", connection.Options.ClientId).Replace("{name}", name);
-        _ = connection.SubscribeAsync(topic);
+        _connection = connection;
+        _name = name;
+
         connection.ApplicationMessageReceivedAsync += async m =>
         {
             var topic = m.ApplicationMessage.Topic;
-            if (topic.Equals(topic))
+            if (topic.Equals(topicTemplate))
             {
                 if (OnMessage != null)
                 {
@@ -26,5 +32,32 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                 }
             }
         };
+    }
+
+    string? topicTemplate;
+    protected string? TopicTemplate
+    {
+        get
+        {
+            return topicTemplate;
+        }
+        set
+        {
+            
+            string topic = value?.Replace("{clientId}", _connection.Options.ClientId)!;
+
+            if (nameInTopic)
+            {
+                topic = topic!.Replace("{name}", _name);
+            }
+            else
+            {
+                topic = topic!.Replace("/{name}", String.Empty);
+            }
+
+
+            topicTemplate = topic;
+            _ = _connection.SubscribeAsync(topic);
+        }
     }
 }

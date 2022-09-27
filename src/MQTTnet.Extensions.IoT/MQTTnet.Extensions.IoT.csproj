@@ -12,4 +12,8 @@
     <PackageReference Include="MQTTnet" Version="4.1.0.247" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MQTTnet.Extensions.MultiCloud\MQTTnet.Extensions.MultiCloud.csproj" />
+  </ItemGroup>
+
 </Project>

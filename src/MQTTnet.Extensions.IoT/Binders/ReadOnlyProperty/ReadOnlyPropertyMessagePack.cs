@@ -3,7 +3,7 @@ using MQTTnet.Extensions.IoT.Serializers;
 
 namespace MQTTnet.Extensions.IoT.Binders.ReadOnlyProperty;
 
-public class ReadOnlyPropertyMessagePack<T> : DeviceToCloudBinder<T>, IROProperty<T>
+public class ReadOnlyPropertyMessagePack<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
 {
     public ReadOnlyPropertyMessagePack(IMqttClient mqttClient, string name) : base(mqttClient, name, new MsgPackSerializer())
     {

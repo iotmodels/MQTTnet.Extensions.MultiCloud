@@ -15,7 +15,7 @@ public abstract class DeviceToCloudBinder<T>
     protected bool wrapMessage = false;
 
     protected bool retain = false;
-
+    
     public DeviceToCloudBinder(IMqttClient mqttClient, string name, IMessageSerializer ser)
     {
         connection = mqttClient;
@@ -30,6 +30,10 @@ public abstract class DeviceToCloudBinder<T>
         if (nameInTopic)
         {
             topic = topic.Replace("{name}", name);
+        }
+        else
+        {
+            topic = topic.Replace("/{name}", string.Empty);
         }
 
         byte[] payloadBytes;
