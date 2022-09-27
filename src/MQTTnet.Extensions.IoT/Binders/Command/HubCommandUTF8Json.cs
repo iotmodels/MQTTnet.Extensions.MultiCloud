@@ -10,11 +10,20 @@ namespace MQTTnet.Extensions.IoT.Binders.Command
 {
     public class HubCommandUTF8Json<T, TResp> : CloudToDeviceBinder<T, TResp>, ICommand<T, TResp>
     {
+        int reqRid = -1;
+
         public HubCommandUTF8Json(IMqttClient client, string name)
         : base(client, name, new UTF8JsonSerializer())
         {
             TopicTemplate = "$iothub/methods/POST/{name}/#";
-            ResponseTopic = "$iothub/methods/res/200/?$rid=1";
+            ResponseTopic = "$iothub/methods/res/200/?$rid={rid}";
+
+            PreProcessMessage = topic =>
+            {
+                (reqRid, _) = TopicParser.ParseTopic(topic);
+            };
+
+            PostProcessMessage = () => reqRid.ToString();
         }
     }
 }
