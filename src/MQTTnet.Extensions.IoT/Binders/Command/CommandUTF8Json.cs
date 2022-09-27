@@ -9,6 +9,6 @@ public class CommandUTF8Json<T, TResp> : CloudToDeviceBinder<T, TResp>, ICommand
         : base(client, name, new UTF8JsonSerializer())
     {
         TopicTemplate = "device/{clientId}/commands/{name}";
-        topicResponseSuffix = "resp";
+        ResponseTopic = "device/{clientId}/commands/{name}/resp";
     }
 }

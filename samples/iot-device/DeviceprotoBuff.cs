@@ -8,26 +8,17 @@ using device_template_protos;
 
 namespace iot_device;
 
-public class Device : BackgroundService
+public class DeviceprotoBuff : BackgroundService
 {
-    private readonly ILogger<Device> _logger;
+    private readonly ILogger<DeviceprotoBuff> _logger;
     private readonly IConfiguration _configuration;
 
     private IMqttClient? mqtt;
 
-    public Device(ILogger<Device> logger, IConfiguration configuration)
+    public DeviceprotoBuff(ILogger<DeviceprotoBuff> logger, IConfiguration configuration)
     {
         _logger = logger;
         _configuration = configuration;
-    }
-
-    protected async Task ExecuteAsync2(CancellationToken stoppingToken)
-    {
-        ConnectionSettings cs = new(_configuration.GetConnectionString("hub"));
-        IMqttClient connection = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, stoppingToken);
-        IoTHubClient hubClient = new IoTHubClient(connection);
-        var twin = await hubClient.GetTwinAsync();
-        Console.WriteLine(twin);
     }
 
 
