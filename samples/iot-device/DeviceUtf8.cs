@@ -24,7 +24,7 @@ public class DeviceUtf8 : BackgroundService
 
     protected  override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        ConnectionSettings cs = new(_configuration.GetConnectionString("hub") + ";ModelId=dtmi:com:example:DeviceTemplate;1");
+        ConnectionSettings cs = new(_configuration.GetConnectionString("central") + ";ModelId=dtmi:com:example:DeviceTemplate;1");
         //mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
         mqtt = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, stoppingToken);
         _logger.LogInformation($"Connected {cs}");
@@ -35,19 +35,21 @@ public class DeviceUtf8 : BackgroundService
 
         client.Interval.OnMessage = async m =>
         {
-            Ack<int> ack = new Ack<int>(mqtt,"interval"); //<int>(mqtt!, "interval");
+            Ack<int> ack = new Ack<int>();
             if (m > 0)
             {
                 client.Interval.Value = m;
                 ack.Status = 200;
                 ack.Description = "property accepted";
                 ack.Value = m;
+                ack.Version = client.Interval.Version;
             }
             else
             {
                 ack.Status = 403;
                 ack.Description = $"negative value ({m}) not accepted";
                 ack.Value = client.Interval.Value;
+                ack.Version = client.Interval.Version;
             }
             return await Task.FromResult(ack);
         };

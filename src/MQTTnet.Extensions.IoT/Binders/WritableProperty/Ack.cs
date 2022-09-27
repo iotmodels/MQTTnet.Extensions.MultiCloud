@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.IoT.Binders.WritableProperty
 {
-    public class Ack<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
+    public class Ack<T> 
     {
         [JsonPropertyName("av")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -24,11 +24,5 @@ namespace MQTTnet.Extensions.IoT.Binders.WritableProperty
 
         [JsonPropertyName("value")]
         public T Value { get; set; } = default!;
-
-        public Ack(IMqttClient c, string name)
-            : base(c, name, new UTF8JsonSerializer())
-        {
-            wrapMessage = true;
-        }
     }
 }

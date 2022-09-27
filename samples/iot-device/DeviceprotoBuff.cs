@@ -62,18 +62,6 @@ public class DeviceprotoBuff : BackgroundService
             return await Task.FromResult(new echoResponse { OutEcho = result});
         };
 
-        //client.Enabled.OnMessage = async m =>
-        //{
-        //    client.Enabled.Value = m;
-        //    return await Task.FromResult(new Ack<bool>(mqtt!, "enabled")
-        //    {
-        //        Status = 200,
-        //        Description ="Prop enabled accepted",
-        //        Value = m
-        //    });
-        //};
-
-
         while (!stoppingToken.IsCancellationRequested)
         {
             
