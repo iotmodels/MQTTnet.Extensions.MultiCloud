@@ -2,5 +2,5 @@
 
 public interface ICloudToDevice<T, TResp>
 {
-    public Func<T, Task<TResp>>? OnMessage { get; set; }
+    Func<T, Task<TResp>>? OnMessage { get; set; }
 }
