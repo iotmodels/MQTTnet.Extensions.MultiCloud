@@ -2,6 +2,8 @@
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,12 +26,17 @@ namespace MQTTnet.Extensions.IoT
             {
                 throw new ApplicationException($"Cannot connect to {cs}");
             }
-            var pubAck = await mqtt.PublishJsonAsync(
+
+            var birthPayload = Encoding.UTF8.GetBytes(
+                JsonSerializer.Serialize(
+                    new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
+                    {
+                        ModelId = cs.ModelId
+                    }));
+
+            var pubAck = await mqtt.PublishBinaryAsync(
                BirthConvention.BirthTopic(mqtt.Options.ClientId),
-               new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
-               {
-                   ModelId = cs.ModelId
-               },
+               birthPayload,
                Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true);
             if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
             {

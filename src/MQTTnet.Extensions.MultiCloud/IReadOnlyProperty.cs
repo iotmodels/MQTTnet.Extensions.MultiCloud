@@ -1,13 +1,3 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿namespace MQTTnet.Extensions.MultiCloud;
 
-namespace MQTTnet.Extensions.MultiCloud
-{
-    public interface IReadOnlyProperty<T>
-    {
-        string PropertyName { get; }
-        T PropertyValue { get; set; }
-        int Version { get; set; }
-        Task<int> ReportPropertyAsync(CancellationToken cancellationToken = default);
-    }
-}
+public interface IReadOnlyProperty<T> : IDeviceToCloud<T> { }
