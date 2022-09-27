@@ -61,9 +61,9 @@ namespace mqtt_device
             var cs = connectionString + ";ModelId=" + Idevicetemplate.ModelId;
             var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             var client = new dtmi_com_example_devicetemplate.hub.devicetemplate(hub);
-            computedSettings = HubDpsFactory.ComputedSettings;
+            computedSettings = HubDpsFactory.ComputedSettings!;
             nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;
-            await client.InitState();
+            //await client.InitState();
             return client;
         }
     }

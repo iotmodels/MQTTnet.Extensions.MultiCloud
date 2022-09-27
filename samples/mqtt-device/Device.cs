@@ -26,63 +26,56 @@ public class Device : BackgroundService
         client = await new ClientFactory(_configuration).CreateDeviceTemplateClientAsync(stoppingToken);
         _logger.LogWarning("Connected to {settings}",ClientFactory.computedSettings );
 
-        //client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
-        client.Command_echo.OnCmdDelegate = Cmd_echo_Handler;
+        client.Property_interval.Value = default_interval;
+        client.Property_interval.OnMessage = Property_interval_UpdateHandler;
+        client.Command_echo.OnMessage = Cmd_echo_Handler;
 
 
-        client.Property_sdkInfo.PropertyValue = ClientFactory.NuGetPackageVersion;
-        await client.Property_sdkInfo.ReportPropertyAsync(stoppingToken);
+        await client.Property_sdkInfo.SendMessageAsync(ClientFactory.NuGetPackageVersion);
 
-        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-        await client.Property_interval.ReportPropertyAsync(stoppingToken);
+        //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
+        //await client.Property_interval.ReportPropertyAsync(stoppingToken);
 
         double lastTemp = 21;
         while (!stoppingToken.IsCancellationRequested)
         {
             lastTemp = GenerateSensorReading(lastTemp, 12, 45);
             //await client!.Telemetry_temp.SendTelemetryAsync(lastTemp, stoppingToken);
-            var interval = client!.Property_interval.PropertyValue?.Value;
+            var interval = client!.Property_interval.Value;
             _logger.LogInformation("Waiting {interval} s to send telemetry", interval);
-            //await Task.Delay(interval.HasValue ? interval.Value * 1000 : 1000, stoppingToken);
-            await Task.Delay(50000);
+            await Task.Delay(client.Property_interval.Value * 1000 , stoppingToken);
+            
         }
     }
 
-    private PropertyAck<int> Property_interval_UpdateHandler(PropertyAck<int> p)
+    private async Task<Ack<int>> Property_interval_UpdateHandler(int p)
     {
         ArgumentNullException.ThrowIfNull(client);
-        _logger.LogInformation("New prop {name} received", p.Name);
-        var ack = new PropertyAck<int>(p.Name);
+        _logger.LogInformation("New prop interval received");
+        var ack = new Ack<int>();
 
-        if (p.Value > 0)
+        if (p > 0)
         {
             ack.Description = "desired notification accepted";
             ack.Status = 200;
-            ack.Version = p.Version;
-            ack.Value = p.Value;
-            ack.LastReported = p.Value;
+            ack.Version = client.Property_interval.Version;
+            ack.Value = p;
+            //ack.LastReported = p;
         }
         else
         {
             ack.Description = "negative values not accepted";
             ack.Status = 405;
-            ack.Version = p.Version;
-            ack.Value = client.Property_interval.PropertyValue.LastReported > 0 ?
-                            client.Property_interval.PropertyValue.LastReported :
-                            default_interval;
+            ack.Version = client.Property_interval.Version;
+            ack.Value = client.Property_interval.Value;
         };
-        client.Property_interval.PropertyValue = ack;
-        return ack;
+        return await Task.FromResult(ack);
     }
 
-    private Cmd_echo_Response Cmd_echo_Handler(Cmd_echo_Request req)
+    private async Task<string> Cmd_echo_Handler(string req)
     {
         _logger.LogInformation($"Command echo received");
-        return new Cmd_echo_Response 
-        { 
-            Status = 200,
-            ReponsePayload = req.request + req.request
-        };
+        return await Task.FromResult(req + req);
     }
 
     readonly Random random = new();
