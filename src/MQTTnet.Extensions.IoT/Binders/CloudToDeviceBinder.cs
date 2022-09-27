@@ -18,7 +18,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
     public Func<T, Task<TResp>>? OnMessage { get; set; }
 
     protected Action<string>? PreProcessMessage;
-    protected Func<TResp, string>? PostProcessMessage;
+    protected Func<string>? PostProcessMessage;
 
     public CloudToDeviceBinder(IMqttClient connection, string name, IMessageSerializer serializer)
     {
@@ -44,10 +44,9 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                     string? resTopic = responseTopic;
                     if (PostProcessMessage != null)
                     {
-                        string rid = PostProcessMessage(resp);
+                        string rid = PostProcessMessage();
                         resTopic = responseTopic?.Replace("{rid}", rid);
                     }
-
 
                     _ = connection.PublishBinaryAsync(resTopic, responseBytes);
                 }
