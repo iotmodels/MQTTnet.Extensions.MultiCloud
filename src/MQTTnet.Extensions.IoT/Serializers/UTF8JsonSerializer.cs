@@ -22,15 +22,9 @@ public class UTF8JsonSerializer : IMessageSerializer
         {
             return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(payload));
         }
-        else // hack to submit acks to hub
+        else 
         {
-            var patch = new
-            {
-                properties = new
-                {
-                    reported = new Dictionary<string, T> { { name, payload } }
-                }
-            };
+            var patch = new Dictionary<string, T> { { name, payload } };
             return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(patch));
         }
     }

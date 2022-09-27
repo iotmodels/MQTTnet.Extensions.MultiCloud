@@ -23,7 +23,7 @@ namespace MQTTnet.Extensions.IoT.Binders.Command
                 (reqRid, _) = TopicParser.ParseTopic(topic);
             };
 
-            PostProcessMessage = resp => reqRid.ToString();
+            PostProcessMessage = () => reqRid.ToString();
         }
     }
 }
