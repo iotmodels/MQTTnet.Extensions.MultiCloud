@@ -1,10 +1,37 @@
-﻿using System.Text;
+﻿using Google.Protobuf;
+using MQTTnet.Extensions.IoT.Binders.WritableProperty;
+using System.Text;
 using System.Text.Json;
 
 namespace MQTTnet.Extensions.IoT.Serializers;
 
 public class UTF8JsonSerializer : IMessageSerializer
 {
-    public T FromBytes<T>(byte[] payload) => JsonSerializer.Deserialize<T>(Encoding.UTF8.GetString(payload))!;
-    public byte[] ToBytes<T>(T payload) => Encoding.UTF8.GetBytes(JsonSerializer.Serialize(payload));
+    public T FromBytes<T>(byte[] payload, string name = "")
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            return JsonSerializer.Deserialize<T>(Encoding.UTF8.GetString(payload))!;
+        }
+        JsonDocument jdoc = JsonDocument.Parse(payload);
+        return jdoc.RootElement.GetProperty(name).Deserialize<T>()!;
+    }
+    public byte[] ToBytes<T>(T payload, string name = "")
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(payload));
+        }
+        else // hack to submit acks to hub
+        {
+            var patch = new
+            {
+                properties = new
+                {
+                    reported = new Dictionary<string, T> { { name, payload } }
+                }
+            };
+            return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(patch));
+        }
+    }
 }
