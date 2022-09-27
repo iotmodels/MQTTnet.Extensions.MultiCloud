@@ -27,11 +27,10 @@ public class DeviceUtf8 : BackgroundService
         ConnectionSettings cs = new(_configuration.GetConnectionString("hub") + ";ModelId=dtmi:com:example:DeviceTemplate;1");
         //mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
         mqtt = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, stoppingToken);
-
         _logger.LogInformation($"Connected {cs}");
-        var client = new IoTHubClient(mqtt!);
+        var client = new ClientHub(mqtt!);
 
-        client.Interval.Value = 55;
+        client.Interval.Value = 5;
         await client!.SdkInfo.SendMessageAsync("my SDK testing hub");
 
         client.Interval.OnMessage = async m =>
@@ -62,18 +61,6 @@ public class DeviceUtf8 : BackgroundService
             }
             return await Task.FromResult(result);
         };
-
-        //client.Enabled.OnMessage = async m =>
-        //{
-        //    client.Enabled.Value = m;
-        //    return await Task.FromResult(new Ack<bool>(mqtt!, "enabled")
-        //    {
-        //        Status = 200,
-        //        Description ="Prop enabled accepted",
-        //        Value = m
-        //    });
-        //};
-
 
         while (!stoppingToken.IsCancellationRequested)
         {

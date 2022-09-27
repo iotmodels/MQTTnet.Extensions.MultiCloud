@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace iot_device
 {
-    internal class IoTHubClient
+    internal class ClientHub
     {
         RequestResponseBinder rr;
 
@@ -22,7 +22,7 @@ namespace iot_device
         public ICommand<string, string> Echo;
         public IWritableProperty<int> Interval;
 
-        public IoTHubClient(IMqttClient c)
+        public ClientHub(IMqttClient c)
         {
             rr = new RequestResponseBinder(c);
             Temperature = new HubTelemetryUTF8Json<double>(c, "temp");

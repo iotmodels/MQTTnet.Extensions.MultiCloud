@@ -24,6 +24,10 @@ public class DeviceprotoBuff : BackgroundService
 
     protected  override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        ConnectionSettings cs = new(_configuration.GetConnectionString("cs") + ";ModelId=device-template.proto");
+        mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
+        _logger.LogInformation($"Connected {cs}");
+
         var client = new ClientProtobuff(mqtt!);
 
         client.Interval.Value = new Properties() { Interval = 5};
@@ -78,13 +82,5 @@ public class DeviceprotoBuff : BackgroundService
             _logger.LogInformation("Worker running at: {time}, enabled {enabled}", DateTimeOffset.Now, true);
             await Task.Delay(client.Interval.Value.Interval * 1000, stoppingToken);
         }
-    }
-
-    public override async Task StartAsync(CancellationToken stoppingToken)
-    {
-        ConnectionSettings cs = new(_configuration.GetConnectionString("cs") + ";ModelId=dtmi:com:example:DeviceTemplate;1");
-        mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
-        _logger.LogInformation($"Connected {cs}");
-        await ExecuteAsync(stoppingToken);
     }
 }
