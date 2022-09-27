@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud.Binders;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -12,7 +13,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
     {
         IMqttClient connection;
         public Func<JsonNode, GenericPropertyAck> OnProperty_Updated = null;
-        public GenericDesiredUpdatePropertyBinder(IMqttClient c, IPropertyStoreWriter updTwinBinder)
+        public GenericDesiredUpdatePropertyBinder(IMqttClient c, RequestResponseBinder updTwinBinder)
         {
             connection = c;
             connection.ApplicationMessageReceivedAsync += async m =>
@@ -30,7 +31,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                              var ack = OnProperty_Updated(desired);
                              if (ack != null)
                              {
-                                 _ = updTwinBinder.ReportPropertyAsync(ack.BuildAck());
+                                 //_ = updTwinBinder.ReportPropertyAsync(ack.BuildAck());
                              }
                          }
                      }

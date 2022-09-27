@@ -1,9 +1,9 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.IoT;
-using MQTTnet.Extensions.IoT.Binders.Command;
-using MQTTnet.Extensions.IoT.Binders.ReadOnlyProperty;
-using MQTTnet.Extensions.IoT.Binders.Telemetry;
-using MQTTnet.Extensions.IoT.Binders.WritableProperty;
+using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.ReadOnlyProperty;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.WritableProperty;
 
 namespace iot_device;
 

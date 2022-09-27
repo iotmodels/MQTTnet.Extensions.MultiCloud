@@ -1,10 +1,8 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.IoT;
-using MQTTnet.Extensions.IoT.Binders;
-using MQTTnet.Extensions.IoT.Binders.Command;
-using MQTTnet.Extensions.IoT.Binders.ReadOnlyProperty;
-using MQTTnet.Extensions.IoT.Binders.Telemetry;
-using MQTTnet.Extensions.IoT.Binders.WritableProperty;
+using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
+using MQTTnet.Extensions.MultiCloud.Binders;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry;
 using System;
 using System.Collections.Generic;
 using System.Linq;

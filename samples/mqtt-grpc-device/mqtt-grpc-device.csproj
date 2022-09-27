@@ -17,7 +17,7 @@
 		<Protobuf Include="protos\*.proto" GrpcServices="None" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\MQTTnet.Extensions.IoT\MQTTnet.Extensions.IoT.csproj" />
+	  <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
 	</ItemGroup>
   <ItemGroup>
     <None Update="ca.pem">

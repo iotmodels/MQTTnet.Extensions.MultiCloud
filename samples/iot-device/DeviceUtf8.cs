@@ -1,10 +1,9 @@
 using MQTTnet.Client;
-using MQTTnet.Extensions.IoT;
-using MQTTnet.Extensions.IoT.Binders.WritableProperty;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
 
 using device_template_protos;
+using MQTTnet.Extensions.MultiCloud;
 
 namespace iot_device;
 
