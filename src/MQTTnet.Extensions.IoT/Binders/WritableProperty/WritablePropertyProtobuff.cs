@@ -17,7 +17,7 @@ namespace MQTTnet.Extensions.IoT.Binders.WritableProperty
             : base(connection, name, new ProtoBuffSerializer(parser))
         {
             TopicTemplate = "grpc/{clientId}/props/{name}/set";
-            topicResponseSuffix = "ack";
+            ResponseTopic = "grpc/{clientId}/props/{name}/ack";
         }
     }
 }

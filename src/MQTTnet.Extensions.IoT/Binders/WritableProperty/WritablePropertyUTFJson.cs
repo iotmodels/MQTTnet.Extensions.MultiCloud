@@ -11,7 +11,7 @@ namespace MQTTnet.Extensions.IoT.Binders.WritableProperty
             : base(c, name, new UTF8JsonSerializer())
         {
             TopicTemplate = "device/{clientId}/props/{name}/set";
-            topicResponseSuffix = "ack";
+            ResponseTopic = "device/{clientId}/props/{name}/ack";
         }
     }
 }

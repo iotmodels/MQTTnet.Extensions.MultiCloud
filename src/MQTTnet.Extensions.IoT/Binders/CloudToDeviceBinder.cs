@@ -7,8 +7,6 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 {
     string _name;
     IMqttClient _connection;
-
-    protected string topicResponseSuffix = string.Empty;
     
     protected bool nameInTopic = true;
     public Func<T, Task<TResp>>? OnMessage { get; set; }
@@ -21,14 +19,14 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
         connection.ApplicationMessageReceivedAsync += async m =>
         {
             var topic = m.ApplicationMessage.Topic;
-            if (topic.Equals(topicTemplate))
+            if (topic.StartsWith(topicTemplate!.Replace("/#", string.Empty)))
             {
                 if (OnMessage != null)
                 {
                     T req = serializer.FromBytes<T>(m.ApplicationMessage.Payload);
                     TResp resp = await OnMessage.Invoke(req);
                     byte[] responseBytes = serializer.ToBytes(resp);
-                    _ = connection.PublishBinaryAsync($"{topic}/{topicResponseSuffix}", responseBytes);
+                    _ = connection.PublishBinaryAsync(responseTopic, responseBytes);
                 }
             }
         };
@@ -58,6 +56,29 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 
             topicTemplate = topic;
             _ = _connection.SubscribeAsync(topic);
+        }
+    }
+
+    string? responseTopic;
+    protected string? ResponseTopic
+    {
+        get
+        {
+            return responseTopic;
+        }
+        set
+        {
+            string topic = value?.Replace("{clientId}", _connection.Options.ClientId)!;
+
+            if (nameInTopic)
+            {
+                topic = topic!.Replace("{name}", _name);
+            }
+            else
+            {
+                topic = topic!.Replace("/{name}", String.Empty);
+            }
+            responseTopic = topic;
         }
     }
 }

@@ -10,36 +10,29 @@ namespace iot_device;
 
 public class DeviceUtf8 : BackgroundService
 {
-    private readonly ILogger<Device> _logger;
+    private readonly ILogger<DeviceUtf8> _logger;
     private readonly IConfiguration _configuration;
 
     private IMqttClient? mqtt;
 
-    public DeviceUtf8(ILogger<Device> logger, IConfiguration configuration)
+    public DeviceUtf8(ILogger<DeviceUtf8> logger, IConfiguration configuration)
     {
         _logger = logger;
         _configuration = configuration;
     }
 
-    protected async Task ExecuteAsync2(CancellationToken stoppingToken)
-    {
-        ConnectionSettings cs = new(_configuration.GetConnectionString("hub"));
-        IMqttClient connection = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, stoppingToken);
-        IoTHubClient hubClient = new IoTHubClient(connection);
-        var twin = await hubClient.GetTwinAsync();
-        Console.WriteLine(twin);
-    }
-
 
     protected  override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        ConnectionSettings cs = new(_configuration.GetConnectionString("cs") + ";ModelId=dtmi:com:example:DeviceTemplate;1");
-        mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
-        _logger.LogInformation($"Connected {cs}");
-        var client = new ClientUTF8Json(mqtt!);
+        ConnectionSettings cs = new(_configuration.GetConnectionString("hub") + ";ModelId=dtmi:com:example:DeviceTemplate;1");
+        //mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
+        mqtt = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, stoppingToken);
 
-        client.Interval.Value = 5;
-        await client!.SdkInfo.SendMessageAsync("my SDK");
+        _logger.LogInformation($"Connected {cs}");
+        var client = new IoTHubClient(mqtt!);
+
+        client.Interval.Value = 55;
+        await client!.SdkInfo.SendMessageAsync("my SDK testing hub");
 
         client.Interval.OnMessage = async m =>
         {

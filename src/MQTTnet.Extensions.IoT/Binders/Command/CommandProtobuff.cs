@@ -10,6 +10,6 @@ public class CommandProtobuff<T, TResp> : CloudToDeviceBinder<T, TResp>, IComman
         : base(client, name, new ProtoBuffSerializer(parser))
     {
         TopicTemplate = "grpc/{clientId}/cmd/{name}";
-        topicResponseSuffix = "resp";
+        ResponseTopic = "grpc/{clientId}/cmd/{name}/resp";
     }
 }
