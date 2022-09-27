@@ -5,7 +5,7 @@ namespace MQTTnet.Extensions.IoT.Binders
 {
     internal class TopicParser
     {
-        internal static (int rid, int twinVersion) ParseTopic(string topic)
+        internal static TopicParameters ParseTopic(string topic)
         {
             var segments = topic.Split('/');
             int twinVersion = -1;
@@ -16,7 +16,7 @@ namespace MQTTnet.Extensions.IoT.Binders
                 int.TryParse(qs["$rid"], out rid);
                 twinVersion = Convert.ToInt32(qs["$version"]);
             }
-            return (rid, twinVersion);
+            return new TopicParameters() { Rid = rid, Version = twinVersion};
         }
     }
 }

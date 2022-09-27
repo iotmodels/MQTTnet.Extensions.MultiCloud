@@ -10,5 +10,6 @@ namespace MQTTnet.Extensions.IoT
     public interface IWritableProperty<T> : ICloudToDevice<T, Ack<T>>
     {
         T? Value { get; set; }
+        int? Version { get; set; }
     }
 }
