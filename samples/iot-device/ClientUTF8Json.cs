@@ -11,16 +11,14 @@ internal class ClientUTF8Json
 {
     public ITelemetry<double> Temperature;
     public IReadOnlyProperty<string> SdkInfo;
-    public ICommand<int, string> EchoRepeater;
+    public ICommand<string, string> Echo;
     public IWritableProperty<int> Interval;
-    public IWritableProperty<bool> Enabled;
 
     public ClientUTF8Json(IMqttClient c)
     {
-        Temperature = new TelemetryUTF8Json<double>(c, "temperature");
+        Temperature = new TelemetryUTF8Json<double>(c, "temp");
         SdkInfo = new ReadOnlyPropertyUTFJson<string>(c, "sdkInfo");
-        EchoRepeater = new CommandUTF8Json<int, string>(c, "echoRepeater");
+        Echo = new CommandUTF8Json<string, string>(c, "echo");
         Interval = new WritablePropertyUTFJson<int>(c, "interval");
-        Enabled = new WritablePropertyUTFJson<bool>(c, "enabled");
     }
 }
