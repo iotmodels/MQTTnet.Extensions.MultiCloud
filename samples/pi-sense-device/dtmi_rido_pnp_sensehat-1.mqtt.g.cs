@@ -3,12 +3,14 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings;
 
 namespace dtmi_rido_pnp_sensehat.mqtt;
 
-public class sensehat : PnPMqttClient, Isensehat
+public class sensehat : Isensehat
 {
+    public IMqttClient Connection { get; set; }
+    public string InitialState { get; set; }
     public IReadOnlyProperty<string> Property_piri { get; set; }
     public IReadOnlyProperty<string> Property_ipaddr { get; set; }
     public IReadOnlyProperty<string> Property_sdkInfo { get; set; }
@@ -22,8 +24,9 @@ public class sensehat : PnPMqttClient, Isensehat
 
     public ICommand<Cmd_ChangeLCDColor_Request, Cmd_ChangeLCDColor_Response> Command_ChangeLCDColor { get; set; }
 
-    internal sensehat(IMqttClient c) : base(c, Isensehat.ModelId)
+    internal sensehat(IMqttClient c) 
     {
+        Connection = c;
         Property_piri = new ReadOnlyProperty<string>(c, "piri");
         Property_ipaddr = new ReadOnlyProperty<string>(c, "ipaddr");
         Property_sdkInfo = new ReadOnlyProperty<string>(c, "sdkInfo");
@@ -36,6 +39,12 @@ public class sensehat : PnPMqttClient, Isensehat
         Command_ChangeLCDColor = new Command<Cmd_ChangeLCDColor_Request, Cmd_ChangeLCDColor_Response>(c, "ChangeLCDColor");
     }
 
-    public async Task<MqttClientPublishResult> SendTelemetryAsync(AllTelemetries payload, CancellationToken t) =>
-       await base.SendTelemetryAsync(payload, t);
+    public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default) =>
+       Connection.PublishJsonAsync(
+           $"pnp/{Connection.Options.ClientId}/telemetry",
+           payload,
+           MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce,
+           false,
+           t);
+
 }

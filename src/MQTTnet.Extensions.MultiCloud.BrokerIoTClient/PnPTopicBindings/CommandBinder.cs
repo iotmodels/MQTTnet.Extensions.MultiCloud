@@ -3,7 +3,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
+namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings
 {
     public class Command<T, TResponse> : ICommand<T, TResponse>
         where T : IBaseCommandRequest<T>, new()

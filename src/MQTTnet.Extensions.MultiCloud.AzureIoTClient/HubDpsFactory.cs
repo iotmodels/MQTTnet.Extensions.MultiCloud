@@ -11,6 +11,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
     public class HubDpsFactory
     {
         private static Timer reconnectTimer;
+        public static string NuGetPackageVersion => $"{ThisAssembly.AssemblyName} {ThisAssembly.NuGetPackageVersion}";
+
         public static ConnectionSettings ComputedSettings { get; private set; }
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectionString, CancellationToken cancellationToken = default) =>
             await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectionString), cancellationToken);

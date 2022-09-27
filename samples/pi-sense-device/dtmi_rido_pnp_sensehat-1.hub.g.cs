@@ -35,8 +35,4 @@ public class sensehat : HubMqttClient, Isensehat
         Telemetry_p = new Telemetry<double>(c, "p");
         Command_ChangeLCDColor = new Command<Cmd_ChangeLCDColor_Request, Cmd_ChangeLCDColor_Response>(c, "ChangeLCDColor");
     }
-
-    public async Task<MqttClientPublishResult> SendTelemetryAsync(AllTelemetries payload, CancellationToken t) =>
-        await base.SendTelemetryAsync(payload, t);
-    
 }

@@ -3,20 +3,23 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings;
 
 namespace dtmi_rido_pnp_memmon.mqtt;
 
-public class memmon : PnPMqttClient, Imemmon
+public class memmon : Imemmon
 {
+    public IMqttClient Connection { get; set; }
+    public string InitialState { get; set; }
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_workingSet { get; set; }
     public ICommand<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response> Command_getRuntimeStats { get; set; }
 
-    internal memmon(IMqttClient c) : base(c, Imemmon.ModelId)
+    internal memmon(IMqttClient c) 
     {
+        Connection = c;
         Property_started = new ReadOnlyProperty<DateTime>(c, "started");
         Property_interval = new WritableProperty<int>(c, "interval");
         Property_enabled = new WritableProperty<bool>(c, "enabled");

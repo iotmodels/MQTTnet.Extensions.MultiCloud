@@ -14,7 +14,6 @@ public interface Idevicetemplate
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_temp{ get; set; }
     public ICommand<Cmd_echo_Request, Cmd_echo_Response> Command_echo { get; set; }
-    public Task<MqttClientPublishResult> SendTelemetryAsync(AllTelemetries payload, CancellationToken t);
 }
 
 public class AllTelemetries

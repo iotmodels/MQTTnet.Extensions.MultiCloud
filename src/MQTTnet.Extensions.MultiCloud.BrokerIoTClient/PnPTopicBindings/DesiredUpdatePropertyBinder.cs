@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Internal;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -7,13 +6,13 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings
+namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings
 {
     public class DesiredUpdatePropertyBinder<T>
     {
-        IMqttClient connection;
-        string name;
-        string cName;
+        private readonly IMqttClient connection;
+        private readonly string name;
+        private readonly string cName;
         public Func<PropertyAck<T>, PropertyAck<T>>? OnProperty_Updated = null;
 
         public DesiredUpdatePropertyBinder(IMqttClient c, IPropertyStoreWriter propertyBinder, string propertyName, string componentName = "")

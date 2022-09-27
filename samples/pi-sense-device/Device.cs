@@ -4,7 +4,6 @@ using Microsoft.ApplicationInsights;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Net.NetworkInformation;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using Color = System.Drawing.Color;
 
@@ -41,8 +40,8 @@ public class Device : BackgroundService
         client.Property_combineTelemetry.OnProperty_Updated = Property_combineTelemetry_UpdateHandler;
         client.Command_ChangeLCDColor.OnCmdDelegate = Cmd_ChangeLCDColor_Handler;
 
-        Type baseClient = client.GetType().BaseType!;
-        client.Property_sdkInfo.PropertyValue = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
+
+        client.Property_sdkInfo.PropertyValue = SenseHatFactory.NuGetPackageVersion;
         await client.Property_sdkInfo.ReportPropertyAsync();
 
         await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
