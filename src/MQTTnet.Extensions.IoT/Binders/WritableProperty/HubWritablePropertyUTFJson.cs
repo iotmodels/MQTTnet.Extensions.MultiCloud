@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.IoT.Binders.WritableProperty
@@ -14,8 +15,13 @@ namespace MQTTnet.Extensions.IoT.Binders.WritableProperty
         public HubWritablePropertyUTFJson(IMqttClient c, string name)
             : base(c, name, new UTF8JsonSerializer())
         {
-            TopicTemplate = "$iothub/twin/PATCH/properties/desired";
-            ResponseTopic = "$iothub/twin/PATCH/properties/desired/ack";
+            TopicTemplate = "$iothub/twin/PATCH/properties/desired/#";
+            ResponseTopic = "$iothub/twin/PATCH/properties/reported/?rid=1";
+            unwrapRequest = true;
+            wrapResponse = true;
+
+            
+            
         }
     }
 }

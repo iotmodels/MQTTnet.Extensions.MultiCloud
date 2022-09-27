@@ -1,4 +1,6 @@
-﻿using MQTTnet.Client;
+﻿using Google.Protobuf;
+using MQTTnet.Client;
+using System.Text.Json;
 using System.Xml.Linq;
 
 namespace MQTTnet.Extensions.IoT.Binders;
@@ -9,10 +11,14 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
     IMqttClient _connection;
     
     protected bool nameInTopic = true;
+
+    protected bool unwrapRequest = false;
+    protected bool wrapResponse = false;
+
     public Func<T, Task<TResp>>? OnMessage { get; set; }
 
     protected Action<string>? PreProcessMessage;
-    protected Func<string>? PostProcessMessage;
+    protected Func<TResp, string>? PostProcessMessage;
 
     public CloudToDeviceBinder(IMqttClient connection, string name, IMessageSerializer serializer)
     {
@@ -31,16 +37,17 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                         PreProcessMessage(topic);
                     }
 
-                    T req = serializer.FromBytes<T>(m.ApplicationMessage.Payload);
+                    T req = serializer.FromBytes<T>(m.ApplicationMessage.Payload, unwrapRequest ? _name : String.Empty);
                     TResp resp = await OnMessage.Invoke(req);
-                    byte[] responseBytes = serializer.ToBytes(resp);
+                    byte[] responseBytes = serializer.ToBytes(resp, wrapResponse ? _name : String.Empty);
                     
                     string? resTopic = responseTopic;
                     if (PostProcessMessage != null)
                     {
-                        string rid = PostProcessMessage();
+                        string rid = PostProcessMessage(resp);
                         resTopic = responseTopic?.Replace("{rid}", rid);
                     }
+
 
                     _ = connection.PublishBinaryAsync(resTopic, responseBytes);
                 }

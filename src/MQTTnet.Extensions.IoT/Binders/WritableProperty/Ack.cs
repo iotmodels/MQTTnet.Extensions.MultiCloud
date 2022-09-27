@@ -28,7 +28,7 @@ namespace MQTTnet.Extensions.IoT.Binders.WritableProperty
         public Ack(IMqttClient c, string name)
             : base(c, name, new UTF8JsonSerializer())
         {
-
+            wrapMessage = true;
         }
     }
 }
