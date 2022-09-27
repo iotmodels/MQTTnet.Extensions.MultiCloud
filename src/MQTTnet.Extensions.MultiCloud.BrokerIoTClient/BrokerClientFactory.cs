@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MQTTnet.Extensions.MultiCloud.Serializers;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
 {
@@ -26,12 +27,11 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
                 throw new ApplicationException($"Cannot connect to {cs}");
             }
 
-            var birthPayload = Encoding.UTF8.GetBytes(
-               JsonSerializer.Serialize(
+            var birthPayload = new UTF8JsonSerializer().ToBytes(
                    new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
                    {
                        ModelId = cs.ModelId
-                   }));
+                   });
 
             var pubAck = await mqtt.PublishBinaryAsync(
                BirthConvention.BirthTopic(mqtt.Options.ClientId),

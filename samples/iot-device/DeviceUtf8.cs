@@ -4,6 +4,7 @@ using MQTTnet.Extensions.MultiCloud.Connections;
 
 using device_template_protos;
 using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 namespace iot_device;
 
@@ -23,11 +24,11 @@ public class DeviceUtf8 : BackgroundService
 
     protected  override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        ConnectionSettings cs = new(_configuration.GetConnectionString("central") + ";ModelId=dtmi:com:example:DeviceTemplate;1");
-        //mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
-        mqtt = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, stoppingToken);
+        ConnectionSettings cs = new(_configuration.GetConnectionString("cs") + ";ModelId=dtmi:com:example:DeviceTemplate;1");
+        mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
+        //mqtt = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, stoppingToken);
         _logger.LogInformation($"Connected {cs}");
-        var client = new ClientHub(mqtt!);
+        var client = new ClientUTF8Json(mqtt!);
 
         client.Interval.Value = 5;
         await client!.SdkInfo.SendMessageAsync("my SDK testing hub");
