@@ -58,8 +58,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mqtt-device", "samples\mqtt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mqtt-grpc-device", "samples\mqtt-grpc-device\mqtt-grpc-device.csproj", "{AF019503-8813-4967-B858-0DDAE43C2073}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTnet.Extensions.IoT", "src\MQTTnet.Extensions.IoT\MQTTnet.Extensions.IoT.csproj", "{A2E32D72-DE48-4DD0-9502-E3F0FA08F511}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,10 +108,6 @@ Global
 		{AF019503-8813-4967-B858-0DDAE43C2073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF019503-8813-4967-B858-0DDAE43C2073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF019503-8813-4967-B858-0DDAE43C2073}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2E32D72-DE48-4DD0-9502-E3F0FA08F511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2E32D72-DE48-4DD0-9502-E3F0FA08F511}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2E32D72-DE48-4DD0-9502-E3F0FA08F511}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2E32D72-DE48-4DD0-9502-E3F0FA08F511}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
