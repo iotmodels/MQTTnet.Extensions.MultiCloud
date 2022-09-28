@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MQTTnet.Client;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,13 +12,24 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
     public class TwinInitializer
     {
-        public static void InitPropertyValue<T>(string twin, IWritableProperty<T> prop, string propName, T defaultValue)
+        public static async Task InitPropertyValue<T>(IMqttClient client, string twin, IWritableProperty<T> prop, string propName, T defaultValue)
         {
             var ack = InitFromTwin(twin, propName, defaultValue);
+            Ack<T> acceptedAck;
             if (prop.OnMessage != null)
             {
-                prop.OnMessage.Invoke(ack.Value);
+                acceptedAck = await prop.OnMessage.Invoke(ack.Value);
             }
+            else
+            {
+                acceptedAck = ack;
+            }
+            acceptedAck.Status = 203;
+            acceptedAck.Value = ack.Value;
+            acceptedAck.Version = 0;
+            acceptedAck.Description = "Init from default value";
+            var roBinder = new ReadOnlyProperty<Ack<T>>(client, propName);
+            await roBinder.SendMessageAsync(acceptedAck);
         }
 
         private static Ack<T> InitFromTwin<T>(string twinJson, string propName, T defaultValue)
@@ -55,7 +67,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 
                 reported_Prop_version = reported[propName]!["av"]?.GetValue<int>() ?? -1;
                 reported_Prop_status = reported![propName]!["ac"]!.GetValue<int>();
-                reported_Prop_description = reported![propName]!["ad"]!.GetValue<string>();
+                reported_Prop_description = reported![propName]!["ad"]?.GetValue<string>()!;
                 reportedFound = true;
             }
 

@@ -33,7 +33,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         {
             BirthConvention.BirthMessage? bm = null;
             var birthFound = false;
-            var ta = await BrokerClientFactory.CreateFromConnectionSettingsAsync(scs);
+            var ta = await BrokerClientFactory.CreateFromConnectionSettingsAsync(scs, false);
             ta.ApplicationMessageReceivedAsync += async m =>
             {
 
@@ -43,9 +43,9 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                 await Task.Yield();
 
             };
-            await ta.SubscribeAsync("pnp/e2e-device/birth");
+            await ta.SubscribeAsync("registry/e2e-device/status");
             cs.ModelId = Imemmon.ModelId;
-            var td = new memmon(await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs));
+            var td = new memmon(await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true));
             await Task.Delay(100);
             Assert.True(birthFound);
             Assert.Equal(Imemmon.ModelId, bm!.ModelId);

@@ -12,6 +12,7 @@ public class TwinRequestResponseBinder
 {
     internal int lastRid = -1;
     private readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingGetTwinRequests = new ConcurrentDictionary<int, TaskCompletionSource<string>>();
+    private readonly ConcurrentDictionary<int, TaskCompletionSource<int>> pendingUpdateTwinRequests = new ConcurrentDictionary<int, TaskCompletionSource<int>>();
     public Func<string, Task<string>>? OnMessage { get; set; }
 
     private readonly IMqttClient connection;
@@ -23,7 +24,7 @@ public class TwinRequestResponseBinder
             await Task.Yield();
 
             var topic = m.ApplicationMessage.Topic;
-            if (topic.StartsWith("$iothub/twin/res/20"))
+            if (topic.StartsWith("$iothub/twin/res/200"))
             {
                 string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload ?? new byte[0]);
                 (int rid, _) = TopicParser.ParseTopic(topic);
@@ -35,6 +36,20 @@ public class TwinRequestResponseBinder
                 else
                 {
                     Trace.TraceWarning($"GetTwinBinder: RID {rid} not found pending requests");
+                }
+            }
+            if (topic.StartsWith("$iothub/twin/res/204"))
+            {
+                string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload ?? new byte[0]);
+                (int rid, int version) = TopicParser.ParseTopic(topic);
+                if (pendingUpdateTwinRequests.TryGetValue(rid, out var tcs)!)
+                {
+                    tcs.SetResult(version);
+                    Trace.TraceWarning($"UpdateTwinBinder: RID {rid} found in pending requests");
+                }
+                else
+                {
+                    Trace.TraceWarning($"UpdateTwinBinder: RID {rid} not found pending requests");
                 }
             }
         };
@@ -71,7 +86,7 @@ public class TwinRequestResponseBinder
         return await tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(10));
     }
 
-    public async Task<string> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default)
+    public async Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default)
     {
         await connection.SubscribeWithReplyAsync("$iothub/twin/res/#");
         var rid = RidCounter.NextValue();
@@ -83,10 +98,10 @@ public class TwinRequestResponseBinder
             false,
             cancellationToken);
 
-        var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
         if (puback.ReasonCode == 0)
         {
-            if (pendingGetTwinRequests.TryAdd(rid, tcs))
+            if (pendingUpdateTwinRequests.TryAdd(rid, tcs))
             {
                 Trace.TraceWarning($"UpdTwinBinder: RID {rid} added to pending requests");
             }

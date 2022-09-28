@@ -11,8 +11,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
         Func<JsonNode, GenericPropertyAck> OnPropertyUpdateReceived { get; set; }
 
         Task<string> GetTwinAsync(CancellationToken cancellationToken = default);
-        Task<string> ReportPropertyAsync(object payload, CancellationToken cancellationToken = default);
+        Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default);
         Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default);
-        //Task<MqttClientPublishResult> SendTelemetryAsync(object payload, string componentName, CancellationToken t = default);
+        
     }
 }

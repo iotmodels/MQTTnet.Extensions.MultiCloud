@@ -55,8 +55,8 @@ public class Device : BackgroundService
         client.Property_interval.OnMessage= Property_interval_UpdateHandler;
         client.Command_getRuntimeStats.OnMessage= Command_getRuntimeStats_Handler;
         
-        TwinInitializer.InitPropertyValue(client.InitialState, client.Property_interval, "interval", default_interval);
-        TwinInitializer.InitPropertyValue(client.InitialState, client.Property_enabled, "enabled", default_enabled);
+        await TwinInitializer.InitPropertyValue(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
+        await TwinInitializer.InitPropertyValue(client.Connection, client.InitialState, client.Property_enabled, "enabled", default_enabled);
 
         
         await client.Property_started.SendMessageAsync(DateTime.Now);

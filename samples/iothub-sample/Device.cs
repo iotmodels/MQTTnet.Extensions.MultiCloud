@@ -27,13 +27,9 @@ public class Device : BackgroundService
         _logger.LogWarning($"Connecting to: {connectionSettings}");
 
         var client = new HubMqttClient(await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionSettings, stoppingToken));
-        //await client.InitState();
-
-        Console.Write(" Initial State: ");
-        Console.WriteLine(client.InitialState);
-
-        var v = await client.ReportPropertyAsync(new { started = DateTime.Now }, stoppingToken);
-        Console.Write(" Updated Twin: ");
+        
+        var v = await client.UpdateTwinAsync(new { started = DateTime.Now }, stoppingToken);
+        _logger.LogInformation($" Updated Twin to verison: {v} ");
         var twin = await client.GetTwinAsync(stoppingToken);
         Console.WriteLine(twin);
         

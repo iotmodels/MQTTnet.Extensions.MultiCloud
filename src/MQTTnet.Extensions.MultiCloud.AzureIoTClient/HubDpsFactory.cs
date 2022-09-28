@@ -19,7 +19,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             if (string.IsNullOrEmpty(cs.HostName) && !string.IsNullOrEmpty(cs.IdScope))
             {
                 var dpsMqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
-                await dpsMqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithAzureDpsCredentials(cs).Build());
+                await dpsMqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithAzureDpsCredentials(cs).Build(), cancellationToken);
                 var dpsClient = new MqttDpsClient(dpsMqtt, cs.ModelId!);
                 var dpsRes = await dpsClient.ProvisionDeviceIdentity();
                 cs.HostName = dpsRes.RegistrationState.AssignedHub;
@@ -34,7 +34,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             }
             else
             {
-                connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithAzureIoTHubCredentials(cs).Build());
+                connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithAzureIoTHubCredentials(cs).Build(), cancellationToken);
             }
             if (connAck.ResultCode != MqttClientConnectResultCode.Success)
             {
@@ -48,7 +48,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
         {
             if (mqtt.IsConnected)
             {
-                mqtt.DisconnectAsync().Wait();
+                mqtt.DisconnectAsync().Wait(cancellationToken);
             }
 
             Trace.TraceInformation("Reconnecting before SasToken expires");
