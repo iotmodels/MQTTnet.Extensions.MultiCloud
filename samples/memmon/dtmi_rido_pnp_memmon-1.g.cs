@@ -3,7 +3,9 @@
 
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace dtmi_rido_pnp_memmon;
 
@@ -34,7 +36,7 @@ public class Cmd_getRuntimeStats_Request : IBaseCommandRequest<Cmd_getRuntimeSta
     {
         return new Cmd_getRuntimeStats_Request()
         {
-            DiagnosticsMode = Json.FromString<DiagnosticsMode>(payload)
+            DiagnosticsMode = JsonSerializer.Deserialize<DiagnosticsMode>(payload)
         };
     }
 }
