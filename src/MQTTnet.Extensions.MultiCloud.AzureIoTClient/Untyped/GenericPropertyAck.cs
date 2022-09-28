@@ -1,21 +1,21 @@
 ﻿using System.IO;
 using System.Text.Json;
 
-namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
+namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
 {
 
     public class GenericPropertyAck
     {
         public int Version { get; set; }
         public int Status { get; set; }
-        public string Description { get; set; }
-        public string Value { get; set; }
+        public string? Description { get; set; }
+        public string? Value { get; set; }
 
         public string BuildAck()
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                using (JsonDocument doc = JsonDocument.Parse(Value))
+                using (JsonDocument doc = JsonDocument.Parse(Value!))
                 {
                     using (Utf8JsonWriter writer = new Utf8JsonWriter(ms))
                     {

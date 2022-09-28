@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud.Serializers;
 using MQTTnet.Protocol;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -21,9 +22,9 @@ public class RequestResponseBinder
             await Task.Yield();
 
             var topic = m.ApplicationMessage.Topic;
-            if (topic.StartsWith("$iothub/twin/res/200"))
+            if (topic.StartsWith("$iothub/twin/res/20"))
             {
-                string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload);
+                string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload ?? new byte[0]);
                 (int rid, _) = TopicParser.ParseTopic(topic);
                 if (pendingGetTwinRequests.TryGetValue(rid, out var tcs))
                 {
@@ -68,6 +69,38 @@ public class RequestResponseBinder
         }
         return await tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(10));
     }
+
+    public async Task<string> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default)
+    {
+        await connection.SubscribeWithReplyAsync("$iothub/twin/res/#");
+        var rid = RidCounter.NextValue();
+
+        var puback = await connection.PublishBinaryAsync(
+            $"$iothub/twin/PATCH/properties/reported/?$rid={rid}", 
+            new UTF8JsonSerializer().ToBytes(payload), 
+            MqttQualityOfServiceLevel.AtMostOnce, 
+            false, 
+            cancellationToken);
+
+        var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (puback.ReasonCode == 0)
+        {
+            if (pendingGetTwinRequests.TryAdd(rid, tcs))
+            {
+                Trace.TraceWarning($"UpdTwinBinder: RID {rid} added to pending requests");
+            }
+            else
+            {
+                Trace.TraceWarning($"UpdTwinBinder: RID {rid} not added to pending requests");
+            }
+        }
+        else
+        {
+            Trace.TraceError($"Error '{puback}' publishing twin GET");
+        }
+        return await tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(10));
+    }
+
 
     [DebuggerStepThrough()]
     static class RidCounter
