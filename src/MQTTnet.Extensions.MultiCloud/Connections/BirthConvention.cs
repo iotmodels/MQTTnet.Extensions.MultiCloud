@@ -7,7 +7,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
     {
         public enum ConnectionStatus { offline, online }
 
-        public static string BirthTopic(string clientId) => $"pnp/{clientId}/birth";
+        public static string BirthTopic(string clientId) => $"registry/{clientId}/status";
 
         public class BirthMessage
         {

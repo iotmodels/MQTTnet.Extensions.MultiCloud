@@ -8,7 +8,7 @@ public class ReadOnlyPropertyProtobuff<T> : DeviceToCloudBinder<T>, IReadOnlyPro
 {
     public ReadOnlyPropertyProtobuff(IMqttClient mqttClient, string name) : base(mqttClient, name, new ProtobufSerializer())
     {
-        TopicPattern = "grpc/{clientId}/props";
+        TopicPattern = "device/{clientId}/props";
         WrapMessage = false;
         NameInTopic = false;
         Retain = true;

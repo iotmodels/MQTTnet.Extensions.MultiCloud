@@ -17,8 +17,8 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         public WritablePropertyProtobuff(IMqttClient connection, string name, MessageParser parser)
             : base(connection, name, new ProtobufSerializer(parser))
         {
-            TopicTemplate = "grpc/{clientId}/props/{name}/set";
-            ResponseTopic = "grpc/{clientId}/props/{name}/ack";
+            TopicTemplate = "device/{clientId}/props/{name}/set";
+            ResponseTopic = "device/{clientId}/props/{name}/ack";
         }
     }
 }

@@ -14,7 +14,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         public AllTelemetriesProtobuff(IMqttClient mqttClient)
             : base(mqttClient, string.Empty, new ProtobufSerializer())
         {
-            TopicPattern = "grpc/{clientId}/tel";
+            TopicPattern = "device/{clientId}/tel";
             NameInTopic = false;
             WrapMessage = false;
         }
