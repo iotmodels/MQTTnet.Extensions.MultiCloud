@@ -1,6 +1,5 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Binders;
-using MQTTnet.Extensions.MultiCloud.Serializers;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
@@ -10,8 +9,8 @@ public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
         : base(mqttClient, name)
     {
         TopicPattern = "device/{clientId}/props/{name}";
-        WrapMessage = true;
-        NameInTopic = false;
+        WrapMessage = false;
+        NameInTopic = true;
         Retain = true;
     }
 }

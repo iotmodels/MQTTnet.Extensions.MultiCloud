@@ -7,7 +7,7 @@ namespace pi_sense_device
 {
     internal class SenseHatFactory
     {
-        private static readonly string nugetPackageVersion = string.Empty;
+        private static string nugetPackageVersion = string.Empty;
         public static string NuGetPackageVersion => nugetPackageVersion;
 
         private readonly IConfiguration _configuration;
@@ -56,6 +56,7 @@ namespace pi_sense_device
             var cs = new ConnectionSettings(connectionString) { ModelId = Isensehat.ModelId };
             var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
             var client = new dtmi_rido_pnp_sensehat.mqtt.sensehat(mqtt);
+            nugetPackageVersion = BrokerClientFactory.NuGetPackageVersion;
             return client;
         }
 
@@ -65,6 +66,7 @@ namespace pi_sense_device
             var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             var client = new dtmi_rido_pnp_sensehat.hub.sensehat(hub);
             computedSettings = HubDpsFactory.ComputedSettings!;
+            nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;
             //await client.InitState();
             return client;
         }
