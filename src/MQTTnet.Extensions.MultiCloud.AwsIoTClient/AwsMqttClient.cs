@@ -1,6 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
 using MQTTnet.Extensions.MultiCloud.Connections;
+using MQTTnet.Extensions.MultiCloud.Serializers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,25 +10,29 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient
     public class AwsMqttClient
     {
         public IMqttClient Connection { get; private set; }
-        private readonly IPropertyStoreReader getShadowBinder;
-        private readonly IPropertyStoreWriter updateShadowBinder;
+        private readonly ShadowRequestResponseBinder getShadowBinder;
+        
 
         public AwsMqttClient(IMqttClient c, string modelId = "") //: base(c)
         {
             Connection = c;
-            _ = Connection.PublishJsonAsync(
+            var birthMsg = 
+                new UTF8JsonSerializer().ToBytes(
+                        new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
+                    {
+                        ModelId = modelId
+                    });
+            _ = Connection.PublishBinaryAsync(
                 BirthConvention.BirthTopic(Connection.Options.ClientId),
-                new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
-                {
-                    ModelId = modelId
-                },
+                birthMsg,
                 Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true);
 
-            getShadowBinder = new GetShadowBinder(c);
-            updateShadowBinder = new UpdateShadowBinder(c);
+            getShadowBinder = new ShadowRequestResponseBinder(c);
         }
 
-        public Task<string> GetShadowAsync(CancellationToken cancellationToken = default) => getShadowBinder.ReadPropertiesDocAsync(cancellationToken);
-        public Task<int> UpdateShadowAsync(object payload, CancellationToken cancellationToken = default) => updateShadowBinder.ReportPropertyAsync(payload, cancellationToken);
+        public Task<string> GetShadowAsync(CancellationToken cancellationToken = default) => 
+            getShadowBinder.GetShadowAsync(cancellationToken);
+        public Task<string> UpdateShadowAsync(object payload, CancellationToken cancellationToken = default) => 
+            getShadowBinder.UpdateShadowAsync(payload, cancellationToken);
     }
 }

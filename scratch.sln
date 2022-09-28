@@ -24,6 +24,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiClo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iothub-sample", "samples\iothub-sample\iothub-sample.csproj", "{093D7F6F-01B5-4DAA-B322-A17883337221}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.IntegrationTests", "tests\MQTTnet.Extensions.MultiCloud.IntegrationTests\MQTTnet.Extensions.MultiCloud.IntegrationTests.csproj", "{909ADFE1-5013-4099-BEB6-0D8E2EBDFDE8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.AwsIoTClient", "src\MQTTnet.Extensions.MultiCloud.AwsIoTClient\MQTTnet.Extensions.MultiCloud.AwsIoTClient.csproj", "{9F21488E-30AA-420B-B912-D410C4DA7EF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +70,14 @@ Global
 		{093D7F6F-01B5-4DAA-B322-A17883337221}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{093D7F6F-01B5-4DAA-B322-A17883337221}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{093D7F6F-01B5-4DAA-B322-A17883337221}.Release|Any CPU.Build.0 = Release|Any CPU
+		{909ADFE1-5013-4099-BEB6-0D8E2EBDFDE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{909ADFE1-5013-4099-BEB6-0D8E2EBDFDE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{909ADFE1-5013-4099-BEB6-0D8E2EBDFDE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{909ADFE1-5013-4099-BEB6-0D8E2EBDFDE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F21488E-30AA-420B-B912-D410C4DA7EF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F21488E-30AA-420B-B912-D410C4DA7EF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F21488E-30AA-420B-B912-D410C4DA7EF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F21488E-30AA-420B-B912-D410C4DA7EF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +89,7 @@ Global
 		{77BD5D39-772C-4C66-93FA-EFFBB61E9518} = {C483CF1E-384E-4412-A07F-1DF8B3F3D0AB}
 		{13D0C3B6-6DB3-4FED-B128-5C50C8CDA3EA} = {B52F65DA-176D-4D39-8042-68AC2E326C3A}
 		{093D7F6F-01B5-4DAA-B322-A17883337221} = {C483CF1E-384E-4412-A07F-1DF8B3F3D0AB}
+		{909ADFE1-5013-4099-BEB6-0D8E2EBDFDE8} = {B52F65DA-176D-4D39-8042-68AC2E326C3A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {95274027-E151-4B59-BD49-1E49FCF3E828}
