@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
+namespace MQTTnet.Extensions.MultiCloud
 {
-    internal static class SubscribeExtension
+    public static class SubscribeExtension
     {
         private static List<string> subscriptions = new List<string>();
 
@@ -15,7 +15,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             if (!subscriptions.Contains(topic))
             {
                 subscriptions.Add(topic);
-                
+
                 var subAck = await client.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter(topic).Build(), cancellationToken);
                 subAck.TraceErrors();
 

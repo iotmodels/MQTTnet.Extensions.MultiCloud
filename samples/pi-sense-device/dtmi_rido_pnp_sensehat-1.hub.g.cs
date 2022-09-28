@@ -37,9 +37,9 @@ public class sensehat : HubMqttClient, Isensehat
         Telemetry_h = new HubTelemetryUTF8Json<double>(c, "h");
         Telemetry_p = new HubTelemetryUTF8Json<double>(c, "p");
         Command_ChangeLCDColor = new HubCommandUTF8Json<string, string>(c, "ChangeLCDColor");
-        AllTelemetries = new TelemetryUTF8Json<AllTelemetries>(c, String.Empty)
+        AllTelemetries = new HubTelemetryUTF8Json<AllTelemetries>(c, String.Empty)
         {
-            wrapMessage = true
+            wrapMessage = false
         };
     }
     public async Task SendTelemetryAsync(AllTelemetries payload, CancellationToken t = default)
