@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Binders;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 using System;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
+namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
     public class HubTelemetryUTF8Json<T> : DeviceToCloudBinder<T>, ITelemetry<T>
     {

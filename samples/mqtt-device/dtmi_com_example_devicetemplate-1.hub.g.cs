@@ -3,7 +3,6 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
 
 namespace dtmi_com_example_devicetemplate.hub;
 

@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 using System;
