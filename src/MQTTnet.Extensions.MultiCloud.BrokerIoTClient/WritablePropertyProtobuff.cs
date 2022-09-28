@@ -19,6 +19,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         {
             TopicTemplate = "device/{clientId}/props/{name}/set";
             ResponseTopic = "device/{clientId}/props/{name}/ack";
+            RetainResponse = true;
         }
     }
 }

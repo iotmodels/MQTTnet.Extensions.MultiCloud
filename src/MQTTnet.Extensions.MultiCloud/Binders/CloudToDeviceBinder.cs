@@ -15,6 +15,8 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
     protected bool UnwrapRequest = false;
     protected bool WrapResponse = false;
 
+    protected bool RetainResponse = false;
+
     public Func<T, Task<TResp>>? OnMessage { get; set; }
 
     //protected Action<string>? PreProcessMessage;
@@ -51,7 +53,11 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                             .Replace("{rid}", tp.Rid.ToString())
                             .Replace("{version}", tp.Version.ToString());
 
-                        _ = connection.PublishBinaryAsync(resTopic, responseBytes);
+                        _ = connection.PublishBinaryAsync(
+                            resTopic, 
+                            responseBytes, 
+                            Protocol.MqttQualityOfServiceLevel.AtLeastOnce, 
+                            RetainResponse);
                     }
                     else
                     {

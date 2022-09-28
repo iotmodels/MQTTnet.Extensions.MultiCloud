@@ -27,8 +27,8 @@ internal class mqtt_grpc_sample_device
     {
         Connection = client;
         Props = new Properties();
-        AllProperties = new AllPropertiesProtobuff<Properties>(client);    
-        AllTelemetries = new AllTelemetriesProtobuff<Telemetries>(client);
+        AllProperties = new ReadOnlyPropertyProtobuff<Properties>(client, string.Empty);    
+        AllTelemetries = new TelemetryProtobuff<Telemetries>(client, string.Empty);
         Interval = new WritablePropertyProtobuff<Properties, ack>(client, "interval", Properties.Parser);
         Echo = new CommandProtobuff<echoRequest, echoResponse>(client, "echo", echoRequest.Parser);
         GetRuntimeStats = new CommandProtobuff<getRuntimeStatsRequest, getRuntimeStatsResponse>(client, "getRuntimeStats", getRuntimeStatsRequest.Parser);
