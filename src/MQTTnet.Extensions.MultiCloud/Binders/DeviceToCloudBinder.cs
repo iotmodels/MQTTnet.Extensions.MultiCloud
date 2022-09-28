@@ -12,7 +12,7 @@ public abstract class DeviceToCloudBinder<T>
     private readonly IMessageSerializer MessageSerializer;
 
     protected string TopicPattern = "device/{clientId}/telemetry";
-    protected bool NameInTopic = false;
+    public bool NameInTopic = false;
     public bool WrapMessage = false;
     protected bool Retain = false;
 
@@ -47,14 +47,16 @@ public abstract class DeviceToCloudBinder<T>
         {
             payloadBytes = MessageSerializer.ToBytes(payload);
         }
-
-        var pubAck = await connection.PublishBinaryAsync(
-           topic,
-           payloadBytes,
-           MqttQualityOfServiceLevel.AtMostOnce,
-           Retain,
-           cancellationToken);
-
+        var pubAck = await connection.PublishAsync(
+            new MqttApplicationMessageBuilder()
+                .WithTopic(topic)
+                .WithPayload(payloadBytes)
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                .WithRetainFlag(Retain)
+                .WithPayloadFormatIndicator( MessageSerializer is UTF8JsonSerializer ? MqttPayloadFormatIndicator.CharacterData : MqttPayloadFormatIndicator.Unspecified)
+                .Build(), 
+            cancellationToken);
+        
         if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
         {
             Trace.TraceWarning($"Message not published: {pubAck.ReasonCode}");

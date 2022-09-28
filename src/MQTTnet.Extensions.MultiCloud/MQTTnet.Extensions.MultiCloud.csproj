@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+	  <PackageReference Include="Apache.Avro" Version="1.11.1" />
 	  <PackageReference Include="Google.Protobuf" Version="3.21.6" />
 	  <PackageReference Include="MessagePack" Version="2.4.35" />
     <PackageReference Include="System.Text.Json" Version="6.0.5" />
