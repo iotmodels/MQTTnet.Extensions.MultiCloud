@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud.Serializers;
 using System.Diagnostics;
 using System.Text;
 
@@ -9,15 +10,18 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
     private readonly string _name;
     private readonly IMqttClient _connection;
 
-    protected bool nameInTopic = true;
+    protected bool NameInTopic = true;
 
-    protected bool unwrapRequest = false;
-    protected bool wrapResponse = false;
+    protected bool UnwrapRequest = false;
+    protected bool WrapResponse = false;
 
     public Func<T, Task<TResp>>? OnMessage { get; set; }
 
     //protected Action<string>? PreProcessMessage;
     protected Action<TopicParameters>? PreProcessMessage;
+
+    public CloudToDeviceBinder(IMqttClient connection, string name) 
+        : this(connection, name, new UTF8JsonSerializer()) { }
 
     public CloudToDeviceBinder(IMqttClient connection, string name, IMessageSerializer serializer)
     {
@@ -37,11 +41,11 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                         PreProcessMessage(tp);
                     }
 
-                    T req = serializer.FromBytes<T>(m.ApplicationMessage.Payload, unwrapRequest ? _name : string.Empty)!;
+                    T req = serializer.FromBytes<T>(m.ApplicationMessage.Payload, UnwrapRequest ? _name : string.Empty)!;
                     if (req != null)
                     {
                         TResp resp = await OnMessage.Invoke(req);
-                        byte[] responseBytes = serializer.ToBytes(resp, wrapResponse ? _name : string.Empty);
+                        byte[] responseBytes = serializer.ToBytes(resp, WrapResponse ? _name : string.Empty);
 
                         string? resTopic = responseTopic?
                             .Replace("{rid}", tp.Rid.ToString())
@@ -70,7 +74,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 
             string topic = value?.Replace("{clientId}", _connection.Options.ClientId)!;
 
-            if (nameInTopic)
+            if (NameInTopic)
             {
                 topic = topic!.Replace("{name}", _name);
             }
@@ -96,7 +100,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
         {
             string topic = value?.Replace("{clientId}", _connection.Options.ClientId)!;
 
-            if (nameInTopic)
+            if (NameInTopic)
             {
                 topic = topic!.Replace("{name}", _name);
             }

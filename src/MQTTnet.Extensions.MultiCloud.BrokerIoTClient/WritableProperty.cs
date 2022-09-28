@@ -10,7 +10,7 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
     public int? Version { get; set; }
 
     public WritableProperty(IMqttClient c, string name)
-        : base(c, name, new UTF8JsonSerializer())
+        : base(c, name)
     {
         TopicTemplate = "device/{clientId}/props/{name}/set";
         ResponseTopic = "device/{clientId}/props/{name}/ack";

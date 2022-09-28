@@ -7,7 +7,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 public class Command<T, TResp> : CloudToDeviceBinder<T, TResp>, ICommand<T, TResp>
 {
     public Command(IMqttClient client, string name)
-        : base(client, name, new UTF8JsonSerializer())
+        : base(client, name)
     {
         TopicTemplate = "device/{clientId}/commands/{name}";
         ResponseTopic = "device/{clientId}/commands/{name}/resp";

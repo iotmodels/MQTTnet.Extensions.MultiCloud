@@ -19,8 +19,8 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         {
             TopicTemplate = "$aws/things/{deviceId}/shadow/#";
             ResponseTopic = "$iothub/shadow/PATCH/properties/reported/?$rid={rid}&version={version}";
-            unwrapRequest = true;
-            wrapResponse = true;
+            UnwrapRequest = true;
+            WrapResponse = true;
             PreProcessMessage = tp =>
             {
                 Version = tp.Version;
