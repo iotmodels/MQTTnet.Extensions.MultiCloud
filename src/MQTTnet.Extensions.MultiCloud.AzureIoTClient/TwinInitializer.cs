@@ -32,30 +32,30 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             JsonNode? desired = root?["desired"];
             JsonNode? reported = root?["reported"];
             T desired_Prop = default!;
-            int desiredVersion = desired["$version"].GetValue<int>();
-            Ack<T> result = new Ack<T>() { };
+            int desiredVersion = desired!["$version"]!.GetValue<int>();
+            Ack<T> result = new() { };
 
             bool desiredFound = false;
             if (desired[propName] != null)
             {
-                desired_Prop = desired[propName].Deserialize<T>();
+                desired_Prop = desired![propName]!.Deserialize<T>()!;
                 desiredFound = true;
             }
 
 
             bool reportedFound = false;
-            T reported_Prop = default;
+            T reported_Prop = default!;
             int reported_Prop_version = 0;
             int reported_Prop_status = 001;
             string reported_Prop_description = string.Empty;
 
-            if (reported[propName] != null)
+            if (reported![propName] != null)
             {
-                reported_Prop = reported[propName]["value"].Deserialize<T>();
+                reported_Prop = reported[propName]!["value"]!.Deserialize<T>()!;
 
-                reported_Prop_version = reported[propName]["av"]?.GetValue<int>() ?? -1;
-                reported_Prop_status = reported[propName]["ac"].GetValue<int>();
-                reported_Prop_description = reported[propName]["ad"]?.GetValue<string>();
+                reported_Prop_version = reported[propName]!["av"]?.GetValue<int>() ?? -1;
+                reported_Prop_status = reported![propName]!["ac"]!.GetValue<int>();
+                reported_Prop_description = reported![propName]!["ad"]!.GetValue<string>();
                 reportedFound = true;
             }
 

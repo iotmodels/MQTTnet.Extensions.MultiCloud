@@ -1,7 +1,6 @@
 ﻿syntax = "proto3";
 
 option csharp_namespace = "pi_sense_device_protos";
-import "google/protobuf/timestamp.proto";
 
 message Telemetries {
 	double temperature1 = 1; 
