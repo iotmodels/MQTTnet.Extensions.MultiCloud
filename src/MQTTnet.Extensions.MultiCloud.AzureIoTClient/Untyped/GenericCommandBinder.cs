@@ -3,16 +3,17 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
+namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
 {
     public class GenericCommand
     {
         readonly IMqttClient connection;
-        public Func<GenericCommandRequest, GenericCommandResponse> OnCmdDelegate { get; set; }
+        public Func<GenericCommandRequest, GenericCommandResponse>? OnCmdDelegate { get; set; }
 
         public GenericCommand(IMqttClient c)
         {
             connection = c;
+            _ = connection.SubscribeWithReplyAsync("$iothub/methods/POST/#");
             connection.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
@@ -36,6 +37,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings
                 await Task.Yield();
             };
         }
-        public async Task InitSubscriptionsAsync() => await connection.SubscribeWithReplyAsync("$iothub/methods/POST/#");
+       // public async Task InitSubscriptionsAsync() => await connection.SubscribeWithReplyAsync("$iothub/methods/POST/#");
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MQTTnet.Extensions.MultiCloud
+﻿namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
 {
     public interface IBaseCommandRequest<T>
     {
