@@ -1,11 +1,17 @@
-using dtmi_rido_pnp_sensehat;
 using Iot.Device.SenseHat;
+
 using Microsoft.ApplicationInsights;
+
 using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
+
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using Color = System.Drawing.Color;
+
+using pi_sense_device_protos;
+using dtmi_rido_pnp_sensehat;
 
 namespace pi_sense_device;
 
@@ -56,6 +62,8 @@ public class Device : BackgroundService
         var netInfo = "eth: " + GetLocalIPv4();
         _telemetryClient.TrackTrace(netInfo);
         await client.Property_ipaddr.SendMessageAsync(netInfo);
+        
+        var tp = new TelemetryProtobuf<Telemetries>(client.Connection, string.Empty) ;
 
         double t1 = 21;
         while (!stoppingToken.IsCancellationRequested)
@@ -67,13 +75,20 @@ public class Device : BackgroundService
                 _telemetryClient.TrackMetric("temp1", sh.Temperature.DegreesCelsius);
                 if (client.Property_combineTelemetry.Value)
                 {
-                    await client.SendTelemetryAsync(new AllTelemetries
+                    //await client.SendTelemetryAsync(new AllTelemetries
+                    //{
+                    //    t1 = sh.Temperature.DegreesCelsius,
+                    //    t2 = sh.Temperature2.DegreesCelsius,
+                    //    h = sh.Humidity.Percent,
+                    //    p = sh.Pressure.Pascals
+                    //}, stoppingToken);
+                    await tp.SendMessageAsync(new Telemetries
                     {
-                        t1 = sh.Temperature.DegreesCelsius,
-                        t2 = sh.Temperature2.DegreesCelsius,
-                        h = sh.Humidity.Percent,
-                        p = sh.Pressure.Pascals
-                    }, stoppingToken); ;
+                        Temperature1 = sh.Temperature.DegreesCelsius,
+                        Temperature2 = sh.Temperature2.DegreesCelsius,
+                        Humidity = sh.Humidity.Percent,
+                        Pressure =sh.Pressure.Bars
+                    });
                 }
                 else
                 {
@@ -91,13 +106,23 @@ public class Device : BackgroundService
 
                 if (client.Property_combineTelemetry.Value)
                 {
-                    await client.SendTelemetryAsync(new AllTelemetries
+
+                    //await client.SendTelemetryAsync(new AllTelemetries
+                    //{
+                    //    t1 = t1,
+                    //    t2 = GenerateSensorReading(t1, 5, 35),
+                    //    h = Environment.WorkingSet / 1000000,
+                    //    p = Environment.WorkingSet / 1000000
+                    //}, stoppingToken);
+
+                    await tp.SendMessageAsync(new Telemetries
                     {
-                        t1 = t1,
-                        t2 = GenerateSensorReading(t1, 5, 35),
-                        h = Environment.WorkingSet / 1000000,
-                        p = Environment.WorkingSet / 1000000
-                    }, stoppingToken); ;
+                        Temperature1 = t1,
+                        Temperature2 = GenerateSensorReading(t1, 5, 35),
+                        Humidity = Environment.WorkingSet / 1000000,
+                        Pressure = Environment.WorkingSet / 1000000
+                    }, stoppingToken);
+
                 }
                 else
                 {

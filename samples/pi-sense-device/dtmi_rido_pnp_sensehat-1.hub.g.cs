@@ -4,7 +4,6 @@ using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 
-
 namespace dtmi_rido_pnp_sensehat.hub;
 
 public class sensehat : HubMqttClient, Isensehat

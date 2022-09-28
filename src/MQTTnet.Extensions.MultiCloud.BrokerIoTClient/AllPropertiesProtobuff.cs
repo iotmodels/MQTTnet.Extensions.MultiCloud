@@ -12,7 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
     public class AllPropertiesProtobuff<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
     {
         public AllPropertiesProtobuff(IMqttClient mqttClient)
-            : base(mqttClient, string.Empty, new ProtoBuffSerializer())
+            : base(mqttClient, string.Empty, new ProtobufSerializer())
         {
             TopicPattern = "grpc/{clientId}/props";
             NameInTopic = false;

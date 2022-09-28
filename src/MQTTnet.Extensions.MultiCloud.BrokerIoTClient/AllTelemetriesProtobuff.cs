@@ -12,7 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
     public class AllTelemetriesProtobuff<T> : DeviceToCloudBinder<T>, ITelemetry<T>
     {
         public AllTelemetriesProtobuff(IMqttClient mqttClient)
-            : base(mqttClient, string.Empty, new ProtoBuffSerializer())
+            : base(mqttClient, string.Empty, new ProtobufSerializer())
         {
             TopicPattern = "grpc/{clientId}/tel";
             NameInTopic = false;
