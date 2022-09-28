@@ -1,13 +1,11 @@
 ﻿using MQTTnet.Client;
-using System;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
 {
     public class GenericCommand
     {
-        readonly IMqttClient connection;
+        private readonly IMqttClient connection;
         public Func<GenericCommandRequest, GenericCommandResponse>? OnCmdDelegate { get; set; }
 
         public GenericCommand(IMqttClient c)
@@ -37,6 +35,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
                 await Task.Yield();
             };
         }
-       // public async Task InitSubscriptionsAsync() => await connection.SubscribeWithReplyAsync("$iothub/methods/POST/#");
+        // public async Task InitSubscriptionsAsync() => await connection.SubscribeWithReplyAsync("$iothub/methods/POST/#");
     }
 }

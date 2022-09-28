@@ -8,9 +8,9 @@ public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
 {
     public ReadOnlyProperty(IMqttClient mqttClient, string name) : base(mqttClient, name, new UTF8JsonSerializer())
     {
-        topicPattern = "device/{clientId}/props/{name}";
-        wrapMessage = true;
-        nameInTopic = false;
-        retain = true;
+        TopicPattern = "device/{clientId}/props/{name}";
+        WrapMessage = true;
+        NameInTopic = false;
+        Retain = true;
     }
 }

@@ -38,7 +38,7 @@ public class sensehat : HubMqttClient, Isensehat
         Command_ChangeLCDColor = new Command<string, string>(c, "ChangeLCDColor");
         AllTelemetries = new Telemetry<AllTelemetries>(c, String.Empty)
         {
-            wrapMessage = false
+            WrapMessage = false
         };
     }
     public async Task SendTelemetryAsync(AllTelemetries payload, CancellationToken t = default)

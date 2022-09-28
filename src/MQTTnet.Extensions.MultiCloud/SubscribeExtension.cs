@@ -1,14 +1,11 @@
 ﻿using MQTTnet.Client;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud
 {
     public static class SubscribeExtension
     {
-        private static List<string> subscriptions = new List<string>();
+        private static readonly List<string> subscriptions = new List<string>();
 
         public static async Task SubscribeWithReplyAsync(this IMqttClient client, string topic, CancellationToken cancellationToken = default)
         {

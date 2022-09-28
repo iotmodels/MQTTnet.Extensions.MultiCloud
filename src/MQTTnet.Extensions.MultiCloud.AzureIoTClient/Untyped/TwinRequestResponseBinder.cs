@@ -13,7 +13,8 @@ public class TwinRequestResponseBinder
     internal int lastRid = -1;
     private readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingGetTwinRequests = new ConcurrentDictionary<int, TaskCompletionSource<string>>();
     public Func<string, Task<string>>? OnMessage { get; set; }
-    IMqttClient connection;
+
+    private readonly IMqttClient connection;
     public TwinRequestResponseBinder(IMqttClient connection)
     {
         this.connection = connection;
@@ -103,7 +104,7 @@ public class TwinRequestResponseBinder
 
 
     [DebuggerStepThrough()]
-    static class RidCounter
+    private static class RidCounter
     {
         private static int counter = 0;
         internal static int Current => counter;
@@ -111,7 +112,7 @@ public class TwinRequestResponseBinder
         internal static void Reset() => counter = 0;
     }
 
-    class TopicParser
+    private class TopicParser
     {
         internal static (int rid, int twinVersion) ParseTopic(string topic)
         {

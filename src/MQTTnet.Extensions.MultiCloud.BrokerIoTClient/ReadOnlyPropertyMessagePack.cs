@@ -8,9 +8,9 @@ public class ReadOnlyPropertyMessagePack<T> : DeviceToCloudBinder<T>, IReadOnlyP
 {
     public ReadOnlyPropertyMessagePack(IMqttClient mqttClient, string name) : base(mqttClient, name, new MsgPackSerializer())
     {
-        topicPattern = "device/{clientId}/props/{name}";
-        wrapMessage = false;
-        nameInTopic = true;
-        retain = true;
+        TopicPattern = "device/{clientId}/props/{name}";
+        WrapMessage = false;
+        NameInTopic = true;
+        Retain = true;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud.Serializers;
 using MQTTnet.Protocol;
 using System.Diagnostics;
 
@@ -8,26 +9,27 @@ public abstract class DeviceToCloudBinder<T>
 {
     private readonly IMqttClient connection;
     private readonly string name;
-    private readonly IMessageSerializer messageSerializer;
-    protected string topicPattern = "device/{clientId}/telemetry";
+    private readonly IMessageSerializer MessageSerializer;
 
-    protected bool nameInTopic = false;
-    public bool wrapMessage = false;
+    protected string TopicPattern = "device/{clientId}/telemetry";
+    protected bool NameInTopic = false;
+    public bool WrapMessage = false;
+    protected bool Retain = false;
 
-    protected bool retain = false;
+    public DeviceToCloudBinder(IMqttClient mqttClient, string name) : this(mqttClient, name, new UTF8JsonSerializer()) { }
 
     public DeviceToCloudBinder(IMqttClient mqttClient, string name, IMessageSerializer ser)
     {
         connection = mqttClient;
         this.name = name;
-        messageSerializer = ser;
+        MessageSerializer = ser;
     }
 
     public async Task SendMessageAsync(T payload, CancellationToken cancellationToken = default)
     {
 
-        string topic = topicPattern.Replace("{clientId}", connection.Options.ClientId);
-        if (nameInTopic)
+        string topic = TopicPattern.Replace("{clientId}", connection.Options.ClientId);
+        if (NameInTopic)
         {
             topic = topic.Replace("{name}", name);
         }
@@ -37,20 +39,20 @@ public abstract class DeviceToCloudBinder<T>
         }
 
         byte[] payloadBytes;
-        if (wrapMessage)
+        if (WrapMessage)
         {
-            payloadBytes = messageSerializer.ToBytes(new Dictionary<string, T> { { name, payload } });
+            payloadBytes = MessageSerializer.ToBytes(new Dictionary<string, T> { { name, payload } });
         }
         else
         {
-            payloadBytes = messageSerializer.ToBytes(payload);
+            payloadBytes = MessageSerializer.ToBytes(payload);
         }
 
         var pubAck = await connection.PublishBinaryAsync(
            topic,
            payloadBytes,
            MqttQualityOfServiceLevel.AtMostOnce,
-           retain,
+           Retain,
            cancellationToken);
 
         if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)

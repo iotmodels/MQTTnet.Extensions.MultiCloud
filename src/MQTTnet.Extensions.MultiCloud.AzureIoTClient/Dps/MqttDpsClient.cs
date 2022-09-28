@@ -1,9 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Serializers;
-using System;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps
 {

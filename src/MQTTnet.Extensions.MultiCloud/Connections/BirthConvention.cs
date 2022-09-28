@@ -1,7 +1,4 @@
 ﻿using MQTTnet.Extensions.MultiCloud.Serializers;
-using System;
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections
@@ -29,7 +26,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             public ConnectionStatus ConnectionStatus { get; set; }
         }
 
-        public static byte[] LastWillPayload() => 
+        public static byte[] LastWillPayload() =>
             new UTF8JsonSerializer().ToBytes(new BirthMessage(ConnectionStatus.offline));
         public static byte[] LastWillPayload(string modelId) =>
             new UTF8JsonSerializer().ToBytes(new BirthMessage(ConnectionStatus.offline) { ModelId = modelId });

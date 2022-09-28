@@ -1,5 +1,4 @@
 ﻿using MessagePack;
-using System.Xml.Linq;
 
 namespace MQTTnet.Extensions.MultiCloud.Serializers;
 

@@ -1,5 +1,4 @@
 ﻿using Google.Protobuf;
-using System.Xml.Linq;
 
 namespace MQTTnet.Extensions.MultiCloud.Serializers;
 

@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using System;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections
 {
@@ -19,7 +18,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
                 builder.WithCredentials(cs.UserName, cs.Password);
             }
 
-            if (cs.ClientId=="{machineName}")
+            if (cs.ClientId == "{machineName}")
             {
                 cs.ClientId = Environment.MachineName;
             }

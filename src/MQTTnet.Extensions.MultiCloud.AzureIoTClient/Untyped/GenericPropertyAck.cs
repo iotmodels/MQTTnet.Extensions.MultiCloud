@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
 {

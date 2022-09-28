@@ -1,16 +1,13 @@
-﻿using Google.Protobuf;
-using MQTTnet.Client;
+﻿using MQTTnet.Client;
 using System.Diagnostics;
 using System.Text;
-using System.Text.Json;
-using System.Xml.Linq;
 
 namespace MQTTnet.Extensions.MultiCloud.Binders;
 
 public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 {
-    string _name;
-    IMqttClient _connection;
+    private readonly string _name;
+    private readonly IMqttClient _connection;
 
     protected bool nameInTopic = true;
 
@@ -61,7 +58,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
         };
     }
 
-    string? topicTemplate;
+    private string? topicTemplate;
     protected string? TopicTemplate
     {
         get
@@ -88,7 +85,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
         }
     }
 
-    string? responseTopic;
+    private string? responseTopic;
     protected string? ResponseTopic
     {
         get

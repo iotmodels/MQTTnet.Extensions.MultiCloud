@@ -1,10 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {

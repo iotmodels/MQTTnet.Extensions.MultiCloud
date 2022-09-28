@@ -1,6 +1,4 @@
-﻿using Google.Protobuf;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -10,7 +8,7 @@ namespace MQTTnet.Extensions.MultiCloud.Serializers;
 
 public class UTF8JsonSerializer : IMessageSerializer
 {
-    static class Json
+    private static class Json
     {
         public static string Stringify(object o) => JsonSerializer.Serialize(o,
              new JsonSerializerOptions()

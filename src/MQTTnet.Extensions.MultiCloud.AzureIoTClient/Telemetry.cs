@@ -9,7 +9,7 @@ public class Telemetry<T> : DeviceToCloudBinder<T>, ITelemetry<T>
     public Telemetry(IMqttClient mqttClient, string name)
     : base(mqttClient, name, new UTF8JsonSerializer())
     {
-        topicPattern = "devices/{clientId}/messages/events/";
-        wrapMessage = true;
+        TopicPattern = "devices/{clientId}/messages/events/";
+        WrapMessage = true;
     }
 }
