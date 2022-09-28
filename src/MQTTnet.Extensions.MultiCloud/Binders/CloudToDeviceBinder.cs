@@ -1,5 +1,7 @@
 ﻿using Google.Protobuf;
 using MQTTnet.Client;
+using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
 
@@ -38,15 +40,22 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                         PreProcessMessage(tp);
                     }
 
-                    T req = serializer.FromBytes<T>(m.ApplicationMessage.Payload, unwrapRequest ? _name : string.Empty);
-                    TResp resp = await OnMessage.Invoke(req);
-                    byte[] responseBytes = serializer.ToBytes(resp, wrapResponse ? _name : string.Empty);
+                    T req = serializer.FromBytes<T>(m.ApplicationMessage.Payload, unwrapRequest ? _name : string.Empty)!;
+                    if (req != null)
+                    {
+                        TResp resp = await OnMessage.Invoke(req);
+                        byte[] responseBytes = serializer.ToBytes(resp, wrapResponse ? _name : string.Empty);
 
-                    string? resTopic = responseTopic?
-                        .Replace("{rid}", tp.Rid.ToString())
-                        .Replace("{version}", tp.Version.ToString());
+                        string? resTopic = responseTopic?
+                            .Replace("{rid}", tp.Rid.ToString())
+                            .Replace("{version}", tp.Version.ToString());
 
-                    _ = connection.PublishBinaryAsync(resTopic, responseBytes);
+                        _ = connection.PublishBinaryAsync(resTopic, responseBytes);
+                    }
+                    else
+                    {
+                        Trace.TraceWarning($"Cannot parse incoming message name: {_name} payload: {Encoding.UTF8.GetString(m.ApplicationMessage.Payload)}");
+                    }
                 }
             }
         };
@@ -75,7 +84,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 
 
             topicTemplate = topic;
-            _ = _connection.SubscribeAsync(topic);
+            _ = _connection.SubscribeWithReplyAsync(topic);
         }
     }
 

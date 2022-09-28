@@ -45,7 +45,7 @@ public class sensehat : Isensehat
         Command_ChangeLCDColor = new CommandUTF8Json<string,string>(c, "ChangeLCDColor");
         AllTelemetries = new TelemetryUTF8Json<AllTelemetries>(c, String.Empty)
         {
-            wrapMessage = true
+            wrapMessage = false
         };
     }
 

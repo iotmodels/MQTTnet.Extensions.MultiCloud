@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -29,14 +30,19 @@ public class UTF8JsonSerializer : IMessageSerializer
             })!;
     }
 
-    public T FromBytes<T>(byte[] payload, string name = "")
+    // TODO convert to TryReadFromBytes
+    public T? FromBytes<T>(byte[] payload, string name = "")
     {
         if (string.IsNullOrEmpty(name))
         {
             return Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
         }
         JsonDocument jdoc = JsonDocument.Parse(payload);
-        return jdoc.RootElement.GetProperty(name).Deserialize<T>()!;
+        if (jdoc.RootElement.TryGetProperty(name, out JsonElement prop))
+        {
+            return prop.Deserialize<T>()!;
+        }
+        return default;
     }
     public byte[] ToBytes<T>(T payload, string name = "")
     {

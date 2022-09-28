@@ -17,7 +17,7 @@ public class Device : BackgroundService
     private readonly IConfiguration _configuration;
     private TelemetryClient _telemetryClient;
 
-    private const int default_interval = 45;
+    private const int default_interval = 5;
 
     ConnectionSettings connectionSettings;
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
@@ -44,6 +44,7 @@ public class Device : BackgroundService
         await client.Property_sdkInfo.SendMessageAsync(SenseHatFactory.NuGetPackageVersion);
 
         client.Property_interval.Value = default_interval;
+        client.Property_combineTelemetry.Value = true;
 
         //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
         
@@ -125,6 +126,7 @@ public class Device : BackgroundService
             ack.Status = 200;
             ack.Version = client.Property_interval.Version ;
             ack.Value = p;
+            client.Property_interval.Value = p;
             //ack.LastReported = p.Value;
         }
         else
@@ -145,6 +147,7 @@ public class Device : BackgroundService
         ack.Status = 200;
         ack.Version = client.Property_combineTelemetry.Version ;
         ack.Value = p;
+        client.Property_combineTelemetry.Value = p;
         //ack.LastReported = p.Value;
         return await Task.FromResult(ack);
     }
