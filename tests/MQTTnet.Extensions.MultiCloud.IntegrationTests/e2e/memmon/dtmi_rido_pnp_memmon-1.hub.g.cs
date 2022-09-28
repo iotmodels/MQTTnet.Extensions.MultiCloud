@@ -4,7 +4,6 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
 using pnp_memmon;
 
 namespace dtmi_rido_pnp_memmon.hub;

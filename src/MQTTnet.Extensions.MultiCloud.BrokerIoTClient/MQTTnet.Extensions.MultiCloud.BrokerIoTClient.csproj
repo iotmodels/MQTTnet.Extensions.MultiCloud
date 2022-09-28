@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
     <Title>MQTT PnP Client based on MQTTnet</Title>
     <Description>Base APIs to create PnP Clients to work with any complaiant MQTT Broker</Description>
     <PackageIcon>iotpnp-128.png</PackageIcon>

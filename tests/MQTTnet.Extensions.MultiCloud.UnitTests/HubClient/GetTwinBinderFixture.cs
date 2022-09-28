@@ -1,4 +1,4 @@
-﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
+﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
 using System.Collections.Generic;
 using Xunit;
 
@@ -7,18 +7,18 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
     public class GetTwinBinderFixture
     {
         private readonly MockMqttClient mockClient;
-        private readonly GetTwinBinder binder;
+        private readonly TwinRequestResponseBinder binder;
 
         public GetTwinBinderFixture()
         {
             mockClient = new MockMqttClient();
-            binder = new GetTwinBinder(mockClient);
+            binder = new TwinRequestResponseBinder(mockClient);
         }
 
         [Fact]
         public void GetTwinAsync()
         {
-            var twinTask = binder.ReadPropertiesDocAsync();
+            var twinTask = binder.GetTwinAsync();
             var rid = binder.lastRid;
             mockClient.SimulateNewMessage($"$iothub/twin/res/200/?$rid={rid}", SampleTwin);
             Assert.StartsWith("$iothub/twin/GET/?$rid=", mockClient.topicRecceived);

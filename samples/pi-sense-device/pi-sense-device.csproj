@@ -14,6 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="_protos\pi-sense-device.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
     <_WebToolingArtifacts Remove="Properties\launchSettings.json" />
   </ItemGroup>
 
@@ -26,6 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
+	<PackageReference Include="Google.Protobuf" Version="3.21.6" />
+	<PackageReference Include="Grpc.Tools" Version="2.49.1">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
 	<PackageReference Include="Iot.Device.Bindings" Version="2.1.0-*" />
 	<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
@@ -59,5 +68,9 @@
 	  <None Update="*.crt">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Protobuf Include="_protos\pi-sense-device.proto" GrpcServices="None" />
 	</ItemGroup>
 </Project>

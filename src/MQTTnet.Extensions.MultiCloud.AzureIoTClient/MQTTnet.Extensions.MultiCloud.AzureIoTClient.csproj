@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
     <Title>Azure IoT Hub Client based on MQTTnet</Title>
     <Description>Implements basic Azure IoT Hub primitives, including:
 SaS and X509 Auth, Telemetry, Properties and Commands. 

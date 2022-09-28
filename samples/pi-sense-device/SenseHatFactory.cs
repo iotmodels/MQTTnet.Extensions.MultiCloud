@@ -7,10 +7,10 @@ namespace pi_sense_device
 {
     internal class SenseHatFactory
     {
-        static string nugetPackageVersion = string.Empty;
+        private static string nugetPackageVersion = string.Empty;
         public static string NuGetPackageVersion => nugetPackageVersion;
 
-        IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         public SenseHatFactory(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -19,11 +19,14 @@ namespace pi_sense_device
         internal static string ComputeDeviceKey(string masterKey, string deviceId) =>
             Convert.ToBase64String(new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(masterKey)).ComputeHash(System.Text.Encoding.UTF8.GetBytes(deviceId)));
 
-        static internal ConnectionSettings computedSettings = new ConnectionSettings();
+        internal static ConnectionSettings computedSettings = new ConnectionSettings();
 
         public async Task<Isensehat> CreateSenseHatClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(connectionString)) throw new ArgumentNullException(nameof(connectionString));
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new ArgumentNullException(nameof(connectionString));
+            }
 
             if (connectionString.Contains("IdScope") || connectionString.Contains("SharedAccessKey"))
             {
@@ -48,21 +51,23 @@ namespace pi_sense_device
             }
         }
 
-        static async Task<dtmi_rido_pnp_sensehat.mqtt.sensehat> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)
+        private static async Task<dtmi_rido_pnp_sensehat.mqtt.sensehat> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
             var cs = new ConnectionSettings(connectionString) { ModelId = Isensehat.ModelId };
             var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
             var client = new dtmi_rido_pnp_sensehat.mqtt.sensehat(mqtt);
+            nugetPackageVersion = BrokerClientFactory.NuGetPackageVersion;
             return client;
         }
 
-        static async Task<dtmi_rido_pnp_sensehat.hub.sensehat> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
+        private static async Task<dtmi_rido_pnp_sensehat.hub.sensehat> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
             var cs = connectionString + ";ModelId=" + Isensehat.ModelId;
             var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             var client = new dtmi_rido_pnp_sensehat.hub.sensehat(hub);
-            computedSettings = HubDpsFactory.ComputedSettings;
-            await client.InitState();
+            computedSettings = HubDpsFactory.ComputedSettings!;
+            nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;
+            //await client.InitState();
             return client;
         }
 

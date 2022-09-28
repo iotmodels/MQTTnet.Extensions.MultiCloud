@@ -13,7 +13,7 @@ public interface Idevicetemplate
     public IReadOnlyProperty<string> Property_sdkInfo { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_temp{ get; set; }
-    public ICommand<Cmd_echo_Request, Cmd_echo_Response> Command_echo { get; set; }
+    public ICommand<string, string> Command_echo { get; set; }
 }
 
 public class AllTelemetries
@@ -21,21 +21,3 @@ public class AllTelemetries
     public double temp { get; set; }
 }
 
-public class Cmd_echo_Request : IBaseCommandRequest<Cmd_echo_Request>
-{
-    public string request;
-
-    public Cmd_echo_Request DeserializeBody(string payload)
-    {
-        return new Cmd_echo_Request()
-        {
-            request = System.Text.Json.JsonSerializer.Deserialize<string>(payload)
-        };
-    }
-}
-
-public class Cmd_echo_Response : IBaseCommandResponse
-{
-    public int Status { get; set; }
-    public object ReponsePayload { get; set; }
-}

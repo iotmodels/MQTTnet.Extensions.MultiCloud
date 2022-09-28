@@ -1,17 +1,13 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace MQTTnet.Extensions.MultiCloud
+﻿namespace MQTTnet.Extensions.MultiCloud
 {
-    public interface IWritableProperty<T>
+    public interface IWritableProperty<T, TResp> : ICloudToDevice<T, TResp>
     {
-        string PropertyName { get; }
-        PropertyAck<T> PropertyValue { get; set; }
+        T? Value { get; set; }
+    }
 
-        Func<PropertyAck<T>, PropertyAck<T>> OnProperty_Updated { get; set; }
-
-        Task InitPropertyAsync(string twin, T defaultValue, CancellationToken cancellationToken = default);
-        Task<int> ReportPropertyAsync(CancellationToken token = default);
+    public interface IWritableProperty<T> : ICloudToDevice<T, Ack<T>>
+    {
+        T? Value { get; set; }
+        int? Version { get; set; }
     }
 }
