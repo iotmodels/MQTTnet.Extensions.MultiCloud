@@ -38,7 +38,6 @@ public class Device : BackgroundService
         _logger = logger;
         _configuration = configuration;
         _telemetryClient = tc;
-        //infoVersion = typeof(ConnectionSettings).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -58,6 +57,10 @@ public class Device : BackgroundService
         client.Property_interval.OnMessage= Property_interval_UpdateHandler;
         client.Command_getRuntimeStats.OnMessage= Command_getRuntimeStats_Handler;
 
+        client.Property_interval.Value = 5;
+        client.Property_enabled.Value = true;
+        
+
         //await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
         //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
 
@@ -73,15 +76,14 @@ public class Device : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            if (client?.Property_enabled.Value == true)
+            if (client.Property_enabled.Value == true)
             {
                 telemetryWorkingSet = Environment.WorkingSet;
                 await client.Telemetry_workingSet.SendMessageAsync(telemetryWorkingSet, stoppingToken);
                 telemetryCounter++;
                 _telemetryClient.TrackMetric("WorkingSet", telemetryWorkingSet);
             }
-            var interval = client?.Property_interval.Value;
-            await Task.Delay(interval.Value * 1000, stoppingToken);
+            await Task.Delay(client.Property_interval.Value * 1000, stoppingToken);
         }
     }
 
@@ -136,6 +138,7 @@ public class Device : BackgroundService
             ack.Status = 200;
             ack.Version = client.Property_interval.Version;
             ack.Value = p;
+            client.Property_interval.Value = p;
             //ack.LastReported = p.Value;
         }
         else
