@@ -14,7 +14,7 @@ public class memmon : HubMqttClient, Imemmon
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_workingSet { get; set; }
-    public ICommand<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response> Command_getRuntimeStats { get; set; }
+    public ICommand<DiagnosticsMode, Dictionary<string, string>> Command_getRuntimeStats { get; set; }
 
     public memmon(IMqttClient c) : base(c)
     {
@@ -22,6 +22,6 @@ public class memmon : HubMqttClient, Imemmon
         Property_interval = new WritableProperty<int>(c, "interval");
         Property_enabled = new WritableProperty<bool>(c, "enabled");
         Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
-        Command_getRuntimeStats = new Command<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response>(c, "getRuntimeStats");
+        Command_getRuntimeStats = new Command<DiagnosticsMode, Dictionary<string, string>>(c, "getRuntimeStats");
     }
 }

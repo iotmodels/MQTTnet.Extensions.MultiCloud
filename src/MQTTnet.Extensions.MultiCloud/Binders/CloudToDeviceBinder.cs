@@ -38,10 +38,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                 if (OnMessage != null)
                 {
                     var tp = TopicParser.ParseTopic(topic);
-                    if (PreProcessMessage != null)
-                    {
-                        PreProcessMessage(tp);
-                    }
+                    PreProcessMessage?.Invoke(tp);
 
                     T req = serializer.FromBytes<T>(m.ApplicationMessage.Payload, UnwrapRequest ? _name : string.Empty)!;
                     if (req != null)

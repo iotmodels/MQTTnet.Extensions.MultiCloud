@@ -151,7 +151,7 @@ public class Device : BackgroundService
         return await Task.FromResult(ack);
     }
 
-    private async Task<Cmd_getRuntimeStats_Response> Command_getRuntimeStats_Handler(Cmd_getRuntimeStats_Request req)
+    private async Task<Dictionary<string, string>> Command_getRuntimeStats_Handler(DiagnosticsMode req)
     {
         commandCounter++;
         _telemetryClient.TrackEvent("CommandReceived", new Dictionary<string, string>()
@@ -159,33 +159,29 @@ public class Device : BackgroundService
             { "CommandName", "getRuntimeStats" },
             { "NumCommands", commandCounter.ToString() }
         });
-        var result = new Cmd_getRuntimeStats_Response()
-        {
-            Status = 200
-        };
-        Dictionary<string, string> diagnosticResults = new()
+        
+        Dictionary<string, string> result = new()
         {
             { "machine name", Environment.MachineName },
             { "os version", Environment.OSVersion.ToString() },
             { "started", TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3) }
         };
 
-        if (req.DiagnosticsMode == DiagnosticsMode.complete)
+        if (req == DiagnosticsMode.complete)
         {
-            diagnosticResults.Add("sdk info:", infoVersion);
+            result.Add("sdk info:", infoVersion);
         }
-        if (req.DiagnosticsMode == DiagnosticsMode.full)
+        if (req == DiagnosticsMode.full)
         {
-            diagnosticResults.Add("sdk info:", infoVersion);
-            diagnosticResults.Add("interval: ", client.Property_interval.Value.ToString());
-            diagnosticResults.Add("enabled: ", client.Property_enabled.Value.ToString());
-            diagnosticResults.Add("twin receive: ", twinRecCounter.ToString());
+            result.Add("sdk info:", infoVersion);
+            result.Add("interval: ", client.Property_interval.Value.ToString());
+            result.Add("enabled: ", client.Property_enabled.Value.ToString());
+            result.Add("twin receive: ", twinRecCounter.ToString());
             //result.diagnosticResults.Add($"twin sends: ", RidCounter.Current.ToString());
-            diagnosticResults.Add("telemetry: ", telemetryCounter.ToString());
-            diagnosticResults.Add("command: ", commandCounter.ToString());
-            diagnosticResults.Add("reconnects: ", reconnectCounter.ToString());
+            result.Add("telemetry: ", telemetryCounter.ToString());
+            result.Add("command: ", commandCounter.ToString());
+            result.Add("reconnects: ", reconnectCounter.ToString());
         }
-        result.ReponsePayload = JsonSerializer.Serialize(diagnosticResults);
         return await Task.FromResult(result);
     }
 
