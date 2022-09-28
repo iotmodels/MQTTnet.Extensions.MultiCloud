@@ -16,6 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiClo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mqtt-device", "samples\mqtt-device\mqtt-device.csproj", "{76B2DFB7-D2B5-4DF9-A8AF-EFE543A49527}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pi-sense-device", "samples\pi-sense-device\pi-sense-device.csproj", "{77BD5D39-772C-4C66-93FA-EFFBB61E9518}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{76B2DFB7-D2B5-4DF9-A8AF-EFE543A49527}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76B2DFB7-D2B5-4DF9-A8AF-EFE543A49527}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76B2DFB7-D2B5-4DF9-A8AF-EFE543A49527}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77BD5D39-772C-4C66-93FA-EFFBB61E9518}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77BD5D39-772C-4C66-93FA-EFFBB61E9518}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77BD5D39-772C-4C66-93FA-EFFBB61E9518}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77BD5D39-772C-4C66-93FA-EFFBB61E9518}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 		{B5B42711-79F2-4D3F-8AC5-DE83F6871332} = {C483CF1E-384E-4412-A07F-1DF8B3F3D0AB}
 		{D10F7A2B-E37C-4F08-948A-2163E2C9AFEB} = {C483CF1E-384E-4412-A07F-1DF8B3F3D0AB}
 		{76B2DFB7-D2B5-4DF9-A8AF-EFE543A49527} = {C483CF1E-384E-4412-A07F-1DF8B3F3D0AB}
+		{77BD5D39-772C-4C66-93FA-EFFBB61E9518} = {C483CF1E-384E-4412-A07F-1DF8B3F3D0AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {95274027-E151-4B59-BD49-1E49FCF3E828}
