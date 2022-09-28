@@ -4,9 +4,9 @@ using MQTTnet.Extensions.MultiCloud.Serializers;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
-public class ReadOnlyPropertyUTFJson<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
+public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
 {
-    public ReadOnlyPropertyUTFJson(IMqttClient mqttClient, string name) : base(mqttClient, name, new UTF8JsonSerializer())
+    public ReadOnlyProperty(IMqttClient mqttClient, string name) : base(mqttClient, name, new UTF8JsonSerializer())
     {
         topicPattern = "device/{clientId}/props/{name}";
         wrapMessage = true;

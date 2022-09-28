@@ -17,9 +17,9 @@ public class devicetemplate : Idevicetemplate
     public devicetemplate(IMqttClient c) 
     {
         Connection = c;
-        Property_sdkInfo = new ReadOnlyPropertyUTFJson<string>(c, "sdkInfo");
-        Property_interval = new WritablePropertyUTFJson<int>(c, "interval");
-        Telemetry_temp = new TelemetryUTF8Json<double>(c, "temp");
-        Command_echo = new CommandUTF8Json<string, string>(c, "echo");
+        Property_sdkInfo = new ReadOnlyProperty<string>(c, "sdkInfo");
+        Property_interval = new WritableProperty<int>(c, "interval");
+        Telemetry_temp = new Telemetry<double>(c, "temp");
+        Command_echo = new Command<string, string>(c, "echo");
     }
 }

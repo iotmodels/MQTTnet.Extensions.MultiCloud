@@ -4,9 +4,9 @@ using MQTTnet.Extensions.MultiCloud.Serializers;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
-public class CommandUTF8Json<T, TResp> : CloudToDeviceBinder<T, TResp>, ICommand<T, TResp>
+public class Command<T, TResp> : CloudToDeviceBinder<T, TResp>, ICommand<T, TResp>
 {
-    public CommandUTF8Json(IMqttClient client, string name)
+    public Command(IMqttClient client, string name)
         : base(client, name, new UTF8JsonSerializer())
     {
         TopicTemplate = "device/{clientId}/commands/{name}";

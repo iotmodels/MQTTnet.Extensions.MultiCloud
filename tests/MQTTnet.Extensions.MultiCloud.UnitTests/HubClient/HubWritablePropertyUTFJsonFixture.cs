@@ -17,7 +17,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
         public void DesiredPropGetsTriggeredAndIsReportedBackWithAck()
         {
             var mqttClient = new MockMqttClient();
-            var desiredBinder = new HubWritablePropertyUTFJson<int>(mqttClient, "myProp");
+            var desiredBinder = new WritableProperty<int>(mqttClient, "myProp");
 
             desiredBinder.OnMessage = async p =>
             {

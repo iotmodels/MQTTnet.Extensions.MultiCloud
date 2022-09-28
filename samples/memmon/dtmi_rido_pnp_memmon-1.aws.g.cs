@@ -20,10 +20,10 @@ public class memmon : AwsMqttClient, Imemmon
 
     internal memmon(IMqttClient c) : base(c, Imemmon.ModelId)
     {
-        Property_started = new ReadOnlyPropertyUTFJson<DateTime>(c, "started");
-        Property_interval = new WritablePropertyUTFJson<int>(c, "interval");
+        Property_started = new ReadOnlyProperty<DateTime>(c, "started");
+        Property_interval = new WritableProperty<int>(c, "interval");
         Property_enabled = new AwsWritablePropertyUTFJson<bool>(c, "enabled");
-        Telemetry_workingSet = new TelemetryUTF8Json<double>(c, "workingSet");
-        Command_getRuntimeStats = new CommandUTF8Json<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response>(c, "getRuntimeStats");
+        Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
+        Command_getRuntimeStats = new Command<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response>(c, "getRuntimeStats");
     }
 }

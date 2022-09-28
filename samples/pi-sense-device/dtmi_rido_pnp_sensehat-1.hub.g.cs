@@ -26,17 +26,17 @@ public class sensehat : HubMqttClient, Isensehat
 
     internal sensehat(IMqttClient c) : base(c)
     {
-        Property_piri = new HubReadOnlyPropertyUTFJson<string>(c, "piri");
-        Property_ipaddr = new HubReadOnlyPropertyUTFJson<string>(c, "ipaddr");
-        Property_sdkInfo = new HubReadOnlyPropertyUTFJson<string>(c, "sdkInfo");
-        Property_combineTelemetry = new HubWritablePropertyUTFJson<bool>(c, "combineTelemetry");
-        Property_interval = new HubWritablePropertyUTFJson<int>(c, "interval");
-        Telemetry_t1 = new HubTelemetryUTF8Json<double>(c, "t1");
-        Telemetry_t2 = new HubTelemetryUTF8Json<double>(c, "t2");
-        Telemetry_h = new HubTelemetryUTF8Json<double>(c, "h");
-        Telemetry_p = new HubTelemetryUTF8Json<double>(c, "p");
-        Command_ChangeLCDColor = new HubCommandUTF8Json<string, string>(c, "ChangeLCDColor");
-        AllTelemetries = new HubTelemetryUTF8Json<AllTelemetries>(c, String.Empty)
+        Property_piri = new ReadOnlyProperty<string>(c, "piri");
+        Property_ipaddr = new ReadOnlyProperty<string>(c, "ipaddr");
+        Property_sdkInfo = new ReadOnlyProperty<string>(c, "sdkInfo");
+        Property_combineTelemetry = new WritableProperty<bool>(c, "combineTelemetry");
+        Property_interval = new WritableProperty<int>(c, "interval");
+        Telemetry_t1 = new Telemetry<double>(c, "t1");
+        Telemetry_t2 = new Telemetry<double>(c, "t2");
+        Telemetry_h = new Telemetry<double>(c, "h");
+        Telemetry_p = new Telemetry<double>(c, "p");
+        Command_ChangeLCDColor = new Command<string, string>(c, "ChangeLCDColor");
+        AllTelemetries = new Telemetry<AllTelemetries>(c, String.Empty)
         {
             wrapMessage = false
         };

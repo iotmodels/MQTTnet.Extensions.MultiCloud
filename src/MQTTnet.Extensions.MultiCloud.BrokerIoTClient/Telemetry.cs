@@ -4,9 +4,9 @@ using MQTTnet.Extensions.MultiCloud.Serializers;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
-public class TelemetryUTF8Json<T> : DeviceToCloudBinder<T>, ITelemetry<T>
+public class Telemetry<T> : DeviceToCloudBinder<T>, ITelemetry<T>
 {
-    public TelemetryUTF8Json(IMqttClient mqttClient, string name)
+    public Telemetry(IMqttClient mqttClient, string name)
         : base(mqttClient, name, new UTF8JsonSerializer())
     {
         topicPattern = "device/{clientId}/telemetry";

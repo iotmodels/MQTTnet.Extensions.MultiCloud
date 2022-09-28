@@ -15,9 +15,9 @@ public class devicetemplate : HubMqttClient, Idevicetemplate
 
     public devicetemplate(IMqttClient c) : base(c)
     {
-        Property_sdkInfo = new HubReadOnlyPropertyUTFJson<string>(c, "sdkInfo");
-        Property_interval = new HubWritablePropertyUTFJson<int>(c, "interval");
-        Telemetry_temp = new HubTelemetryUTF8Json<double>(c, "temp");
-        Command_echo = new HubCommandUTF8Json<string, string>(c, "echo");
+        Property_sdkInfo = new ReadOnlyProperty<string>(c, "sdkInfo");
+        Property_interval = new WritableProperty<int>(c, "interval");
+        Telemetry_temp = new Telemetry<double>(c, "temp");
+        Command_echo = new Command<string, string>(c, "echo");
     }
 }

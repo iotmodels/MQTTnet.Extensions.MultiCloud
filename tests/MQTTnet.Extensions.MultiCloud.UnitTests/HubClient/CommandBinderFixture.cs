@@ -10,7 +10,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
         public void ReceiveCommand()
         {
             var mqttClient = new MockMqttClient();
-            var command = new HubCommandUTF8Json<string, string>(mqttClient, "myCmd");
+            var command = new Command<string, string>(mqttClient, "myCmd");
             bool cmdCalled = false;
             command.OnMessage = async m =>
             {
