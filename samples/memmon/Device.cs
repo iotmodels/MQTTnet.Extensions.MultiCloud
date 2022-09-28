@@ -2,11 +2,10 @@ using dtmi_rido_pnp_memmon;
 using Humanizer;
 using Microsoft.ApplicationInsights;
 using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Diagnostics;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace memmon;
 
@@ -50,27 +49,17 @@ public class Device : BackgroundService
         connectionSettings = MemMonFactory.connectionSettings;
         _logger.LogWarning("Connected");
 
-
         infoVersion = MemMonFactory.NuGetPackageVersion;
 
         client.Property_enabled.OnMessage = Property_enabled_UpdateHandler;
         client.Property_interval.OnMessage= Property_interval_UpdateHandler;
         client.Command_getRuntimeStats.OnMessage= Command_getRuntimeStats_Handler;
-
-        client.Property_interval.Value = 5;
-        client.Property_enabled.Value = true;
         
+        TwinInitializer.InitPropertyValue(client.InitialState, client.Property_interval, "interval", default_interval);
+        TwinInitializer.InitPropertyValue(client.InitialState, client.Property_enabled, "enabled", default_enabled);
 
-        //await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
-        //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-
-        //await client.Property_interval.ReportPropertyAsync(stoppingToken);
-
-        //client.Property_enabled.PropertyValue.SetDefault(default_enabled);
-        //await client.Property_enabled.ReportPropertyAsync(stoppingToken);
-
-        //client.Property_started.PropertyValue = DateTime.Now;
-        //await client.Property_started.ReportPropertyAsync(stoppingToken);
+        
+        await client.Property_started.SendMessageAsync(DateTime.Now);
 
         RefreshScreen(this);
 
@@ -116,8 +105,9 @@ public class Device : BackgroundService
             Description = "desired notification accepted",
             Status = 200,
             Version = client.Property_enabled.Version,
-            Value = p
+            Value = p,
         };
+        client.Property_enabled.Value = p;
         return await Task.FromResult(ack);
     }
 

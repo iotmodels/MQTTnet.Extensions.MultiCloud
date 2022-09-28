@@ -11,6 +11,7 @@ public interface Imemmon
     public const string ModelId = "dtmi:rido:pnp:memmon;1";
     public IMqttClient Connection { get; }
     public string InitialState { get; }
+
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }

@@ -72,6 +72,7 @@ internal class MemMonFactory
         connectionSettings = HubDpsFactory.ComputedSettings;
         var client = new dtmi_rido_pnp_memmon.hub.memmon(hub);
         nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;
+        client.InitialState = await client.GetTwinAsync();
         return client;
     }
 
