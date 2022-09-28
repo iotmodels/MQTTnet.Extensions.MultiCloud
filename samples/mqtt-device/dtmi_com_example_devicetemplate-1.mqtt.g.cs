@@ -3,10 +3,6 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.ReadOnlyProperty;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.WritableProperty;
 
 namespace dtmi_com_example_devicetemplate.mqtt;
 

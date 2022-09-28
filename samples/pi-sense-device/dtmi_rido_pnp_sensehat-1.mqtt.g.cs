@@ -2,10 +2,7 @@
 
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.ReadOnlyProperty;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.WritableProperty;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 namespace dtmi_rido_pnp_sensehat.mqtt;
 

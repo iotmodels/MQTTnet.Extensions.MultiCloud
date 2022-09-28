@@ -4,11 +4,7 @@ using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.AwsIoTClient;
 using MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.ReadOnlyProperty;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.WritableProperty;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 namespace dtmi_rido_pnp_memmon.aws;
 

@@ -1,6 +1,5 @@
 ﻿using Google.Protobuf;
 using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Binders;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 using System;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.WritableProperty
+namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
 {
     public class WritablePropertyProtobuff<T, TResp> : CloudToDeviceBinder<T, TResp>, IWritableProperty<T, TResp>
     {

@@ -2,7 +2,7 @@
 using MQTTnet.Extensions.MultiCloud.Binders;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.ReadOnlyProperty;
+namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 public class ReadOnlyPropertyMessagePack<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
 {

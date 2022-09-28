@@ -1,9 +1,8 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Binders;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command;
+namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 public class CommandUTF8Json<T, TResp> : CloudToDeviceBinder<T, TResp>, ICommand<T, TResp>
 {

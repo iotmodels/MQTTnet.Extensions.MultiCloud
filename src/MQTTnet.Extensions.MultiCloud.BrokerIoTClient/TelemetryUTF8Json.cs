@@ -1,9 +1,8 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Binders;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry;
+namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 public class TelemetryUTF8Json<T> : DeviceToCloudBinder<T>, ITelemetry<T>
 {
