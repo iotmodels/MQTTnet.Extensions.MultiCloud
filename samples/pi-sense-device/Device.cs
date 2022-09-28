@@ -15,11 +15,10 @@ public class Device : BackgroundService
 
     private readonly ILogger<Device> _logger;
     private readonly IConfiguration _configuration;
-    private TelemetryClient _telemetryClient;
+    private readonly TelemetryClient _telemetryClient;
 
     private const int default_interval = 5;
-
-    ConnectionSettings connectionSettings;
+    private readonly ConnectionSettings connectionSettings;
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
     {
         _logger = logger;
@@ -37,7 +36,7 @@ public class Device : BackgroundService
         _logger.LogWarning($"Connected to {SenseHatFactory.computedSettings}");
 
         client.Property_interval.OnMessage = Property_interval_UpdateHandler;
-        client.Property_combineTelemetry.OnMessage= Property_combineTelemetry_UpdateHandler;
+        client.Property_combineTelemetry.OnMessage = Property_combineTelemetry_UpdateHandler;
         client.Command_ChangeLCDColor.OnMessage = Cmd_ChangeLCDColor_Handler;
 
 
@@ -47,7 +46,7 @@ public class Device : BackgroundService
         client.Property_combineTelemetry.Value = true;
 
         //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-        
+
 
         //await client.Property_combineTelemetry.InitPropertyAsync(client.InitialState, true, stoppingToken);
         //await client.Property_combineTelemetry.ReportPropertyAsync(stoppingToken);
@@ -110,11 +109,11 @@ public class Device : BackgroundService
             }
             int interval = client!.Property_interval.Value;
             _logger.LogInformation($"Waiting {interval} s to send telemetry");
-            await Task.Delay(interval * 1000 , stoppingToken);
+            await Task.Delay(interval * 1000, stoppingToken);
         }
     }
 
-    private  async Task<Ack<int>> Property_interval_UpdateHandler(int p)
+    private async Task<Ack<int>> Property_interval_UpdateHandler(int p)
     {
         ArgumentNullException.ThrowIfNull(client);
         _logger.LogInformation($"New prop received");
@@ -124,7 +123,7 @@ public class Device : BackgroundService
         {
             ack.Description = "desired notification accepted";
             ack.Status = 200;
-            ack.Version = client.Property_interval.Version ;
+            ack.Version = client.Property_interval.Version;
             ack.Value = p;
             client.Property_interval.Value = p;
             //ack.LastReported = p.Value;
@@ -142,17 +141,19 @@ public class Device : BackgroundService
     private async Task<Ack<bool>> Property_combineTelemetry_UpdateHandler(bool p)
     {
         ArgumentNullException.ThrowIfNull(client);
-        var ack = new Ack<bool>();
-        ack.Description = "desired notification accepted";
-        ack.Status = 200;
-        ack.Version = client.Property_combineTelemetry.Version ;
-        ack.Value = p;
+        var ack = new Ack<bool>
+        {
+            Description = "desired notification accepted",
+            Status = 200,
+            Version = client.Property_combineTelemetry.Version,
+            Value = p
+        };
         client.Property_combineTelemetry.Value = p;
         //ack.LastReported = p.Value;
         return await Task.FromResult(ack);
     }
 
-    string oldColor = "white";
+    private string oldColor = "white";
     private async Task<string> Cmd_ChangeLCDColor_Handler(string req)
     {
         _logger.LogInformation($"New Command received");
@@ -208,8 +209,9 @@ public class Device : BackgroundService
         return output;
     }
 
-    Random random = new Random();
-    double GenerateSensorReading(double currentValue, double min, double max)
+    private readonly Random random = new Random();
+
+    private double GenerateSensorReading(double currentValue, double min, double max)
     {
         double percentage = 15;
         double value = currentValue * (1 + (percentage / 100 * (2 * random.NextDouble() - 1)));

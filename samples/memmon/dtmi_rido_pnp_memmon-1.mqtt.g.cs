@@ -3,7 +3,10 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.ReadOnlyProperty;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.WritableProperty;
 
 namespace dtmi_rido_pnp_memmon.mqtt;
 
@@ -20,10 +23,10 @@ public class memmon : Imemmon
     internal memmon(IMqttClient c) 
     {
         Connection = c;
-        Property_started = new ReadOnlyProperty<DateTime>(c, "started");
-        Property_interval = new WritableProperty<int>(c, "interval");
-        Property_enabled = new WritableProperty<bool>(c, "enabled");
-        Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
-        Command_getRuntimeStats = new Command<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response>(c, "getRuntimeStats");
+        Property_started = new ReadOnlyPropertyUTFJson<DateTime>(c, "started");
+        Property_interval = new WritablePropertyUTFJson<int>(c, "interval");
+        Property_enabled = new WritablePropertyUTFJson<bool>(c, "enabled");
+        Telemetry_workingSet = new TelemetryUTF8Json<double>(c, "workingSet");
+        Command_getRuntimeStats = new CommandUTF8Json<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response>(c, "getRuntimeStats");
     }
 }
