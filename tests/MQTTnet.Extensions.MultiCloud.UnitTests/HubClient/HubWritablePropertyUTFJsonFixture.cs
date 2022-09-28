@@ -1,25 +1,34 @@
-﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
+﻿using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
+using MQTTnet.Extensions.MultiCloud.Binders;
+using MQTTnet.Extensions.MultiCloud.Serializers;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
 {
-    public class DesiredUpdatePropertyBinderFixture
+    public class HubWritablePropertyUTFJsonFixture
     {
+
         private static string Stringify(object o) => System.Text.Json.JsonSerializer.Serialize(o);
         [Fact]
-        public void ReceiveDesired()
+        public void DesiredPropGetsTriggeredAndIsReportedBackWithAck()
         {
             var mqttClient = new MockMqttClient();
-            var updTwin = new UpdateTwinBinder(mqttClient);
-            var desiredBinder = new DesiredUpdatePropertyBinder<int>(mqttClient, updTwin, "myProp")
+            var desiredBinder = new HubWritablePropertyUTFJson<int>(mqttClient, "myProp");
+
+            desiredBinder.OnMessage = async p =>
             {
-                OnProperty_Updated = p =>
+                return await Task.FromResult(new Ack<int>()
                 {
-                    p.Status = 222;
-                    return p;
-                }
+                    Status = 222,
+                    Version = desiredBinder.Version,
+                    Value = p
+                });
             };
+            
 
             var desiredMsg = new Dictionary<string, object>
             {
@@ -27,7 +36,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
                 { "$version", 3 }
             };
 
-            mqttClient.SimulateNewMessage("$iothub/twin/PATCH/properties/desired", Stringify(desiredMsg));
+            mqttClient.SimulateNewMessage("$iothub/twin/PATCH/properties/desired/?$rid=1&$version=3", Stringify(desiredMsg));
             Assert.StartsWith($"$iothub/twin/PATCH/properties/reported/?$rid=", mqttClient.topicRecceived);
 
             var expected = Stringify(new
