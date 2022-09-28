@@ -6,15 +6,15 @@ using System.Diagnostics;
 using System.Text;
 using System.Web;
 
-namespace MQTTnet.Extensions.MultiCloud.Binders;
+namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
 
-public class RequestResponseBinder
+public class TwinRequestResponseBinder
 {
     internal int lastRid = -1;
     private readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingGetTwinRequests = new ConcurrentDictionary<int, TaskCompletionSource<string>>();
     public Func<string, Task<string>>? OnMessage { get; set; }
     IMqttClient connection;
-    public RequestResponseBinder(IMqttClient connection)
+    public TwinRequestResponseBinder(IMqttClient connection)
     {
         this.connection = connection;
         connection.ApplicationMessageReceivedAsync += async m =>
@@ -76,10 +76,10 @@ public class RequestResponseBinder
         var rid = RidCounter.NextValue();
 
         var puback = await connection.PublishBinaryAsync(
-            $"$iothub/twin/PATCH/properties/reported/?$rid={rid}", 
-            new UTF8JsonSerializer().ToBytes(payload), 
-            MqttQualityOfServiceLevel.AtMostOnce, 
-            false, 
+            $"$iothub/twin/PATCH/properties/reported/?$rid={rid}",
+            new UTF8JsonSerializer().ToBytes(payload),
+            MqttQualityOfServiceLevel.AtMostOnce,
+            false,
             cancellationToken);
 
         var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);

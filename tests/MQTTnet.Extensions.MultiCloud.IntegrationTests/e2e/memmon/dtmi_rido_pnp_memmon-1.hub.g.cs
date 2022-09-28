@@ -19,10 +19,10 @@ public class memmon : HubMqttClient, Imemmon
 
     public memmon(IMqttClient c) : base(c)
     {
-        Property_started = new ReadOnlyProperty<DateTime>(c, "started");
-        Property_interval = new WritableProperty<int>(c, "interval");
-        Property_enabled = new WritableProperty<bool>(c, "enabled");
-        Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
-        Command_getRuntimeStats = new Command<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response>(c, "getRuntimeStats");
+        Property_started = new HubReadOnlyPropertyUTFJson<DateTime>(c, "started");
+        Property_interval = new HubWritablePropertyUTFJson<int>(c, "interval");
+        Property_enabled = new HubWritablePropertyUTFJson<bool>(c, "enabled");
+        Telemetry_workingSet = new HubTelemetryUTF8Json<double>(c, "workingSet");
+        Command_getRuntimeStats = new HubCommandUTF8Json<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response>(c, "getRuntimeStats");
     }
 }

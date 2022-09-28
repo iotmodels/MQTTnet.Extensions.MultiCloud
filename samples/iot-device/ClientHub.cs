@@ -1,7 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.Binders;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace iot_device
 {
     internal class ClientHub
     {
-        RequestResponseBinder rr;
+        TwinRequestResponseBinder rr;
 
         public ITelemetry<double> Temperature;
         public IReadOnlyProperty<string> SdkInfo;
@@ -22,7 +22,7 @@ namespace iot_device
 
         public ClientHub(IMqttClient c)
         {
-            rr = new RequestResponseBinder(c);
+            rr = new TwinRequestResponseBinder(c);
             Temperature = new HubTelemetryUTF8Json<double>(c, "temp");
             SdkInfo = new HubReadOnlyPropertyUTFJson<string>(c, "sdkInfo");
             Echo = new HubCommandUTF8Json<string, string>(c, "echo");

@@ -1,5 +1,5 @@
 ﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.Binders;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
 using System.Collections.Generic;
 using Xunit;
 
@@ -8,12 +8,12 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
     public class GetTwinBinderFixture
     {
         private readonly MockMqttClient mockClient;
-        private readonly RequestResponseBinder binder;
+        private readonly TwinRequestResponseBinder binder;
 
         public GetTwinBinderFixture()
         {
             mockClient = new MockMqttClient();
-            binder = new RequestResponseBinder(mockClient);
+            binder = new TwinRequestResponseBinder(mockClient);
         }
 
         [Fact]

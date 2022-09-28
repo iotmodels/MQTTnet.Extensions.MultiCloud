@@ -3,6 +3,8 @@
 
 
 using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
+using MQTTnet.Extensions.MultiCloud.IntegrationTests;
 using System;
 using System.Collections.Generic;
 

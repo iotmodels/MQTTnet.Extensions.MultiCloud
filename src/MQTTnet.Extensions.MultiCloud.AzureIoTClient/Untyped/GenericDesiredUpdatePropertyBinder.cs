@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Binders;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -13,7 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
     {
         IMqttClient connection;
         public Func<JsonNode, GenericPropertyAck>? OnProperty_Updated = null;
-        public GenericDesiredUpdatePropertyBinder(IMqttClient c, RequestResponseBinder updTwinBinder)
+        public GenericDesiredUpdatePropertyBinder(IMqttClient c, TwinRequestResponseBinder updTwinBinder)
         {
             connection = c;
             _ = connection.SubscribeWithReplyAsync("$iothub/twin/PATCH/properties/desired/#");

@@ -22,7 +22,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             var device = await GetOrCreateDeviceAsync(deviceId);
 
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
-            await td.Property_interval.InitPropertyAsync(td.InitialState, defaultInterval);
+           // await td.Property_interval.InitPropertyAsync(td.InitialState, defaultInterval);
             await Task.Delay(500);
             var serviceTwin = await rm.GetTwinAsync(deviceId);
             var intervalTwin = serviceTwin.Properties.Reported["interval"];
@@ -31,7 +31,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Assert.Equal(0, Convert.ToInt32(intervalTwin["av"]));
             Assert.Equal(203, Convert.ToInt32(intervalTwin["ac"]));
             Assert.Equal("Init from default value", Convert.ToString(intervalTwin["ad"]));
-            Assert.Equal(defaultInterval, td.Property_interval.PropertyValue.Value);
+            Assert.Equal(defaultInterval, td.Property_interval.Value);
 
             await rm.RemoveDeviceAsync(deviceId);
         }
@@ -66,22 +66,22 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             await Task.Delay(1000);
 
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
-            await td.InitState();
+           // await td.InitState();
 
-            td.Property_interval.OnProperty_Updated = m =>
+            td.Property_interval.OnMessage = async m =>
             {
-                return new PropertyAck<int>("interval")
+                return await Task.FromResult(new Ack<int>
                 {
-                    Version = m.Version,
-                    Value = m.Value,
+                    Version = 1,
+                    Value = m,
                     Status = 200,
                     Description = "accepted from device"
-                };
+                });
             };
 
            
 
-            await td.Property_interval.InitPropertyAsync(td.InitialState, defaultInterval);
+            //await td.Property_interval.InitPropertyAsync(td.InitialState, defaultInterval);
 
             await Task.Delay(500);
 
@@ -92,8 +92,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Assert.Equal(serviceTwin.Properties.Desired.Version, Convert.ToInt32(intervalTwin["av"]));
             Assert.Equal(200, Convert.ToInt32(intervalTwin["ac"]));
             Assert.Equal("accepted from device", Convert.ToString(intervalTwin["ad"]));
-            Assert.Equal("accepted from device", td.Property_interval.PropertyValue.Description);
-            Assert.Equal(interval, td.Property_interval.PropertyValue.Value);
+            //Assert.Equal("accepted from device", td.Property_interval.Description);
+            Assert.Equal(interval, td.Property_interval.Value);
 
             await rm.RemoveDeviceAsync(deviceId);
         }
@@ -106,19 +106,19 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             var device = await GetOrCreateDeviceAsync(deviceId);
 
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
-            td.Property_interval.OnProperty_Updated = m =>
+            td.Property_interval.OnMessage = async m =>
             {
-                var ack = new PropertyAck<int>(m.Name)
+                var ack = new Ack<int>()
                 {
-                    Version = m.Version,
-                    Value = m.Value,
+                    Version = 2,
+                    Value = m,
                     Status = 200,
                     Description = "accepted from device"
                 };
-                td.Property_interval.PropertyValue = ack;
-                return ack;
+                
+                return await Task.FromResult(ack);
             };
-            await td.InitState();
+            //await td.InitState();
 
             var twin = await rm.GetTwinAsync(deviceId);
             int interval = 9;
@@ -143,8 +143,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             Assert.Equal(serviceTwin.Properties.Desired.Version, Convert.ToInt32(intervalTwin["av"]));
             Assert.Equal(200, Convert.ToInt32(intervalTwin["ac"]));
             Assert.Equal("accepted from device", Convert.ToString(intervalTwin["ad"]));
-            Assert.Equal("accepted from device", td.Property_interval.PropertyValue.Description);
-            Assert.Equal(interval, td.Property_interval.PropertyValue.Value);
+            //Assert.Equal("accepted from device", td.Property_interval.Description);
+            Assert.Equal(interval, td.Property_interval.Value);
 
             await rm.RemoveDeviceAsync(deviceId);
         }
@@ -157,7 +157,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
 
             bool commandInvoked = false;
             var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
-            td.Command_getRuntimeStats.OnCmdDelegate = m =>
+            td.Command_getRuntimeStats.OnMessage = async m =>
             {
 
                 Dictionary<string, string> diagResults = new Dictionary<string, string>();
@@ -169,7 +169,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
                     ReponsePayload = Json.Stringify(diagResults)
                 };
 
-                return result;
+                return await Task.FromResult(result);
             };
             await Task.Delay(200);
             var sc = ServiceClient.CreateFromConnectionString(hubConnectionString);

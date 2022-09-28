@@ -1,7 +1,6 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
-using MQTTnet.Extensions.MultiCloud.Binders;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 using System;
 using System.Text.Json.Nodes;
@@ -16,14 +15,14 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 
         public string InitialState { get; set; } = String.Empty;
 
-        private readonly RequestResponseBinder twinOperationsBinder;
+        private readonly TwinRequestResponseBinder twinOperationsBinder;
         private readonly GenericDesiredUpdatePropertyBinder genericDesiredUpdateProperty;
         private readonly GenericCommand command;
 
         public HubMqttClient(IMqttClient c)
         {
             Connection = c;
-            twinOperationsBinder = new RequestResponseBinder(c);
+            twinOperationsBinder = new TwinRequestResponseBinder(c);
             //updateTwinBinder = new UpdateTwinBinder(c);
             command = new GenericCommand(c);
             genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c, twinOperationsBinder!);
