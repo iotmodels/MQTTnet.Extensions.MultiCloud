@@ -2,8 +2,10 @@
 
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.ReadOnlyProperty;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.WritableProperty;
 
 namespace dtmi_rido_pnp_sensehat.mqtt;
 
@@ -22,29 +24,33 @@ public class sensehat : Isensehat
     public ITelemetry<double> Telemetry_p { get; set; }
     public ITelemetry<double> Telemetry_m { get; set; }
 
-    public ICommand<Cmd_ChangeLCDColor_Request, Cmd_ChangeLCDColor_Response> Command_ChangeLCDColor { get; set; }
+    public ITelemetry<AllTelemetries> AllTelemetries;
+
+    public ICommand<string,string> Command_ChangeLCDColor { get; set; }
+
+    
 
     internal sensehat(IMqttClient c) 
     {
         Connection = c;
-        Property_piri = new ReadOnlyProperty<string>(c, "piri");
-        Property_ipaddr = new ReadOnlyProperty<string>(c, "ipaddr");
-        Property_sdkInfo = new ReadOnlyProperty<string>(c, "sdkInfo");
-        Property_combineTelemetry = new WritableProperty<bool>(c, "combineTelemetry");
-        Property_interval = new WritableProperty<int>(c, "interval");
-        Telemetry_t1 = new Telemetry<double>(c, "t1");
-        Telemetry_t2 = new Telemetry<double>(c, "t2");
-        Telemetry_h = new Telemetry<double>(c, "h");
-        Telemetry_p = new Telemetry<double>(c, "p");
-        Command_ChangeLCDColor = new Command<Cmd_ChangeLCDColor_Request, Cmd_ChangeLCDColor_Response>(c, "ChangeLCDColor");
+        Property_piri = new ReadOnlyPropertyUTFJson<string>(c, "piri");
+        Property_ipaddr = new ReadOnlyPropertyUTFJson<string>(c, "ipaddr");
+        Property_sdkInfo = new ReadOnlyPropertyUTFJson<string>(c, "sdkInfo");
+        Property_combineTelemetry = new WritablePropertyUTFJson<bool>(c, "combineTelemetry");
+        Property_interval = new WritablePropertyUTFJson<int>(c, "interval");
+        Telemetry_t1 = new TelemetryUTF8Json<double>(c, "t1");
+        Telemetry_t2 = new TelemetryUTF8Json<double>(c, "t2");
+        Telemetry_h = new TelemetryUTF8Json<double>(c, "h");
+        Telemetry_p = new TelemetryUTF8Json<double>(c, "p");
+        Command_ChangeLCDColor = new CommandUTF8Json<string,string>(c, "ChangeLCDColor");
+        AllTelemetries = new TelemetryUTF8Json<AllTelemetries>(c, String.Empty)
+        {
+            wrapMessage = true
+        };
     }
 
-    public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default) =>
-       Connection.PublishJsonAsync(
-           $"pnp/{Connection.Options.ClientId}/telemetry",
-           payload,
-           MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce,
-           false,
-           t);
-
+    public async Task SendTelemetryAsync(AllTelemetries payload, CancellationToken t = default)
+    {
+        await AllTelemetries.SendMessageAsync(payload, t);
+    }
 }

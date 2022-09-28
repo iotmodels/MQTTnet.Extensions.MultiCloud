@@ -12,7 +12,7 @@ public abstract class DeviceToCloudBinder<T>
     protected string topicPattern = "device/{clientId}/telemetry";
 
     protected bool nameInTopic = false;
-    protected bool wrapMessage = false;
+    public bool wrapMessage = false;
 
     protected bool retain = false;
 
