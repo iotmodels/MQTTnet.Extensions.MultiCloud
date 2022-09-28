@@ -58,6 +58,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mqtt-device", "samples\mqtt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mqtt-grpc-device", "samples\mqtt-grpc-device\mqtt-grpc-device.csproj", "{AF019503-8813-4967-B858-0DDAE43C2073}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "payload-size", "samples\payload-size\payload-size.csproj", "{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +110,10 @@ Global
 		{AF019503-8813-4967-B858-0DDAE43C2073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF019503-8813-4967-B858-0DDAE43C2073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF019503-8813-4967-B858-0DDAE43C2073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +126,7 @@ Global
 		{CF342B46-3B96-4270-8881-70FF105DE8E4} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 		{F0DE9E2F-0E87-4C2C-875B-79547FD957D6} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 		{AF019503-8813-4967-B858-0DDAE43C2073} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
+		{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09914DD8-50B2-48E3-B9AB-7764AE36AD6B}
