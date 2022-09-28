@@ -9,7 +9,7 @@ namespace MQTTnet.Extensions.MultiCloud.Binders;
 
 public class RequestResponseBinder
 {
-    int lastRid = -1;
+    internal int lastRid = -1;
     private readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingGetTwinRequests = new ConcurrentDictionary<int, TaskCompletionSource<string>>();
     public Func<string, Task<string>>? OnMessage { get; set; }
     IMqttClient connection;

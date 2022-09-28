@@ -1,55 +1,23 @@
 ﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
 {
-    public class CommandBinderFixture
+    public class HubCommandUTF8JsoFixture
     {
-        private class CmdRequest : IBaseCommandRequest<CmdRequest>
-        {
-
-            public CmdRequest DeserializeBody(string payload) => new CmdRequest();
-        }
-
-        private class CmdResponse : IBaseCommandResponse
-        {
-            public CmdResponse()
-            {
-                ReponsePayload= "result";
-            }
-
-            public int Status { get; set; }
-            public object ReponsePayload { get; set; }
-        }
-
-
         [Fact]
         public void ReceiveCommand()
         {
             var mqttClient = new MockMqttClient();
-            var command = new Command<CmdRequest, CmdResponse>(mqttClient, "myCmd");
+            var command = new HubCommandUTF8Json<string, string>(mqttClient, "myCmd");
             bool cmdCalled = false;
-            command.OnCmdDelegate = m =>
+            command.OnMessage = async m =>
             {
                 cmdCalled = true;
-                return new CmdResponse();
+                return await Task.FromResult("response");
             };
-            mqttClient.SimulateNewMessage("$iothub/methods/POST/myCmd", "{}");
-            Assert.True(cmdCalled);
-        }
-
-        [Fact]
-        public void ReceiveCommand_Component()
-        {
-            var mqttClient = new MockMqttClient();
-            var command = new Command<CmdRequest, CmdResponse>(mqttClient, "myCmd", "myComp");
-            bool cmdCalled = false;
-            command.OnCmdDelegate = m =>
-            {
-                cmdCalled = true;
-                return new CmdResponse();
-            };
-            mqttClient.SimulateNewMessage("$iothub/methods/POST/myComp*myCmd", "{}");
+            mqttClient.SimulateNewMessage("$iothub/methods/POST/myCmd", "\"in\"");
             Assert.True(cmdCalled);
         }
     }
