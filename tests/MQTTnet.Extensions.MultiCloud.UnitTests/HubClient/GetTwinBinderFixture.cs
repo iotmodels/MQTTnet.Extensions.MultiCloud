@@ -1,4 +1,4 @@
-﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
+﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using System.Collections.Generic;
 using Xunit;
 

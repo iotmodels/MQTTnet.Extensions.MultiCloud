@@ -12,7 +12,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
 {
     public class WritablePropertyProtobuff<T, TResp> : CloudToDeviceBinder<T, TResp>, IWritableProperty<T, TResp>
     {
-        public T? Value { get; set; }
+        public T? Value { get; set; } = default!;
 
         public WritablePropertyProtobuff(IMqttClient connection, string name, MessageParser parser)
             : base(connection, name, new ProtobufSerializer(parser))

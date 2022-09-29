@@ -22,7 +22,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             MqttClient? mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
             var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs, withBirth)
-                .WithProtocolVersion(Formatter.MqttProtocolVersion.V500)
+                .WithProtocolVersion(Formatter.MqttProtocolVersion.V311)
                 .Build());
             ComputedSettings = cs;
             if (connAck.ResultCode != MqttClientConnectResultCode.Success)

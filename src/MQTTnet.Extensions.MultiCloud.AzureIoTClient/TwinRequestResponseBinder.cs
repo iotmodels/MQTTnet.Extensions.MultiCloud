@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Web;
 
-namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
+namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 
 public class TwinRequestResponseBinder
 {

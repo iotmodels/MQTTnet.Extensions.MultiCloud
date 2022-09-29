@@ -60,6 +60,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mqtt-grpc-device", "samples
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "payload-size", "samples\payload-size\payload-size.csproj", "{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "memmon-protobuff", "samples\memmon-protobuff\memmon-protobuff.csproj", "{20B75646-CBD2-4E72-8C56-22887A519FA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,10 @@ Global
 		{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20B75646-CBD2-4E72-8C56-22887A519FA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20B75646-CBD2-4E72-8C56-22887A519FA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20B75646-CBD2-4E72-8C56-22887A519FA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20B75646-CBD2-4E72-8C56-22887A519FA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +133,7 @@ Global
 		{F0DE9E2F-0E87-4C2C-875B-79547FD957D6} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 		{AF019503-8813-4967-B858-0DDAE43C2073} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 		{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
+		{20B75646-CBD2-4E72-8C56-22887A519FA3} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09914DD8-50B2-48E3-B9AB-7764AE36AD6B}
