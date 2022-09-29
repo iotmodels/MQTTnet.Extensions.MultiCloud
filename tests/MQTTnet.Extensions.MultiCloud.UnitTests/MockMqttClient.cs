@@ -19,8 +19,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
 
         public bool IsConnected => throw new NotImplementedException();
 
-        public string BaseClientLibraryInfo => "mock client";
-
+        
         public MqttClientOptions Options => new MqttClientOptions() { ClientId = "mock" };
 
         public string payloadReceived;
@@ -40,6 +39,16 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
 
 
         public void SimulateNewMessage(string topic, string payload)
+        {
+            var msg = new MqttApplicationMessageBuilder()
+                .WithTopic(topic)
+                .WithPayload(payload)
+                .Build();
+            var msgReceived = new MqttApplicationMessageReceivedEventArgs(Options.ClientId, msg, new MqttPublishPacket(), (ea, ct) => null);
+            ApplicationMessageReceivedAsync.Invoke(msgReceived);
+        }
+
+        public void SimulateNewBinaryMessage(string topic, byte[] payload)
         {
             var msg = new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
