@@ -8,8 +8,8 @@
     <Description>Implements basic Azure IoT Hub primitives, including:
 SaS and X509 Auth, Telemetry, Properties and Commands. 
 
-Provides an API surface to implement IoT PnP Devices.</Description>
-    <PackageTags>mqtt; azure-iot; pnp; dtdl</PackageTags>
+Provides an API surface to implement IoT Devices using MQTT.</Description>
+    <PackageTags>mqtt; azure-iot; dtdl</PackageTags>
     <PackageIcon>iotpnp-128.png</PackageIcon>
   </PropertyGroup>
 

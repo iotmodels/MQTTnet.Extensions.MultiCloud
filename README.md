@@ -69,7 +69,7 @@ This repo focuses on the first part: how to implement things/devices that can wo
    - Commands. To invoke specific actions in the device from the solution, acka _c2d messages_
    - Properties. To manage the device state, reported by the _device_ and optionally being managed from the _solution_. eg How often the telemetry must be sent. _d2c+c2d messages_
 
-3. Enable solutions to reflect those _interaction patterns_ to create UI experiences, IoT Central, IoTExplorer or [Pnp-Mqtt](https://iotmodels.github.io/iotux-mqtt/) are examples of PnP enabled solutions.
+3. Enable solutions to reflect those _interaction patterns_ to create UI experiences, IoT Central, IoTExplorer or [iotux-mqtt](https://iotmodels.github.io/iotux-mqtt/) are examples of PnP enabled solutions.
 
 Read the [IoT Plug and Play convention](https://docs.microsoft.com/azure/iot-develop/overview-iot-plug-and-play) for more details.
 
@@ -128,7 +128,7 @@ Read and Update the Device Twin:
 
 ```cs
 var twin = await client.GetTwinAsync(stoppingToken);
-var version = await client.ReportPropertyAsync(new { started = DateTime.Now });
+var version = await client.UpdateTwinAsync(new { started = DateTime.Now });
 ```
 
 Properties Updates (aka Writable Properties) handling:
@@ -218,7 +218,7 @@ public class memmon : AwsMqttClient, Imemmon
 For any MQTT compatible broker
 
 ```cs
-public class memmon : PnPMqttClient, Imemmon
+public class memmon : Imemmon
 ```
 
 ### X509 Support

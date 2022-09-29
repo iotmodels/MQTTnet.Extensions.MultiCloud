@@ -4,8 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
 	  <ImplicitUsings>enable</ImplicitUsings>
-    <Title>MQTT PnP Client based on MQTTnet</Title>
-    <Description>Base APIs to create PnP Clients to work with any complaiant MQTT Broker</Description>
+    <Title>MQTT Client based on MQTTnet</Title>
+    <Description>Base APIs to create MQTT Clients to work with any complaiant MQTT Broker</Description>
     <PackageIcon>iotpnp-128.png</PackageIcon>
   </PropertyGroup>
 

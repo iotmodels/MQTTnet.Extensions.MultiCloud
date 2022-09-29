@@ -5,7 +5,7 @@
 	  <Nullable>enable</Nullable>
 	  <ImplicitUsings>enable</ImplicitUsings>
     <Title>MQTTnet Abstraction to create Mqtt clients.</Title>
-    <Description>Provides abstraction APIs to create PnP Devices</Description>
+    <Description>Provides abstraction APIs to create MQTT Devices</Description>
     <PackageIcon>iotpnp-128.png</PackageIcon>
     
   </PropertyGroup>
