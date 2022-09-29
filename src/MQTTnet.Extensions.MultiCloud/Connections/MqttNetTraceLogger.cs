@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Diagnostics;
-using System;
 using System.Diagnostics;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections

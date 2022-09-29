@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using MQTTnet.Extensions.MultiCloud.Serializers;
 using System.Text.Json.Serialization;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections
@@ -8,7 +7,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
     {
         public enum ConnectionStatus { offline, online }
 
-        public static string BirthTopic(string clientId) => $"pnp/{clientId}/birth";
+        public static string BirthTopic(string clientId) => $"registry/{clientId}/status";
 
         public class BirthMessage
         {
@@ -27,7 +26,9 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             public ConnectionStatus ConnectionStatus { get; set; }
         }
 
-        public static byte[] LastWillPayload() => Encoding.UTF8.GetBytes(Json.Stringify(new BirthMessage(ConnectionStatus.offline)));
-        public static byte[] LastWillPayload(string modelId) => Encoding.UTF8.GetBytes(Json.Stringify(new BirthMessage(ConnectionStatus.offline) { ModelId = modelId }));
+        public static byte[] LastWillPayload() =>
+            new UTF8JsonSerializer().ToBytes(new BirthMessage(ConnectionStatus.offline));
+        public static byte[] LastWillPayload(string modelId) =>
+            new UTF8JsonSerializer().ToBytes(new BirthMessage(ConnectionStatus.offline) { ModelId = modelId });
     }
 }

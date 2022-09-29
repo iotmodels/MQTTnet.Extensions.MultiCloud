@@ -1,0 +1,14 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "proto_model";
+import "google/protobuf/timestamp.proto";
+
+message Telemetries {
+	double temperature = 1; 
+	double workingSet = 2;
+}
+
+message Properties {
+	string sdkInfo = 1;
+	google.protobuf.Timestamp started = 2;
+}

@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
 	  <Nullable>enable</Nullable>
-    <Title>MQTTnet extensions to create Mqtt clients.</Title>
-    <Description>Provides APIs to create MQTT Devices</Description>
+	  <ImplicitUsings>enable</ImplicitUsings>
+    <Title>MQTTnet Abstraction to create Mqtt clients.</Title>
+    <Description>Provides abstraction APIs to create PnP Devices</Description>
     <PackageIcon>iotpnp-128.png</PackageIcon>
     
   </PropertyGroup>
@@ -17,8 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MQTTnet" Version="4.1.0.247" />
+	  <PackageReference Include="Apache.Avro" Version="1.11.1" />
+	  <PackageReference Include="Google.Protobuf" Version="3.21.6" />
+	  <PackageReference Include="MessagePack" Version="2.4.35" />
     <PackageReference Include="System.Text.Json" Version="6.0.5" />
+    <PackageReference Include="MQTTnet" Version="4.1.0.247" />
   </ItemGroup>
 
 </Project>

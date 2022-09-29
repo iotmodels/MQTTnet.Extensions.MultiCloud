@@ -3,7 +3,6 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.PnPTopicBindings;
 
 namespace dtmi_com_example_devicetemplate.mqtt;
 
@@ -14,21 +13,13 @@ public class devicetemplate : Idevicetemplate
     public IReadOnlyProperty<string> Property_sdkInfo { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_temp { get; set; }
-    public ICommand<Cmd_echo_Request, Cmd_echo_Response> Command_echo { get; set; }
+    public ICommand<string, string> Command_echo { get; set; }
     public devicetemplate(IMqttClient c) 
     {
         Connection = c;
         Property_sdkInfo = new ReadOnlyProperty<string>(c, "sdkInfo");
         Property_interval = new WritableProperty<int>(c, "interval");
         Telemetry_temp = new Telemetry<double>(c, "temp");
-        Command_echo = new Command<Cmd_echo_Request, Cmd_echo_Response>(c, "echo");
+        Command_echo = new Command<string, string>(c, "echo");
     }
-
-    public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default) =>
-           Connection.PublishJsonAsync(
-               $"pnp/{Connection.Options.ClientId}/telemetry", 
-               payload, 
-               MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce, 
-               false, 
-               t);
 }

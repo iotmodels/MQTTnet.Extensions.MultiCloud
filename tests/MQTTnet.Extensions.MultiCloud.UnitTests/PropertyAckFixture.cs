@@ -8,7 +8,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         public string AStringProp { get; set; } = string.Empty;
         public int AIntProp { get; set; }
     }
-
+    /*
     public class PropertyAckFixture
     {
         private static string Stringify(object o) => System.Text.Json.JsonSerializer.Serialize(o);
@@ -174,4 +174,5 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
 
         }
     }
+    */
 }

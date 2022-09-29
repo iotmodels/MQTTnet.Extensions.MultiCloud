@@ -1,8 +1,6 @@
 ﻿using MQTTnet.Client;
-using System;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
 using System.Text.Json.Nodes;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
@@ -13,8 +11,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
         Func<JsonNode, GenericPropertyAck> OnPropertyUpdateReceived { get; set; }
 
         Task<string> GetTwinAsync(CancellationToken cancellationToken = default);
-        Task<int> ReportPropertyAsync(object payload, CancellationToken cancellationToken = default);
+        Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default);
         Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default);
-        Task<MqttClientPublishResult> SendTelemetryAsync(object payload, string componentName, CancellationToken t = default);
+        
     }
 }

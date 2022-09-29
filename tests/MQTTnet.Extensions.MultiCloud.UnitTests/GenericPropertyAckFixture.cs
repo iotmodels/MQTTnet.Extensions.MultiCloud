@@ -1,4 +1,4 @@
-﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
+﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
 using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests
