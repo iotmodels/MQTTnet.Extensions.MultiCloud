@@ -13,6 +13,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
         Task<string> GetTwinAsync(CancellationToken cancellationToken = default);
         Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default);
         Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default);
-        
+
     }
 }

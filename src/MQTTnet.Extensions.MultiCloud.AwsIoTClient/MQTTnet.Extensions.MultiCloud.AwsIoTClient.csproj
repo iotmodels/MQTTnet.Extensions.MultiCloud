@@ -4,8 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Title>AWS IoT Core client base don MQTTnet</Title>
-    <Description>Provides base APIs to create MQTT PnP clients for AWS Iot Core</Description>
-    <PackageTags>mqtt; aws iot core; pnp</PackageTags>
+    <Description>Provides base APIs to create MQTT clients for AWS IoT Core</Description>
+    <PackageTags>mqtt; aws iot core</PackageTags>
     <PackageIcon>iotpnp-128.png</PackageIcon>
   </PropertyGroup>
 

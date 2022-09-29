@@ -47,7 +47,6 @@ public class Device : BackgroundService
         client.OnPropertyUpdateReceived = m =>
         {
             Console.WriteLine(m.ToString());
-
             return new GenericPropertyAck
             {
                 Value = m.ToJsonString(),

@@ -27,7 +27,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
                              var ack = OnProperty_Updated(desired);
                              if (ack != null)
                              {
-                                 //_ = updTwinBinder.ReportPropertyAsync(ack.BuildAck());
+                                 _ = updTwinBinder.UpdateTwinAsync(ack.BuildAck());
                              }
                          }
                      }

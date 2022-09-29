@@ -1,9 +1,5 @@
-﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using MQTTnet.Extensions.MultiCloud.Binders;
-using MQTTnet.Extensions.MultiCloud.Serializers;
+﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -37,7 +33,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             };
 
             mqttClient.SimulateNewMessage("$iothub/twin/PATCH/properties/desired/?$rid=1&$version=3", Stringify(desiredMsg));
-            Assert.StartsWith($"$iothub/twin/PATCH/properties/reported/?$rid=", mqttClient.topicRecceived);
+            Assert.StartsWith($"$iothub/twin/PATCH/properties/reported/?$rid=1&$version=3", mqttClient.topicRecceived);
 
             var expected = Stringify(new
             {

@@ -8,7 +8,7 @@ Connection settings can be established using the API or parsing a connection str
 - `SharedAccessKey` Device Shared Access Key
 - `SasMinutes` SasToken expire time in minutes, default to `60`.
 - `X509Key` __pathtopfx>|<pfxpassword__  see details in [X509Certificates](X509Certificates.md)
-- `ModelId` DTDL Model ID in DTMI format to create PnP Devices
+- `ModelId` DTDL Model ID in DTMI/Proto format to indicate the model the device implements
 - `ModuleId` IoTHub Device Module Identity
 - `UserName` Username to be used to authenticate with MQTT Brokers
 - `Password` Username to be used to authenticate with MQTT Brokers

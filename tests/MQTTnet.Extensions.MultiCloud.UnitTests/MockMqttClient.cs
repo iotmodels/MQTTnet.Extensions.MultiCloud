@@ -19,9 +19,8 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
 
         public bool IsConnected => throw new NotImplementedException();
 
-        public string BaseClientLibraryInfo => "mock client";
-
-        public MqttClientOptions Options => new MqttClientOptions() { ClientId = "mock" };
+        
+        public MqttClientOptions Options => new() { ClientId = "mock" };
 
         public string payloadReceived;
         public string topicRecceived;
@@ -49,6 +48,16 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             ApplicationMessageReceivedAsync.Invoke(msgReceived);
         }
 
+        public void SimulateNewBinaryMessage(string topic, byte[] payload)
+        {
+            var msg = new MqttApplicationMessageBuilder()
+                .WithTopic(topic)
+                .WithPayload(payload)
+                .Build();
+            var msgReceived = new MqttApplicationMessageReceivedEventArgs(Options.ClientId, msg, new MqttPublishPacket(), (ea, ct) => null);
+            ApplicationMessageReceivedAsync.Invoke(msgReceived);
+        }
+
         public Delegate[] GetInvocationList() => ApplicationMessageReceivedAsync.GetInvocationList();
 
         //public Task<int> PublishAsync(string topic, object payload, int qos = 0, bool retain = false, CancellationToken token = default)
@@ -67,22 +76,30 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         //    payloadReceived = jsonPayload!;// != null ? Encoding.UTF8.GetString(payload) : string.Empty;
         //    return Task.FromResult(0);
         //}
-
+        public string SubscribedTopicReceived { get; set; }
         public Task<int> SubscribeAsync(string topic, CancellationToken token = default)
         {
+            token.ThrowIfCancellationRequested();
+            SubscribedTopicReceived = topic;
             numSubscriptions++;
             //options.TopicFilters.ForEach(t => Trace.TraceInformation(t.Topic));
             return Task.FromResult(0);
         }
 
+        public string UnsubscribeTopicReceived { get; set; }
         public Task<int> UnsubscribeAsync(string topic, CancellationToken token = default)
         {
+            UnsubscribeTopicReceived = topic;
+            token.ThrowIfCancellationRequested();
             numSubscriptions--;
             return Task.FromResult(0);
         }
 
+#pragma warning disable CA1822 // Mark members as static
         public Task DisconnectAsync(CancellationToken token = default)
+#pragma warning restore CA1822 // Mark members as static
         {
+            token.ThrowIfCancellationRequested();
             return Task.CompletedTask;
         }
 
