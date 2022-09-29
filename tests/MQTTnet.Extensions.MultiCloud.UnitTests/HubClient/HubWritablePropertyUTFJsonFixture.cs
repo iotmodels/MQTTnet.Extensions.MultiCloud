@@ -1,9 +1,5 @@
-﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using MQTTnet.Extensions.MultiCloud.Binders;
-using MQTTnet.Extensions.MultiCloud.Serializers;
+﻿using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
