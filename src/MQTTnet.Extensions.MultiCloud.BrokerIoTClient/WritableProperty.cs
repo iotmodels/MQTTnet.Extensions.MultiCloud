@@ -1,6 +1,5 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Binders;
-using MQTTnet.Extensions.MultiCloud.Serializers;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 

@@ -5,8 +5,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
@@ -17,8 +17,8 @@ public class ShadowRequestResponseBinder
     private readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingGetshadowRequests = new();
     public Func<string, Task<string>>? OnMessage { get; set; }
 
-    readonly IMqttClient connection;
-    readonly string topicBase = String.Empty;
+    private readonly IMqttClient connection;
+    private readonly string topicBase = String.Empty;
     public ShadowRequestResponseBinder(IMqttClient connection)
     {
         this.connection = connection;
@@ -28,7 +28,7 @@ public class ShadowRequestResponseBinder
         connection.ApplicationMessageReceivedAsync += async m =>
         {
             await Task.Yield();
-           
+
             var topic = m.ApplicationMessage.Topic;
             if (topic.StartsWith(topicBase + "/+/accepted"))
             {
@@ -111,7 +111,7 @@ public class ShadowRequestResponseBinder
 
 
     [DebuggerStepThrough()]
-    static class RidCounter
+    private static class RidCounter
     {
         private static int counter = 0;
         internal static int Current => counter;
@@ -119,7 +119,7 @@ public class ShadowRequestResponseBinder
         internal static void Reset() => counter = 0;
     }
 
-    class TopicParser
+    private class TopicParser
     {
         internal static (int rid, int shadowVersion) ParseTopic(string topic)
         {

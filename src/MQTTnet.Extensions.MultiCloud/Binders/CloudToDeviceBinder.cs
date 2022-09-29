@@ -1,5 +1,6 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Serializers;
+using MQTTnet.Protocol;
 using System.Diagnostics;
 using System.Text;
 
@@ -22,7 +23,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
     //protected Action<string>? PreProcessMessage;
     protected Action<TopicParameters>? PreProcessMessage;
 
-    public CloudToDeviceBinder(IMqttClient connection, string name) 
+    public CloudToDeviceBinder(IMqttClient connection, string name)
         : this(connection, name, new UTF8JsonSerializer()) { }
 
     public CloudToDeviceBinder(IMqttClient connection, string name, IMessageSerializer serializer)
@@ -50,16 +51,23 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                             .Replace("{rid}", tp.Rid.ToString())
                             .Replace("{version}", tp.Version.ToString());
 
-                        _ = connection.PublishBinaryAsync(
-                            resTopic, 
-                            responseBytes, 
-                            Protocol.MqttQualityOfServiceLevel.AtLeastOnce, 
-                            RetainResponse);
+                        _ = connection.PublishAsync(
+                            new MqttApplicationMessageBuilder()
+                                .WithTopic(topic)
+                                .WithPayload(responseBytes)
+                                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                                .WithRetainFlag(RetainResponse)
+                                .WithPayloadFormatIndicator(serializer is UTF8JsonSerializer ? MqttPayloadFormatIndicator.CharacterData : MqttPayloadFormatIndicator.Unspecified)
+                                .Build());
                     }
                     else
                     {
                         Trace.TraceWarning($"Cannot parse incoming message name: {_name} payload: {Encoding.UTF8.GetString(m.ApplicationMessage.Payload)}");
                     }
+                }
+                else
+                {
+                    Trace.TraceWarning($"C2D Binder has no callback configured to send the response.");
                 }
             }
         };

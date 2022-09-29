@@ -1,10 +1,5 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System;
-using System.Text.Json;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
