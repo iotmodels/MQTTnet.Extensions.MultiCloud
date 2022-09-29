@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace MQTTnet.Extensions.MultiCloud
+﻿namespace MQTTnet.Extensions.MultiCloud
 {
     public static class TaskTimeoutExtension
     {

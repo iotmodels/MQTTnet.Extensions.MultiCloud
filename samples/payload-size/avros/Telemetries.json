@@ -1,0 +1,14 @@
+﻿{
+  "name": "AvroTests.Telemetries",
+  "type": "record",
+  "fields": [
+    {
+      "name": "Temperature",
+      "type": "double"
+    },
+    {
+      "name": "WorkingSet",
+      "type": "double"
+    }
+  ]
+}

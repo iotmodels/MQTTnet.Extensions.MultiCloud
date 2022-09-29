@@ -4,26 +4,26 @@ option csharp_namespace = "mqtt_grpc_device_protos";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 
-// @topic: -> grpc/{clientId}/tel[/{telName}]
+// @topic: -> device/{clientId}/tel[/{telName}]
 message Telemetries {
 	double temperature = 1; 
 	double workingSet = 2;
 }
-// @topic: -> grpc/{clientId}/props[/{propName}] (r)
+// @topic: -> device/{clientId}/props[/{propName}] (r)
 message Properties {
 	string sdkInfo = 1;
 	google.protobuf.Timestamp started = 2;
 	int32 interval = 3;
 }
 
-// @topic: <- grpc/{clientId}/props[/{propName}]/set (r)
-// @topic: -> grpc/{clientId}/props[/{propName}]/ack (r)
+// @topic: <- device/{clientId}/props[/{propName}]/set (r)
+// @topic: -> device/{clientId}/props[/{propName}]/ack (r)
 service PropertiesSetter {
 	rpc set_interval(Properties) returns (ack);
 }
 
-// @topic: <- grpc/{clientId}/cmd/{cmdName}
-// @topic: -> grpc/{clientId}/cmd/{cmdName}/resp
+// @topic: <- device/{clientId}/cmd/{cmdName}
+// @topic: -> device/{clientId}/cmd/{cmdName}/resp
 service Commands {
 	rpc echo(echoRequest) returns (echoResponse);
 	rpc getRuntimeStats(getRuntimeStatsRequest) returns (getRuntimeStatsResponse);

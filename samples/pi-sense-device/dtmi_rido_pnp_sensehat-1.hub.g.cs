@@ -3,7 +3,6 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
 
 namespace dtmi_rido_pnp_sensehat.hub;
 
@@ -20,7 +19,9 @@ public class sensehat : HubMqttClient, Isensehat
     public ITelemetry<double> Telemetry_p { get; set; }
     public ITelemetry<double> Telemetry_m { get; set; }
 
-    public ICommand<Cmd_ChangeLCDColor_Request, Cmd_ChangeLCDColor_Response> Command_ChangeLCDColor { get; set; }
+    public ITelemetry<AllTelemetries> AllTelemetries;
+
+    public ICommand<string, string> Command_ChangeLCDColor { get; set; }
 
     internal sensehat(IMqttClient c) : base(c)
     {
@@ -33,6 +34,14 @@ public class sensehat : HubMqttClient, Isensehat
         Telemetry_t2 = new Telemetry<double>(c, "t2");
         Telemetry_h = new Telemetry<double>(c, "h");
         Telemetry_p = new Telemetry<double>(c, "p");
-        Command_ChangeLCDColor = new Command<Cmd_ChangeLCDColor_Request, Cmd_ChangeLCDColor_Response>(c, "ChangeLCDColor");
+        Command_ChangeLCDColor = new Command<string, string>(c, "ChangeLCDColor");
+        AllTelemetries = new Telemetry<AllTelemetries>(c, String.Empty)
+        {
+            WrapMessage = false
+        };
+    }
+    public async Task SendTelemetryAsync(AllTelemetries payload, CancellationToken t = default)
+    {
+        await AllTelemetries.SendMessageAsync(payload, t);
     }
 }

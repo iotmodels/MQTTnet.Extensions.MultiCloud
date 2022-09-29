@@ -67,12 +67,12 @@ internal class MemMonFactory
 
     static async Task<dtmi_rido_pnp_memmon.hub.memmon> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
     {
-        var cs = connectionString + ";ModelId=" + Imemmon.ModelId;
+        var cs = new ConnectionSettings(connectionString) { ModelId = Imemmon.ModelId };
         var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
         connectionSettings = HubDpsFactory.ComputedSettings;
         var client = new dtmi_rido_pnp_memmon.hub.memmon(hub);
         nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;
-        await client.InitState();
+        client.InitialState = await client.GetTwinAsync();
         return client;
     }
 

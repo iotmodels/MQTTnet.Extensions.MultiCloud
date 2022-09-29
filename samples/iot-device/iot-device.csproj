@@ -16,7 +16,16 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\MQTTnet.Extensions.MultiCloud\src\MQTTnet.Extensions.IoT\MQTTnet.Extensions.IoT.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Protobuf Include="_protos\*.proto" GrpcServices="None" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="_protos\device-template.proto" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.AzureIoTClient\MQTTnet.Extensions.MultiCloud.AzureIoTClient.csproj" />
+	  <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
+	</ItemGroup>
 </Project>

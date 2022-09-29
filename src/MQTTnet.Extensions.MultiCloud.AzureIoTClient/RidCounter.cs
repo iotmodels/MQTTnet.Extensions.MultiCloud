@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Threading;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {

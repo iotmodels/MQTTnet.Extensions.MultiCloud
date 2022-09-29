@@ -1,6 +1,5 @@
 ﻿using MQTTnet.Client;
 using System.Diagnostics;
-using System.Linq;
 
 namespace MQTTnet.Extensions.MultiCloud
 {

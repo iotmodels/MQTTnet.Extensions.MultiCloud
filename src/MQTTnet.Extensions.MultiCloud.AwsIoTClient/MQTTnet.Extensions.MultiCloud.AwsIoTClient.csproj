@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Title>AWS IoT Core client base don MQTTnet</Title>
     <Description>Provides base APIs to create MQTT PnP clients for AWS Iot Core</Description>
