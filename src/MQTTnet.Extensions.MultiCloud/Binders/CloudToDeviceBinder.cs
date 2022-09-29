@@ -53,7 +53,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 
                         _ = connection.PublishAsync(
                             new MqttApplicationMessageBuilder()
-                                .WithTopic(topic)
+                                .WithTopic(responseTopic)
                                 .WithPayload(responseBytes)
                                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                                 .WithRetainFlag(RetainResponse)
