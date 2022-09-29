@@ -13,6 +13,7 @@ namespace mqtt_grpc_device;
 
 internal class mqtt_grpc_sample_device 
 {
+    internal const string ModelId = "mqtt-grpc-device.proto";
     internal IMqttClient Connection;
 
     internal Properties Props;

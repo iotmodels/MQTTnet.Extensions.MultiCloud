@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using mqtt_grpc_device_protos;
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
+using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +29,8 @@ namespace mqtt_grpc_device
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            connection = await BrokerClientFactory.CreateFromConnectionSettingsAsync(_configuration.GetConnectionString("cs"), true, stoppingToken);
+            ConnectionSettings cs = new(_configuration.GetConnectionString("cs")) { ModelId = mqtt_grpc_sample_device.ModelId };
+            connection = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
 
             client = new mqtt_grpc_sample_device(connection);
 
@@ -51,7 +53,7 @@ namespace mqtt_grpc_device
                 var telemetries = new Telemetries()
                 {
                     Temperature = lastTemperature,
-                    WorkingSet = Environment.WorkingSet
+                    WorkingSet = Environment.WorkingSet / 500000
                 };
                 await client.AllTelemetries.SendMessageAsync(telemetries);
                 _logger.LogInformation("LastTemp {lastTemp}. Waiting {interval}s", lastTemperature, client.Props.Interval);

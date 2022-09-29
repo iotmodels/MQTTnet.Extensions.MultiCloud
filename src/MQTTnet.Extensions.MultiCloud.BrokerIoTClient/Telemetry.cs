@@ -9,7 +9,7 @@ public class Telemetry<T> : DeviceToCloudBinder<T>, ITelemetry<T>
     public Telemetry(IMqttClient mqttClient, string name)
         : base(mqttClient, name)
     {
-        TopicPattern = "device/{clientId}/telemetry";
+        TopicPattern = "device/{clientId}/telemetry/{name}";
         WrapMessage = true;
     }
 }

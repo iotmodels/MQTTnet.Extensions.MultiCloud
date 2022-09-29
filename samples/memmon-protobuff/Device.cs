@@ -45,7 +45,7 @@ public class Device : BackgroundService
     {
         var cs = new ConnectionSettings(_configuration.GetConnectionString("cs")) { ModelId="memmon.proto"};
         _logger.LogWarning($"Connecting to..{cs}");
-        var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(_configuration.GetConnectionString("cs"), true, stoppingToken);
+        var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
         connectionSettings = cs;
         mqtt.DisconnectedAsync += Connection_DisconnectedAsync;
         infoVersion = BrokerClientFactory.NuGetPackageVersion;
@@ -54,15 +54,16 @@ public class Device : BackgroundService
 
         client = new MemmonClient(mqtt);
 
-        client.Props.Enabled = default_enabled;
-        client.Props.Interval = default_interval;
-
         client.Property_enabled.OnMessage = Property_enabled_UpdateHandler;
         client.Property_interval.OnMessage= Property_interval_UpdateHandler;
         client.getRuntimeStats.OnMessage= Command_getRuntimeStats_Handler;
-        
-        
-        await client.AllProperties.SendMessageAsync(new memmon_model_protos.Properties { Started = DateTime.UtcNow.ToTimestamp()});
+
+        client.Props.Started = DateTime.UtcNow.ToTimestamp();
+        client.Props.Enabled = default_enabled;
+        client.Props.Interval = default_interval;
+
+
+        await client.AllProperties.SendMessageAsync(client.Props);
 
         RefreshScreen(this);
 
@@ -153,11 +154,11 @@ public class Device : BackgroundService
         result.DiagResults.Add("started", TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3));
         
 
-        if (req.Mode == getRuntimeStatsMode.Basic)
+        if (req.Mode == getRuntimeStatsMode.Normal)
         {
             result.DiagResults.Add("sdk info:", infoVersion);
         }
-        if (req.Mode == getRuntimeStatsMode.Normal)
+        if (req.Mode == getRuntimeStatsMode.Full)
         {
             result.DiagResults.Add("sdk info:", infoVersion);
             result.DiagResults.Add("interval: ", client.Props.Interval.ToString());
