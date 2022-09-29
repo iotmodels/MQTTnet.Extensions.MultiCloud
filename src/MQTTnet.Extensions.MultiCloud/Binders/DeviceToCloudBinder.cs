@@ -53,10 +53,10 @@ public abstract class DeviceToCloudBinder<T>
                 .WithPayload(payloadBytes)
                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                 .WithRetainFlag(Retain)
-                .WithPayloadFormatIndicator( MessageSerializer is UTF8JsonSerializer ? MqttPayloadFormatIndicator.CharacterData : MqttPayloadFormatIndicator.Unspecified)
-                .Build(), 
+                .WithPayloadFormatIndicator(MessageSerializer is UTF8JsonSerializer ? MqttPayloadFormatIndicator.CharacterData : MqttPayloadFormatIndicator.Unspecified)
+                .Build(),
             cancellationToken);
-        
+
         if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
         {
             Trace.TraceWarning($"Message not published: {pubAck.ReasonCode}");
