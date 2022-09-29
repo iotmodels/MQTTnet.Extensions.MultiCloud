@@ -39,6 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_actions", "_actions", "{68
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F618E3CF-0552-44BD-A92A-A926AF319D00}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.runsettings = .runsettings
 		.runsettings.template = .runsettings.template
 		src\Directory.Build.props = src\Directory.Build.props
@@ -58,7 +59,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mqtt-device", "samples\mqtt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mqtt-grpc-device", "samples\mqtt-grpc-device\mqtt-grpc-device.csproj", "{AF019503-8813-4967-B858-0DDAE43C2073}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "payload-size", "samples\payload-size\payload-size.csproj", "{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "payload-size", "samples\payload-size\payload-size.csproj", "{DF590535-2FDC-4A0A-9EE4-7C9BF818C7B4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "memmon-protobuff", "samples\memmon-protobuff\memmon-protobuff.csproj", "{20B75646-CBD2-4E72-8C56-22887A519FA3}"
 EndProject

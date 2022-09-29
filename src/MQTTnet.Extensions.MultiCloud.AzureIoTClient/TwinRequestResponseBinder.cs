@@ -89,11 +89,20 @@ public class TwinRequestResponseBinder
     public async Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default)
     {
         await connection.SubscribeWithReplyAsync("$iothub/twin/res/#");
-        var rid = RidCounter.NextValue();
-
+        byte[] patchBytes;
+        if (payload is string)
+        {
+            patchBytes = Encoding.UTF8.GetBytes((string)payload);
+        }
+        else
+        {
+            patchBytes = new UTF8JsonSerializer().ToBytes(payload);
+        }
+        
+        var rid = RidCounter.NextValue(); 
         var puback = await connection.PublishBinaryAsync(
             $"$iothub/twin/PATCH/properties/reported/?$rid={rid}",
-            new UTF8JsonSerializer().ToBytes(payload),
+            patchBytes,
             MqttQualityOfServiceLevel.AtMostOnce,
             false,
             cancellationToken);

@@ -20,7 +20,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         public bool IsConnected => throw new NotImplementedException();
 
         
-        public MqttClientOptions Options => new MqttClientOptions() { ClientId = "mock" };
+        public MqttClientOptions Options => new() { ClientId = "mock" };
 
         public string payloadReceived;
         public string topicRecceived;
@@ -76,22 +76,30 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         //    payloadReceived = jsonPayload!;// != null ? Encoding.UTF8.GetString(payload) : string.Empty;
         //    return Task.FromResult(0);
         //}
-
+        public string SubscribedTopicReceived { get; set; }
         public Task<int> SubscribeAsync(string topic, CancellationToken token = default)
         {
+            token.ThrowIfCancellationRequested();
+            SubscribedTopicReceived = topic;
             numSubscriptions++;
             //options.TopicFilters.ForEach(t => Trace.TraceInformation(t.Topic));
             return Task.FromResult(0);
         }
 
+        public string UnsubscribeTopicReceived { get; set; }
         public Task<int> UnsubscribeAsync(string topic, CancellationToken token = default)
         {
+            UnsubscribeTopicReceived = topic;
+            token.ThrowIfCancellationRequested();
             numSubscriptions--;
             return Task.FromResult(0);
         }
 
+#pragma warning disable CA1822 // Mark members as static
         public Task DisconnectAsync(CancellationToken token = default)
+#pragma warning restore CA1822 // Mark members as static
         {
+            token.ThrowIfCancellationRequested();
             return Task.CompletedTask;
         }
 
