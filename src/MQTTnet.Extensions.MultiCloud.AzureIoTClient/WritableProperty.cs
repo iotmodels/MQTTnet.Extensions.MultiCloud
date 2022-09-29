@@ -12,7 +12,7 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
         : base(c, name)
     {
         TopicTemplate = "$iothub/twin/PATCH/properties/desired/#";
-        ResponseTopic = "$iothub/twin/PATCH/properties/reported/?$rid={rid}&version={version}";
+        ResponseTopic = "$iothub/twin/PATCH/properties/reported/?$rid={rid}&$version={version}";
         UnwrapRequest = true;
         WrapResponse = true;
         PreProcessMessage = tp =>
