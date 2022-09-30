@@ -35,7 +35,7 @@ jobs:
       env:
         E2EHubConnectionString: ${{secrets.E2EHubConnectionString}}
         TestHubName: ${{secrets.TestHubName}} 
-      run: dotnet test --no-build --verbosity normal --logger trx --filter FullyQualifiedName\!~MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
+      run: dotnet test --no-build --verbosity normal --logger trx
 
     - name: Process trx reports with default
       if: always()
