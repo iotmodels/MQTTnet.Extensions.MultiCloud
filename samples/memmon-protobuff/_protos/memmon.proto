@@ -23,9 +23,10 @@ service Commands {
 }
 
 message ack {
-	int32 status = 1;
-	string description = 2;
-	google.protobuf.Any value =3;
+	google.protobuf.Any value = 1;
+	int32 version = 2;
+	int32 status = 3;
+	string description = 4;
 }
 
 enum getRuntimeStatsMode {

@@ -108,7 +108,7 @@ public class Device : BackgroundService
             { "PropName", "enables" },
             { "NumTwinUpdates", twinRecCounter.ToString() }
         });
-
+        client.Property_enabled.Version++;
         var ack = new Ack<bool>
         {
             Description = "desired notification accepted",
@@ -129,16 +129,17 @@ public class Device : BackgroundService
             { "PropName", "interval" },
             { "NumTwinUpdates", twinRecCounter.ToString() }
         });
+        
         var ack = new Ack<int>();
+        client.Property_interval.Version++;
 
         if (p > 0)
         {
+            client.Property_interval.Value = p;
             ack.Description = "desired notification accepted";
             ack.Status = 200;
             ack.Version = client.Property_interval.Version;
             ack.Value = p;
-            client.Property_interval.Value = p;
-            //ack.LastReported = p.Value;
         }
         else
         {
@@ -204,7 +205,7 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "--------", "-----".PadLeft(15, '-'), "------"));
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "enabled".PadRight(8), enabled_value?.PadLeft(15), client?.Property_enabled?.Version));
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "interval".PadRight(8), interval_value?.PadLeft(15), client?.Property_interval.Version));
-            //AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "started".PadRight(8), client.Property_started.ToShortTimeString().PadLeft(15), client?.Property_started?.Version));
+            //AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "started".PadRight(8), client.Property_started.T().PadLeft(15), client?.Property_started?.Version));
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Reconnects: {reconnectCounter}");
             AppendLineWithPadRight(sb, $"Telemetry: {telemetryCounter}");

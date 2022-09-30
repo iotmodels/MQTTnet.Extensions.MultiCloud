@@ -8,7 +8,7 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
     readonly IMqttClient _connection;
     readonly string _name;
     public T? Value { get; set; }
-    public int? Version { get; set; }
+    public int? Version { get; set; } = -1;
 
     public WritableProperty(IMqttClient c, string name)
         : base(c, name)
