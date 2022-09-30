@@ -1,6 +1,8 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Binders;
 using MQTTnet.Extensions.MultiCloud.Serializers;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
 {
@@ -13,13 +15,18 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
             : base(c, name, new UTF8JsonSerializer())
         {
             TopicTemplate = "$aws/things/{deviceId}/shadow/#";
-            ResponseTopic = "$iothub/shadow/PATCH/properties/reported/?$rid={rid}&version={version}";
+            ResponseTopic = "$aws/things/{deviceId}/shadow/accepted";
             UnwrapRequest = true;
             WrapResponse = true;
             PreProcessMessage = tp =>
             {
                 Version = tp.Version;
             };
+        }
+
+        public Task SendMessageAsync(Ack<T> payload, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
