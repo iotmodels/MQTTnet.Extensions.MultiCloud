@@ -4,6 +4,8 @@ option csharp_namespace = "mqtt_grpc_device_protos";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 
+package rido.mqtt_grpc_device;
+
 // @topic: -> device/{clientId}/tel[/{telName}]
 message Telemetries {
 	double temperature = 1; 
@@ -30,9 +32,10 @@ service Commands {
 }
 
 message ack {
-	int32 status = 1;
-	string description = 2;
-	google.protobuf.Any value =3;
+	google.protobuf.Any value = 1;
+	int32 version = 2;
+	int32 status = 3;
+	string description = 4;
 }
 
 message echoRequest {

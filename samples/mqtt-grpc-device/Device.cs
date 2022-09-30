@@ -96,16 +96,19 @@ namespace mqtt_grpc_device
         {
             ArgumentNullException.ThrowIfNull(connection);
             ack ack = new ack();
+            client!.Interval.Version++;
             if (desired.Interval > 0)
             {
                 client!.Props.Interval= desired.Interval;
                 ack.Status = 200;
+                ack.Version = client.Interval.Version!.Value;
                 ack.Description = "property accepted";
                 ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(desired);
             }
             else
             {
                 ack.Status = 200;
+                ack.Version = client.Interval.Version!.Value;
                 ack.Description = "negative values not accepted";
                 ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(client!.Props);
             }
