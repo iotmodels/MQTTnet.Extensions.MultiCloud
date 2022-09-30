@@ -7,7 +7,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
     public class TwinInitializer
     {
-        public static async Task InitPropertyValue<T>(IMqttClient client, string twin, IWritableProperty<T> prop, string propName, T defaultValue)
+        public static async Task InitPropertyAsync<T>(IMqttClient client, string twin, IWritableProperty<T> prop, string propName, T defaultValue)
         {
             var ack = InitFromTwin(twin, propName, defaultValue);
             Ack<T> acceptedAck;

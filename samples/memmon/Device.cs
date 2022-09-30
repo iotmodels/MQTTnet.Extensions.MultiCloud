@@ -3,6 +3,7 @@ using Humanizer;
 using Microsoft.ApplicationInsights;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Diagnostics;
 using System.Text;
@@ -54,10 +55,18 @@ public class Device : BackgroundService
         client.Property_enabled.OnMessage = Property_enabled_UpdateHandler;
         client.Property_interval.OnMessage= Property_interval_UpdateHandler;
         client.Command_getRuntimeStats.OnMessage= Command_getRuntimeStats_Handler;
-        
-        await TwinInitializer.InitPropertyValue(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
-        await TwinInitializer.InitPropertyValue(client.Connection, client.InitialState, client.Property_enabled, "enabled", default_enabled);
 
+        if (client is HubMqttClient)
+        {
+            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
+            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_enabled, "enabled", default_enabled);
+        }
+        else
+        {
+            await PropertyInitializer.InitPropertyAsync(client.Property_interval, default_interval);
+            await PropertyInitializer.InitPropertyAsync(client.Property_enabled, default_enabled);
+        }
+         
         
         await client.Property_started.SendMessageAsync(DateTime.Now);
 
