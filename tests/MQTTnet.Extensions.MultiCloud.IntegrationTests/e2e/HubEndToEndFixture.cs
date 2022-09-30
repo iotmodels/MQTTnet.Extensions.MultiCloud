@@ -15,7 +15,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         private const int defaultInterval = 23;
         private readonly RegistryManager rm = RegistryManager.CreateFromConnectionString(hubConnectionString);
 
-        [Fact, Trait("e2e", "hub")]
+        //[Fact, Trait("e2e", "hub")]
         public async Task NewDeviceSendDefaults()
         {
             var deviceId = "memmon-test" + new Random().Next(100);
@@ -47,7 +47,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             await rm.RemoveDeviceAsync(deviceId);
         }
 
-        [Fact(Skip = "investigate timeout")]
+        //[Fact(Skip = "investigate timeout")]
         public async Task DeviceReadsSettingsAtStartup()
         {
 
@@ -109,7 +109,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             await rm.RemoveDeviceAsync(deviceId);
         }
 
-        [Fact(Skip = "Threading issues"), Trait("e2e", "hub")]
+        //[Fact(Skip = "Threading issues"), Trait("e2e", "hub")]
         public async Task UpdatesDesiredPropertyWhenOnline()
         {
 
@@ -161,7 +161,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             rm.RemoveDeviceAsync(deviceId).Wait();
         }
 
-        [Fact, Trait("e2e", "hub")]
+        //[Fact, Trait("e2e", "hub")]
         public async Task CommandsGetCalled()
         {
             var deviceId = "memmon-test" + new Random().Next(100);
