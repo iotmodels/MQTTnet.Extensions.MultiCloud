@@ -4,6 +4,8 @@ option csharp_namespace = "memmon_model_protos";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 
+package rido.memmon;
+
 message Telemetries {
 	double workingSet = 1;
 }

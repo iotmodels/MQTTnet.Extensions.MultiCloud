@@ -12,6 +12,7 @@ namespace _protos
 {
     internal class MemmonClient
     {
+        internal const string ModelId = "rido.memmon";
         public Properties Props = new Properties();
         public IReadOnlyProperty<Properties> AllProperties { get; set; }
         public IWritableProperty<Properties, ack> Property_interval { get; set; }

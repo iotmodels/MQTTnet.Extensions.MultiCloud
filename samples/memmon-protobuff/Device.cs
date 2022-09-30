@@ -43,7 +43,7 @@ public class Device : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var cs = new ConnectionSettings(_configuration.GetConnectionString("cs")) { ModelId="memmon.proto"};
+        var cs = new ConnectionSettings(_configuration.GetConnectionString("cs")) { ModelId = MemmonClient.ModelId };
         _logger.LogWarning($"Connecting to..{cs}");
         var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
         connectionSettings = cs;
