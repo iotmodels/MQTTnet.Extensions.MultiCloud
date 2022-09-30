@@ -101,12 +101,13 @@ public class Device : BackgroundService
             { "PropName", "enables" },
             { "NumTwinUpdates", twinRecCounter.ToString() }
         });
-
+        client.Property_enabled.Version++;
         var ack = new ack
         {
-            Description = "desired notification accepted",
-            Status = 200,
             Value = Google.Protobuf.WellKnownTypes.Any.Pack(desired),
+            Version = client.Property_enabled.Version.Value,
+            Description = "desired notification accepted",
+            Status = 200
         };
         client.Props.Enabled = desired.Enabled;
         return await Task.FromResult(ack);
@@ -121,13 +122,15 @@ public class Device : BackgroundService
             { "PropName", "interval" },
             { "NumTwinUpdates", twinRecCounter.ToString() }
         });
-        var ack = new ack();
 
+        var ack = new ack();
+        client.Property_interval.Version++;
         if (desired.Interval > 0)
         {
+            ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(desired);
             ack.Description = "desired notification accepted";
             ack.Status = 200;
-            ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(desired);
+            ack.Version = client.Property_interval.Version.Value;
             client.Props.Interval = desired.Interval;
         }
         else
@@ -135,6 +138,7 @@ public class Device : BackgroundService
             ack.Description = "negative values not accepted";
             ack.Status = 405;
             ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(client.Props);
+            ack.Version = client.Property_interval.Version.Value;
         };
         return await Task.FromResult(ack);
     }
@@ -190,9 +194,9 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "Property", "Value".PadRight(15), "Version"));
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "--------", "-----".PadLeft(15, '-'), "------"));
-            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "enabled".PadRight(8), enabled_value?.PadLeft(15), ""));
-            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "interval".PadRight(8), interval_value?.PadLeft(15), ""));
-            //AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "started".PadRight(8), client.Property_started.ToShortTimeString().PadLeft(15), client?.Property_started?.Version));
+            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "enabled".PadRight(8), enabled_value?.PadLeft(15), client.Property_enabled.Version.Value));
+            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "interval".PadRight(8), interval_value?.PadLeft(15), client.Property_interval .Version.Value));
+            //AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "started".PadRight(8), client.Props.Started.Seconds.ToString().PadLeft(15), ""));
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Reconnects: {reconnectCounter}");
             AppendLineWithPadRight(sb, $"Telemetry: {telemetryCounter}");

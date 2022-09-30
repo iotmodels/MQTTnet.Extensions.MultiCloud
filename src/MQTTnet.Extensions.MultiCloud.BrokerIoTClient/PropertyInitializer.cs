@@ -11,11 +11,11 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
     {
         public static async Task InitPropertyAsync<T>(IWritableProperty<T> prop, T defaultValue)
         {
-            if (prop.Version == null)
+            if (prop.Version == -1)
             {
                 prop.Value = defaultValue;
-                prop.Version = 0;
-                await prop.SendMessageAsync(new Ack<T>() { Status = 0, Value = defaultValue, Description = "init default value" });
+                prop.Version++;
+                await prop.SendMessageAsync(new Ack<T>() { Status = 0, Value = defaultValue, Description = "init default value", Version = prop.Version });
             }
         }
     }
