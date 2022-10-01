@@ -10,6 +10,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
         public static async Task InitPropertyAsync<T>(IMqttClient client, string twin, IWritableProperty<T> prop, string propName, T defaultValue)
         {
             var ack = InitFromTwin(twin, propName, defaultValue);
+            prop.Version = ack.Version;
             Ack<T> acceptedAck;
             if (prop.OnMessage != null)
             {
@@ -18,11 +19,9 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             else
             {
                 acceptedAck = ack;
+                acceptedAck.Description = "Init from default value";
+                acceptedAck.Status = 203;
             }
-            acceptedAck.Status = 203;
-            acceptedAck.Value = ack.Value;
-            acceptedAck.Version = 0;
-            acceptedAck.Description = "Init from default value";
             var roBinder = new ReadOnlyProperty<Ack<T>>(client, propName);
             await roBinder.SendMessageAsync(acceptedAck);
         }

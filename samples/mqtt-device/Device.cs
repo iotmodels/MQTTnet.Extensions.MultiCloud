@@ -1,5 +1,7 @@
 using dtmi_com_example_devicetemplate;
 using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
 
 namespace mqtt_device;
@@ -33,8 +35,16 @@ public class Device : BackgroundService
 
         await client.Property_sdkInfo.SendMessageAsync(ClientFactory.NuGetPackageVersion);
 
-        //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-        //await client.Property_interval.ReportPropertyAsync(stoppingToken);
+        if (client is HubMqttClient)
+        {
+            HubMqttClient hubClient = (HubMqttClient)client;
+            client.InitialState = await hubClient.GetTwinAsync();
+            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
+        }
+        else
+        {
+            await PropertyInitializer.InitPropertyAsync(client.Property_interval, default_interval);
+        }
 
         double lastTemp = 21;
         while (!stoppingToken.IsCancellationRequested)
