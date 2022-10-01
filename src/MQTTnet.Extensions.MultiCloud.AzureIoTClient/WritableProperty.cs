@@ -16,7 +16,7 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
         _name = name;
         _connection = c;
         TopicTemplate = "$iothub/twin/PATCH/properties/desired/#";
-        ResponseTopic = "$iothub/twin/PATCH/properties/reported/?$rid={rid}&$version={version}";
+        ResponseTopic = "$iothub/twin/PATCH/properties/reported/?$rid={rid}";
         UnwrapRequest = true;
         WrapResponse = true;
         PreProcessMessage = tp =>

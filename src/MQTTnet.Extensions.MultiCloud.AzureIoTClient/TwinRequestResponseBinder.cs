@@ -37,8 +37,8 @@ public class TwinRequestResponseBinder
                 {
                     Trace.TraceWarning($"GetTwinBinder: RID {rid} not found pending requests");
                 }
-            }
-            if (topic.StartsWith("$iothub/twin/res/204"))
+            } 
+            else if (topic.StartsWith("$iothub/twin/res/204"))
             {
                 string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload ?? new byte[0]);
                 (int rid, int version) = TopicParser.ParseTopic(topic);
@@ -51,6 +51,11 @@ public class TwinRequestResponseBinder
                 {
                     Trace.TraceWarning($"UpdateTwinBinder: RID {rid} not found pending requests");
                 }
+            }
+            else if (topic.StartsWith("$iothub/twin/res"))
+            {
+                Trace.TraceWarning("topic: " + m.ApplicationMessage.Topic);
+                Trace.TraceWarning("msg : " + Encoding.UTF8.GetString(m.ApplicationMessage.Payload!));
             }
         };
     }
