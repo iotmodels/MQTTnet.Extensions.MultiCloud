@@ -57,7 +57,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                                 .WithPayload(responseBytes)
                                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                                 .WithRetainFlag(RetainResponse)
-                                .WithPayloadFormatIndicator(serializer is UTF8JsonSerializer ? MqttPayloadFormatIndicator.CharacterData : MqttPayloadFormatIndicator.Unspecified)
+                                //.WithPayloadFormatIndicator(serializer is UTF8JsonSerializer ? MqttPayloadFormatIndicator.CharacterData : MqttPayloadFormatIndicator.Unspecified)
                                 .Build());
                     }
                     else
