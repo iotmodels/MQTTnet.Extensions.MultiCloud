@@ -7,12 +7,11 @@ namespace MQTTnet.Extensions.MultiCloud.Binders;
 
 public abstract class DeviceToCloudBinder<T> : IDeviceToCloud<T>
 {
-    private readonly IMqttClient _connection;
     private readonly string _name;
+    private readonly IMqttClient _connection;
     private readonly IMessageSerializer _messageSerializer;
 
     public string TopicPattern = "device/{clientId}/telemetry";
-    //public bool NameInTopic = false;
     public bool WrapMessage = false;
     protected bool Retain = false;
 
@@ -45,7 +44,6 @@ public abstract class DeviceToCloudBinder<T> : IDeviceToCloud<T>
                 .WithPayload(payloadBytes)
                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                 .WithRetainFlag(Retain)
-                .WithPayloadFormatIndicator(_messageSerializer is UTF8JsonSerializer ? MqttPayloadFormatIndicator.CharacterData : MqttPayloadFormatIndicator.Unspecified)
                 .Build(),
             cancellationToken);
 

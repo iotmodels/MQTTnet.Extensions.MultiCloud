@@ -11,8 +11,6 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
     private readonly string _name;
     private readonly IMqttClient _connection;
 
-    protected bool NameInTopic = true;
-
     protected bool UnwrapRequest = false;
     protected bool WrapResponse = false;
 
@@ -20,7 +18,6 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 
     public Func<T, Task<TResp>>? OnMessage { get; set; }
 
-    //protected Action<string>? PreProcessMessage;
     protected Action<TopicParameters>? PreProcessMessage;
 
     public CloudToDeviceBinder(IMqttClient connection, string name)
@@ -34,7 +31,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
         connection.ApplicationMessageReceivedAsync += async m =>
         {
             var topic = m.ApplicationMessage.Topic;
-            if (topic.StartsWith(topicTemplate!.Replace("/#", string.Empty)))
+            if (topic.StartsWith(requestTopicPattern!.Replace("/#", string.Empty)))
             {
                 if (OnMessage != null)
                 {
@@ -47,7 +44,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                         TResp resp = await OnMessage.Invoke(req);
                         byte[] responseBytes = serializer.ToBytes(resp, WrapResponse ? _name : string.Empty);
 
-                        string? resTopic = responseTopic?
+                        string? resTopic = responseTopicPattern?
                             .Replace("{rid}", tp.Rid.ToString())
                             .Replace("{version}", tp.Version.ToString());
 
@@ -57,7 +54,6 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                                 .WithPayload(responseBytes)
                                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                                 .WithRetainFlag(RetainResponse)
-                                //.WithPayloadFormatIndicator(serializer is UTF8JsonSerializer ? MqttPayloadFormatIndicator.CharacterData : MqttPayloadFormatIndicator.Unspecified)
                                 .Build());
                     }
                     else
@@ -65,61 +61,28 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                         Trace.TraceWarning($"Cannot parse incoming message name: {_name} payload: {Encoding.UTF8.GetString(m.ApplicationMessage.Payload)}");
                     }
                 }
-                else
-                {
-                    Trace.TraceWarning($"C2D Binder has no callback configured to send the response.");
-                }
             }
         };
     }
 
-    private string? topicTemplate;
-    protected string? TopicTemplate
+    private string? requestTopicPattern;
+    protected string? RequestTopicPattern
     {
-        get
-        {
-            return topicTemplate;
-        }
+        get => requestTopicPattern;
         set
         {
-
-            string topic = value?.Replace("{clientId}", _connection.Options.ClientId)!;
-
-            if (NameInTopic)
-            {
-                topic = topic!.Replace("{name}", _name);
-            }
-            else
-            {
-                topic = topic!.Replace("/{name}", string.Empty);
-            }
-
-
-            topicTemplate = topic;
-            _ = _connection.SubscribeWithReplyAsync(topic);
+            requestTopicPattern = value?.Replace("{clientId}", _connection.Options.ClientId).Replace("{name}", _name)!;
+            _ = _connection.SubscribeWithReplyAsync(requestTopicPattern);
         }
     }
 
-    private string? responseTopic;
-    protected string? ResponseTopic
+    private string? responseTopicPattern;
+    protected string? ResponseTopicPattern
     {
-        get
-        {
-            return responseTopic;
-        }
+        get => responseTopicPattern;
         set
         {
-            string topic = value?.Replace("{clientId}", _connection.Options.ClientId)!;
-
-            if (NameInTopic)
-            {
-                topic = topic!.Replace("{name}", _name);
-            }
-            else
-            {
-                topic = topic!.Replace("/{name}", string.Empty);
-            }
-            responseTopic = topic;
+            responseTopicPattern = value?.Replace("{clientId}", _connection.Options.ClientId).Replace("{name}", _name)!;
         }
     }
 }
