@@ -16,7 +16,7 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
         _name = name;
         _connection = c;
 
-        TopicTemplate = "device/{clientId}/props/{name}/set";
+        TopicTemplate = "device/{clientId}/props/{name}/set/#";
         ResponseTopic = "device/{clientId}/props/{name}/ack";
         RetainResponse = true;
         PreProcessMessage = tp =>
@@ -27,7 +27,12 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
 
     public async Task SendMessageAsync(Ack<T> payload, CancellationToken cancellationToken = default)
     {
-        var prop = new ReadOnlyProperty<Ack<T>>(_connection, _name);
+        var prop = new ReadOnlyProperty<Ack<T>>(_connection, _name)
+        {
+            TopicPattern = "device/{clientId}/props/{name}/ack",
+            WrapMessage = false,
+            NameInTopic = true
+        };
         await prop.SendMessageAsync(payload, cancellationToken);
     }
 }
