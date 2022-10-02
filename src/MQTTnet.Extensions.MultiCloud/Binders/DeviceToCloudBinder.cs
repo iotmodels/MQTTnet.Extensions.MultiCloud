@@ -11,7 +11,7 @@ public abstract class DeviceToCloudBinder<T>
     private readonly string name;
     private readonly IMessageSerializer MessageSerializer;
 
-    protected string TopicPattern = "device/{clientId}/telemetry";
+    public string TopicPattern = "device/{clientId}/telemetry";
     public bool NameInTopic = false;
     public bool WrapMessage = false;
     protected bool Retain = false;

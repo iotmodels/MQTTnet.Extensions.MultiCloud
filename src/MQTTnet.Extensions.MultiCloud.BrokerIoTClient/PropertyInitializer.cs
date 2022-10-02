@@ -14,9 +14,10 @@ public class PropertyInitializer
         if (prop.Version == -1)
         {
             prop.Value = defaultValue;
+            prop.Version = 0;
             await prop.SendMessageAsync(new Ack<T>() 
             { 
-                Status = 0, 
+                Status = 203, 
                 Value = defaultValue, 
                 Description = "init default value", 
                 Version = prop.Version 
