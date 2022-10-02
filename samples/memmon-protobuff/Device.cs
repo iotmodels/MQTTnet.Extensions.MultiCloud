@@ -101,7 +101,6 @@ public class Device : BackgroundService
             { "PropName", "enables" },
             { "NumTwinUpdates", twinRecCounter.ToString() }
         });
-        client.Property_enabled.Version++;
         var ack = new ack
         {
             Value = Google.Protobuf.WellKnownTypes.Any.Pack(desired),
@@ -124,7 +123,6 @@ public class Device : BackgroundService
         });
 
         var ack = new ack();
-        client.Property_interval.Version++;
         if (desired.Interval > 0)
         {
             ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(desired);

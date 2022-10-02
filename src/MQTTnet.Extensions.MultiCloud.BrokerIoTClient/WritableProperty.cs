@@ -19,6 +19,10 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
         TopicTemplate = "device/{clientId}/props/{name}/set";
         ResponseTopic = "device/{clientId}/props/{name}/ack";
         RetainResponse = true;
+        PreProcessMessage = tp =>
+        {
+            Version = tp.Version;
+        };
     }
 
     public async Task SendMessageAsync(Ack<T> payload, CancellationToken cancellationToken = default)
