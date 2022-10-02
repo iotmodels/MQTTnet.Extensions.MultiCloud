@@ -96,7 +96,6 @@ namespace mqtt_grpc_device
         {
             ArgumentNullException.ThrowIfNull(connection);
             ack ack = new ack();
-            client!.Interval.Version++;
             if (desired.Interval > 0)
             {
                 client!.Props.Interval= desired.Interval;

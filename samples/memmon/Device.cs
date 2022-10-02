@@ -108,7 +108,7 @@ public class Device : BackgroundService
             { "PropName", "enables" },
             { "NumTwinUpdates", twinRecCounter.ToString() }
         });
-        client.Property_enabled.Version++;
+
         var ack = new Ack<bool>
         {
             Description = "desired notification accepted",
@@ -131,8 +131,7 @@ public class Device : BackgroundService
         });
         
         var ack = new Ack<int>();
-        client.Property_interval.Version++;
-
+        
         if (p > 0)
         {
             client.Property_interval.Value = p;

@@ -60,7 +60,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             {
                 propReceived = true;
                 wp.Value = message;
-                wp.Version++;
+                
                 return await Task.FromResult(
                     new Ack<string>
                     {
@@ -73,19 +73,19 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             mockMqtt.SimulateNewBinaryMessage("$iothub/twin/PATCH/properties/desired/?$rid=1&$version=3",
                 new UTF8JsonSerializer().ToBytes(new { aStringProp = "string value" } ));
             Assert.True(propReceived);
-            Assert.Equal(4, wp.Version);
+            Assert.Equal(3, wp.Version);
             Assert.Equal("string value", wp.Value);
             Assert.Equal($"$iothub/twin/PATCH/properties/reported/?$rid=1", mockMqtt.topicRecceived);
-            Assert.Equal("{\"aStringProp\":{\"av\":4,\"ac\":200,\"value\":\"string value\"}}", mockMqtt.payloadReceived);
+            Assert.Equal("{\"aStringProp\":{\"av\":3,\"ac\":200,\"value\":\"string value\"}}", mockMqtt.payloadReceived);
 
             propReceived = false;
             mockMqtt.SimulateNewBinaryMessage("$iothub/twin/PATCH/properties/desired/?$rid=1&$version=4",
                 new UTF8JsonSerializer().ToBytes(new { aStringProp = "second string value" }));
             Assert.True(propReceived);
-            Assert.Equal(5, wp.Version);
+            Assert.Equal(4, wp.Version);
             Assert.Equal("second string value", wp.Value);
             Assert.Equal($"$iothub/twin/PATCH/properties/reported/?$rid=1", mockMqtt.topicRecceived);
-            Assert.Equal("{\"aStringProp\":{\"av\":5,\"ac\":200,\"value\":\"second string value\"}}", mockMqtt.payloadReceived);
+            Assert.Equal("{\"aStringProp\":{\"av\":4,\"ac\":200,\"value\":\"second string value\"}}", mockMqtt.payloadReceived);
 
 
         }
