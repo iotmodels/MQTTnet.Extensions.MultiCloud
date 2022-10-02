@@ -15,6 +15,6 @@ internal class JsonDeviceClient
     {
         Telemetry = new Telemetry<Telemetries>(mqtt) {  WrapMessage = false };
         Props = new ReadOnlyProperty<Properties>(mqtt);
-        Prop_SdkInfo = new ReadOnlyProperty<string>(mqtt, "serialNumber") { WrapMessage = false, NameInTopic = true };
+        Prop_SdkInfo = new ReadOnlyProperty<string>(mqtt, "serialNumber") { WrapMessage = false };
     }
 }

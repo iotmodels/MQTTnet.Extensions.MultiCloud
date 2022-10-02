@@ -14,6 +14,6 @@ internal class AvroDeviceClient
     {
         Telemetry = new TelemetryAvro<avros.Telemetries>(mqtt, new avros.Telemetries().Schema);
         Props = new ReadOnlyPropertyAvro<avros.Properties>(mqtt, new avros.Properties().Schema);
-        Prop_SdkInfo = new ReadOnlyPropertyAvro<avros.Properties>(mqtt, new avros.Properties().Schema) { NameInTopic = true };
+        Prop_SdkInfo = new ReadOnlyPropertyAvro<avros.Properties>(mqtt, new avros.Properties().Schema);
     }
 }

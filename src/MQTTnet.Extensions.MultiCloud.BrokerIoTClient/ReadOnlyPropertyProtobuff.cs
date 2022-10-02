@@ -13,7 +13,6 @@ public class ReadOnlyPropertyProtobuff<T> : DeviceToCloudBinder<T>, IReadOnlyPro
     {
         TopicPattern = "device/{clientId}/props";
         WrapMessage = false;
-        NameInTopic = false;
         Retain = true;
     }
 }

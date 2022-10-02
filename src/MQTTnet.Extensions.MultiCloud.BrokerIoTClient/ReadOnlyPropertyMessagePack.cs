@@ -10,7 +10,6 @@ public class ReadOnlyPropertyMessagePack<T> : DeviceToCloudBinder<T>, IReadOnlyP
     {
         TopicPattern = "device/{clientId}/props/{name}";
         WrapMessage = false;
-        NameInTopic = true;
         Retain = true;
     }
 }
