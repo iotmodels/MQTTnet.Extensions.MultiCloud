@@ -15,7 +15,6 @@ public class ReadOnlyPropertyAvro<T> : DeviceToCloudBinder<T>, IReadOnlyProperty
     {
         TopicPattern = "device/{clientId}/props";
         WrapMessage = false;
-        NameInTopic = false;
         Retain = true;
     }
 }

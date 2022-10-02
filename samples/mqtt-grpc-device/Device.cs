@@ -55,7 +55,7 @@ namespace mqtt_grpc_device
                     Temperature = lastTemperature,
                     WorkingSet = Environment.WorkingSet / 500000
                 };
-                await client.AllTelemetries.SendMessageAsync(telemetries);
+                await client.AllTelemetries.SendMessageAsync(telemetries, stoppingToken);
                 _logger.LogInformation("LastTemp {lastTemp}. Waiting {interval}s", lastTemperature, client.Props.Interval);
                 await Task.Delay(client.Props.Interval * 1000, stoppingToken);
             }
@@ -95,7 +95,7 @@ namespace mqtt_grpc_device
         async Task<ack> OnPropIntervalReceivedHandler(Properties desired)
         {
             ArgumentNullException.ThrowIfNull(connection);
-            ack ack = new ack();
+            ack ack = new();
             if (desired.Interval > 0)
             {
                 client!.Props.Interval= desired.Interval;
@@ -107,7 +107,7 @@ namespace mqtt_grpc_device
             else
             {
                 ack.Status = 200;
-                ack.Version = client.Interval.Version!.Value;
+                ack.Version = client!.Interval.Version!.Value;
                 ack.Description = "negative values not accepted";
                 ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(client!.Props);
             }

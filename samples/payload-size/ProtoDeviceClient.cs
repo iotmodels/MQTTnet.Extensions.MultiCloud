@@ -13,6 +13,6 @@ internal class ProtoDeviceClient
     {
         Telemetry = new TelemetryProtobuff<proto_model.Telemetries>(mqtt);
         Props = new ReadOnlyPropertyProtobuff<proto_model.Properties>(mqtt);
-        Prop_SdkInfo = new ReadOnlyPropertyProtobuff<proto_model.Properties>(mqtt) { NameInTopic = true };
+        Prop_SdkInfo = new ReadOnlyPropertyProtobuff<proto_model.Properties>(mqtt);
     }
 }

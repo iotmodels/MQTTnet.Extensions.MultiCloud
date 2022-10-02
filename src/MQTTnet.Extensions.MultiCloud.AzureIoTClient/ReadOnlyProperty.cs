@@ -10,7 +10,6 @@ public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
     {
         TopicPattern = "$iothub/twin/PATCH/properties/reported/?$rid=1";
         WrapMessage = true;
-        NameInTopic = false;
         Retain = false;
     }
 }

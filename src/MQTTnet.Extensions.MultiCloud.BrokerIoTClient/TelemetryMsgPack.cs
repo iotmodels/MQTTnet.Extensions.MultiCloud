@@ -10,6 +10,5 @@ public class TelemetryMsgPack<T> : DeviceToCloudBinder<T>, ITelemetry<T>
         : base(mqttClient, name, new MsgPackSerializer())
     {
         TopicPattern = "device/{clientId}/telemetry";
-        NameInTopic = true;
-    }
+     }
 }
