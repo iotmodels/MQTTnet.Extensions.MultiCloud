@@ -14,8 +14,8 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         public AwsWritablePropertyUTFJson(IMqttClient c, string name)
             : base(c, name, new UTF8JsonSerializer())
         {
-            TopicTemplate = "$aws/things/{deviceId}/shadow/#";
-            ResponseTopic = "$aws/things/{deviceId}/shadow/accepted";
+            RequestTopicPattern = "$aws/things/{deviceId}/shadow/#";
+            ResponseTopicPattern = "$aws/things/{deviceId}/shadow/accepted";
             UnwrapRequest = true;
             WrapResponse = true;
             PreProcessMessage = tp =>

@@ -8,6 +8,6 @@ public class CommandMsgPack<T, TResp> : CloudToDeviceBinder<T, TResp>, ICommand<
 {
     public CommandMsgPack(IMqttClient client, string name) : base(client, name, new MsgPackSerializer())
     {
-        TopicTemplate = "device/{clientId}/commands/{name}";
+        RequestTopicPattern = "device/{clientId}/commands/{name}";
     }
 }

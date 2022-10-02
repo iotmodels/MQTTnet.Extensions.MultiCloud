@@ -8,7 +8,7 @@ public class Command<T, TResp> : CloudToDeviceBinder<T, TResp>, ICommand<T, TRes
     public Command(IMqttClient client, string name)
     : base(client, name)
     {
-        TopicTemplate = "$iothub/methods/POST/{name}/#";
-        ResponseTopic = "$iothub/methods/res/200/?$rid={rid}";
+        RequestTopicPattern = "$iothub/methods/POST/{name}/#";
+        ResponseTopicPattern = "$iothub/methods/res/200/?$rid={rid}";
     }
 }

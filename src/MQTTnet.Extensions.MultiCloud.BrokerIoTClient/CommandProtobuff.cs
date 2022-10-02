@@ -10,7 +10,7 @@ public class CommandProtobuff<T, TResp> : CloudToDeviceBinder<T, TResp>, IComman
     public CommandProtobuff(IMqttClient client, string name, MessageParser parser)
         : base(client, name, new ProtobufSerializer(parser))
     {
-        TopicTemplate = "device/{clientId}/cmd/{name}";
-        ResponseTopic = "device/{clientId}/cmd/{name}/resp";
+        RequestTopicPattern = "device/{clientId}/cmd/{name}";
+        ResponseTopicPattern = "device/{clientId}/cmd/{name}/resp";
     }
 }
