@@ -10,7 +10,6 @@ public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
         : base(mqttClient, name)
     {
         WrapMessage = false;
-        NameInTopic = true;
         Retain = true;
     }
 }

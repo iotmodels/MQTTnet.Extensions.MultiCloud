@@ -30,8 +30,7 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
         var prop = new ReadOnlyProperty<Ack<T>>(_connection, _name)
         {
             TopicPattern = "device/{clientId}/props/{name}/ack",
-            WrapMessage = false,
-            NameInTopic = true
+            WrapMessage = false
         };
         await prop.SendMessageAsync(payload, cancellationToken);
     }
