@@ -5,18 +5,22 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
+namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
+
+public class PropertyInitializer
 {
-    public class PropertyInitializer
+    public static async Task InitPropertyAsync<T>(IWritableProperty<T> prop, T defaultValue)
     {
-        public static async Task InitPropertyAsync<T>(IWritableProperty<T> prop, T defaultValue)
+        if (prop.Version == -1)
         {
-            if (prop.Version == -1)
-            {
-                prop.Value = defaultValue;
-                prop.Version++;
-                await prop.SendMessageAsync(new Ack<T>() { Status = 0, Value = defaultValue, Description = "init default value", Version = prop.Version });
-            }
+            prop.Value = defaultValue;
+            await prop.SendMessageAsync(new Ack<T>() 
+            { 
+                Status = 0, 
+                Value = defaultValue, 
+                Description = "init default value", 
+                Version = prop.Version 
+            });
         }
     }
 }
