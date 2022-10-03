@@ -20,10 +20,9 @@
 
   <ItemGroup>
 	  <PackageReference Include="Apache.Avro" Version="1.11.1" />
-	  <PackageReference Include="Google.Protobuf" Version="3.21.6" />
+	  <PackageReference Include="Google.Protobuf" Version="3.21.7" />
 	  <PackageReference Include="MessagePack" Version="2.4.35" />
-    <PackageReference Include="System.Text.Json" Version="6.0.5" />
-    <PackageReference Include="MQTTnet" Version="4.1.0.247" />
+    <PackageReference Include="MQTTnet" Version="4.1.1.318" />
   </ItemGroup>
 
 </Project>
