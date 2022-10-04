@@ -30,7 +30,6 @@ public static partial class MqttNetExtensions
                 certs.Add(caCert);
                 tls.CertificateValidationHandler = ea =>
                 {
-#if NET6_0
                     X509Chain chain = new X509Chain();
                     chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
                     chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
@@ -42,10 +41,6 @@ public static partial class MqttNetExtensions
                     var x5092 = new X509Certificate2(ea.Certificate);
                     var res = chain.Build(x5092);
                     return res;
-#endif
-#if NETSTANDARD2_1
-                    return ea.Certificate.Issuer == caCert.Subject;
-#endif
                 };
             }
             tls.Certificates = certs;
