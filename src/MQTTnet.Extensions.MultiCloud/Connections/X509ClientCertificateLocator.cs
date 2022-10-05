@@ -17,16 +17,14 @@ internal class X509ClientCertificateLocator
         }
         else if (certSettings.Length == 40) //thumbprint
         {
-            using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+            using X509Store store = new(StoreName.My, StoreLocation.CurrentUser);
+            store.Open(OpenFlags.ReadOnly);
+            var certs = store.Certificates.Find(X509FindType.FindByThumbprint, certSettings, false);
+            if (certs != null && certs.Count > 0)
             {
-                store.Open(OpenFlags.ReadOnly);
-                var certs = store.Certificates.Find(X509FindType.FindByThumbprint, certSettings, false);
-                if (certs != null && certs.Count > 0)
-                {
-                    cert = certs[0];
-                }
-                store.Close();
+                cert = certs[0];
             }
+            store.Close();
         }
         else if (certSettings.Contains(".pem|")) //mycert.pem|mycert.key
         {

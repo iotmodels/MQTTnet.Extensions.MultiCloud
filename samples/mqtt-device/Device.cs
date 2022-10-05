@@ -33,12 +33,11 @@ public class Device : BackgroundService
         client.Command_echo.OnMessage = Cmd_echo_Handler;
 
 
-        await client.Property_sdkInfo.SendMessageAsync(ClientFactory.NuGetPackageVersion);
+        await client.Property_sdkInfo.SendMessageAsync(ClientFactory.NuGetPackageVersion, stoppingToken);
 
-        if (client is HubMqttClient)
+        if (client is HubMqttClient hubClient)
         {
-            HubMqttClient hubClient = (HubMqttClient)client;
-            client.InitialState = await hubClient.GetTwinAsync();
+            client.InitialState = await hubClient.GetTwinAsync(stoppingToken);
             await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
         }
         else

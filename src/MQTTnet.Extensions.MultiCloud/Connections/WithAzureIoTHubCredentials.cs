@@ -24,7 +24,7 @@ public static partial class MqttNetExtensions
             var cert = X509ClientCertificateLocator.Load(cs.X509Key!);
             string clientId = X509CommonNameParser.GetCNFromCertSubject(cert);
             cs.ClientId = clientId;
-            if (clientId.Contains("/")) //is a module
+            if (clientId.Contains('/')) //is a module
             {
                 var segmentsId = clientId.Split('/');
                 cs.DeviceId = segmentsId[0];

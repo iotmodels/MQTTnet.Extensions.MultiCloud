@@ -19,7 +19,7 @@ namespace pi_sense_device
         internal static string ComputeDeviceKey(string masterKey, string deviceId) =>
             Convert.ToBase64String(new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(masterKey)).ComputeHash(System.Text.Encoding.UTF8.GetBytes(deviceId)));
 
-        internal static ConnectionSettings computedSettings = new ConnectionSettings();
+        internal static ConnectionSettings computedSettings = new ();
 
         public async Task<Isensehat> CreateSenseHatClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
@@ -63,7 +63,7 @@ namespace pi_sense_device
         private static async Task<dtmi_rido_pnp_sensehat.hub.sensehat> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
             var cs = connectionString + ";ModelId=" + Isensehat.ModelId;
-            var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
+            var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, cancellationToken);
             var client = new dtmi_rido_pnp_sensehat.hub.sensehat(hub);
             computedSettings = HubDpsFactory.ComputedSettings!;
             nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;

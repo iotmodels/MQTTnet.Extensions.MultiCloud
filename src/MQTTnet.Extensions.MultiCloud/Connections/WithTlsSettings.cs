@@ -30,7 +30,7 @@ public static partial class MqttNetExtensions
                 certs.Add(caCert);
                 tls.CertificateValidationHandler = ea =>
                 {
-                    X509Chain chain = new X509Chain();
+                    X509Chain chain = new();
                     chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
                     chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
                     chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;

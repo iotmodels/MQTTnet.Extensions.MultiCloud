@@ -7,7 +7,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
     public class HubDpsFactory
     {
-        private static Timer? reconnectTimer;
         public static string NuGetPackageVersion => $"{ThisAssembly.AssemblyName} {ThisAssembly.NuGetPackageVersion}";
 
         public static ConnectionSettings? ComputedSettings { get; private set; }
@@ -60,8 +59,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
                 cancellationToken).Result;
 
             mqtt.ReSuscribe();
-
-            reconnectTimer = new Timer(o =>
+            ConnectionTimer.reconnectTimer = new Timer(o =>
             {
                 ConnectWithTimer(mqtt, connectionSettings, cancellationToken);
             }, null, (connectionSettings.SasMinutes * 60 * 1000) - 10, 0);

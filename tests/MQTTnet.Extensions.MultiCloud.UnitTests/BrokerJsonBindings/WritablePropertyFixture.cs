@@ -10,8 +10,8 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
         [Fact]
         public void ReceiveWPWithVersion()
         {
-            MockMqttClient mockMqtt = new MockMqttClient();
-            WritableProperty<string> wp = new WritableProperty<string>(mockMqtt, "aStringProp");
+            MockMqttClient mockMqtt = new();
+            WritableProperty<string> wp = new(mockMqtt, "aStringProp");
             Assert.Equal(-1, wp.Version);
             Assert.Null(wp.Value);
             bool propReceived = false;

@@ -17,9 +17,8 @@ internal static class StringToDictionaryExtension
             .Cast<Match>()
             .Select(m => new string[] {
                 m.Result("$1"),
-                valuePairString.Substring(
-                    m.Index + m.Value.Length,
-                    (m.NextMatch().Success ? m.NextMatch().Index : valuePairString.Length) - (m.Index + m.Value.Length))
+                valuePairString[
+                    (m.Index + m.Value.Length)..(m.NextMatch().Success ? m.NextMatch().Index : valuePairString.Length)]
             });
 
         if (!parts.Any() || parts.Any(p => p.Length != 2))

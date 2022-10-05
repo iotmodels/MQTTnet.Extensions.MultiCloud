@@ -10,10 +10,8 @@ internal class SasAuth
 
     internal static string Sign(string requestString, string key)
     {
-        using (var algorithm = new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(key)))
-        {
-            return Convert.ToBase64String(algorithm.ComputeHash(Encoding.UTF8.GetBytes(requestString)));
-        }
+        using var algorithm = new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(key));
+        return Convert.ToBase64String(algorithm.ComputeHash(Encoding.UTF8.GetBytes(requestString)));
     }
 
     internal static string CreateSasToken(string resource, string sasKey, int minutes)

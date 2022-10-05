@@ -5,7 +5,7 @@ namespace MQTTnet.Extensions.MultiCloud;
 
 public static class SubscribeExtension
 {
-    private static readonly List<string> subscriptions = new List<string>();
+    private static readonly List<string> subscriptions = new();
 
     public static async Task SubscribeWithReplyAsync(this IMqttClient client, string topic, CancellationToken cancellationToken = default)
     {

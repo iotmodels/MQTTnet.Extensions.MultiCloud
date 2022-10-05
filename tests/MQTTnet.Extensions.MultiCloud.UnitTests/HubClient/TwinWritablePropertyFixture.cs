@@ -9,13 +9,13 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
 
     public class TwinWritablePropertyFixture
     {
-        private static string Stringify(object o) => System.Text.Json.JsonSerializer.Serialize(o);
+        //private static string Stringify(object o) => System.Text.Json.JsonSerializer.Serialize(o);
 
-        private readonly IMqttClient connection;
+        //private readonly IMqttClient connection;
 
         public TwinWritablePropertyFixture()
         {
-            connection = new MockMqttClient();
+           // connection = new MockMqttClient();
 
         }
 
