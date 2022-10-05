@@ -25,7 +25,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
                     Value = p
                 });
             };
-            
+
 
             var desiredMsg = new Dictionary<string, object>
             {
@@ -60,7 +60,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             {
                 propReceived = true;
                 wp.Value = message;
-                
+
                 return await Task.FromResult(
                     new Ack<string>
                     {
@@ -71,7 +71,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             };
 
             mockMqtt.SimulateNewBinaryMessage("$iothub/twin/PATCH/properties/desired/?$rid=1&$version=3",
-                new UTF8JsonSerializer().ToBytes(new { aStringProp = "string value" } ));
+                new UTF8JsonSerializer().ToBytes(new { aStringProp = "string value" }));
             Assert.True(propReceived);
             Assert.Equal(3, wp.Version);
             Assert.Equal("string value", wp.Value);

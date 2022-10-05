@@ -5,17 +5,25 @@ namespace MQTTnet.Extensions.MultiCloud.Connections;
 
 public static partial class MqttNetExtensions
 {
-    public static MqttClientOptionsBuilder WithAzureIoTHubCredentials(this MqttClientOptionsBuilder builder, ConnectionSettings? cs)
+    internal static MqttClientOptionsBuilder WithAzureIoTHubCredentials(this MqttClientOptionsBuilder builder, ConnectionSettings? cs)
     {
         if (cs?.Auth == AuthType.Sas)
         {
-            cs.ClientId = cs.DeviceId;
+            if (string.IsNullOrEmpty(cs.ModuleId))
+            {
+                cs.ClientId = cs.DeviceId;
+            }
+            else
+            {
+                cs.ClientId = $"{cs.DeviceId}/{cs.ModuleId}";
+            }
             return builder.WithAzureIoTHubCredentialsSas(cs.HostName!, cs.DeviceId!, cs.ModuleId!, cs.SharedAccessKey!, cs.ModelId!, cs.SasMinutes, cs.TcpPort);
         }
         else if (cs?.Auth == AuthType.X509)
         {
             var cert = X509ClientCertificateLocator.Load(cs.X509Key!);
             string clientId = X509CommonNameParser.GetCNFromCertSubject(cert);
+            cs.ClientId = clientId;
             if (clientId.Contains("/")) //is a module
             {
                 var segmentsId = clientId.Split('/');
@@ -43,7 +51,6 @@ public static partial class MqttNetExtensions
             builder
                 .WithTcpServer(hostName, tcpPort)
                 .WithTls()
-                .WithClientId(deviceId)
                 .WithCredentials(username, password);
         }
         else
@@ -52,7 +59,6 @@ public static partial class MqttNetExtensions
             builder
                 .WithTcpServer(hostName, tcpPort)
                 .WithTls()
-                .WithClientId($"{deviceId}/{moduleId}")
                 .WithCredentials(username, password);
         }
         return builder;
@@ -64,7 +70,6 @@ public static partial class MqttNetExtensions
 
         builder
             .WithTcpServer(hostName, tcpPort)
-            .WithClientId(clientId)
             .WithCredentials(new MqttClientCredentials(SasAuth.GetUserName(hostName, clientId, modelId)))
             .WithTls(new MqttClientOptionsBuilderTlsParameters
             {

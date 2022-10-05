@@ -13,7 +13,7 @@ internal class MemMonFactory
     internal static string ComputeDeviceKey(string masterKey, string deviceId) =>
             Convert.ToBase64String(new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(masterKey)).ComputeHash(System.Text.Encoding.UTF8.GetBytes(deviceId)));
 
-    IConfiguration _configuration;
+    readonly IConfiguration _configuration;
 
     internal static ConnectionSettings connectionSettings;
 
@@ -68,11 +68,11 @@ internal class MemMonFactory
     static async Task<dtmi_rido_pnp_memmon.hub.memmon> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
     {
         var cs = new ConnectionSettings(connectionString) { ModelId = Imemmon.ModelId };
-        var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
+        var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, cancellationToken);
         connectionSettings = HubDpsFactory.ComputedSettings;
         var client = new dtmi_rido_pnp_memmon.hub.memmon(hub);
         nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;
-        client.InitialState = await client.GetTwinAsync();
+        client.InitialState = await client.GetTwinAsync(cancellationToken);
         return client;
     }
 

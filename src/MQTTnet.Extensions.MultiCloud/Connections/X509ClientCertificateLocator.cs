@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections;
 
-public class X509ClientCertificateLocator
+internal class X509ClientCertificateLocator
 {
     public static X509Certificate2 Load(string certSettings)
     {
@@ -30,7 +30,7 @@ public class X509ClientCertificateLocator
         }
         else if (certSettings.Contains(".pem|")) //mycert.pem|mycert.key
         {
-#if NET6_0_OR_GREATER
+
             var segments = certSettings.Split('|');
             var pemPath = segments[0];
             var keyPath = segments[1];
@@ -47,9 +47,6 @@ public class X509ClientCertificateLocator
                 var thisCert = X509Certificate2.CreateFromEncryptedPemFile(pemPath, keyPasswd, keyPath);
                 cert = new X509Certificate2(thisCert.Export(X509ContentType.Pkcs12));
             }
-#else
-            throw new NotSupportedException("PEM files not supported before net6");
-#endif
         }
         else
         {

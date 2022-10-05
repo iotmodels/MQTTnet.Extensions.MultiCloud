@@ -18,7 +18,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs, withBirth)
                 .WithProtocolVersion(Formatter.MqttProtocolVersion.V311)
-                .Build());
+                .Build(), cancellationToken);
             ComputedSettings = cs;
             if (connAck.ResultCode != MqttClientConnectResultCode.Success)
             {
@@ -35,7 +35,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
                 var pubAck = await mqtt.PublishBinaryAsync(
                    BirthConvention.BirthTopic(mqtt.Options.ClientId),
                    birthPayload,
-                   Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true);
+                   Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true, cancellationToken);
                 if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
                 {
                     throw new ApplicationException($"Error publishing Birth {cs}");

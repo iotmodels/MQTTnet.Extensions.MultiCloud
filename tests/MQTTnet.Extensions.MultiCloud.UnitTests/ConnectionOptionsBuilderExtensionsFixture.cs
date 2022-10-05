@@ -41,7 +41,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             builder.WithConnectionSettings(cs);
             Assert.Equal(Environment.MachineName, cs.ClientId);
 
-            cs = new ConnectionSettings { X509Key="onething.pfx|1234", ClientId = "{machineName}" };
+            cs = new ConnectionSettings { X509Key = "onething.pfx|1234", ClientId = "{machineName}" };
             builder.WithConnectionSettings(cs);
             Assert.Equal(Environment.MachineName, cs.ClientId);
 

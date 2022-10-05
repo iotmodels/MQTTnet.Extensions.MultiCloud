@@ -1,9 +1,5 @@
 ﻿using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Serializers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -24,8 +20,8 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
                 propReceived = true;
                 wp.Value = message;
                 return await Task.FromResult(
-                    new Ack<string> 
-                    { 
+                    new Ack<string>
+                    {
                         Value = message,
                         Version = wp.Version,
                         Status = 200

@@ -1,7 +1,4 @@
 ﻿using MQTTnet.Client;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
 {

@@ -28,7 +28,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 
             };
             var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
-                .WithAzureIoTHubCredentials(cs)
+                .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
             Assert.True(client.IsConnected);
@@ -51,7 +51,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 SharedAccessKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.Empty.ToString("N")))
             };
             var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
-                .WithAzureIoTHubCredentials(cs)
+                .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
             Assert.True(client.IsConnected);
@@ -72,7 +72,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 X509Key = "ca-device.pem|ca-device.key"
             };
             var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
-                .WithAzureIoTHubCredentials(cs)
+                .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
             Assert.True(client.IsConnected);
@@ -93,7 +93,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 X509Key = "ca-module.pem|ca-module.key"
             };
             var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
-                .WithAzureIoTHubCredentials(cs)
+                .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
             Assert.True(client.IsConnected);

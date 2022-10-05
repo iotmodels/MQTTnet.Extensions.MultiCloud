@@ -20,7 +20,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
                     var segments = topic.Split('/');
                     var cmdName = segments[3];
                     string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload);
-                    GenericCommandRequest req = new GenericCommandRequest()
+                    GenericCommandRequest req = new()
                     {
                         CommandName = cmdName,
                         CommandPayload = msg

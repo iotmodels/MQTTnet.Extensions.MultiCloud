@@ -9,7 +9,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps
     {
         private readonly IMqttClient mqttClient;
         private int rid = 0;
-        private readonly TaskCompletionSource<DpsStatus> tcs = new TaskCompletionSource<DpsStatus>();
+        private readonly TaskCompletionSource<DpsStatus> tcs = new();
         private readonly string modelId;
         public MqttDpsClient(IMqttClient c, string mid)
         {
@@ -34,7 +34,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps
                         // TODO: ready retry-after
                         await Task.Delay(2500); //avoid throtling
                         var pollTopic = $"$dps/registrations/GET/iotdps-get-operationstatus/?$rid={rid++}&operationId={dpsRes.OperationId}";
-                        var puback = await mqttClient.PublishBinaryAsync(pollTopic, new byte[0]);
+                        var puback = await mqttClient.PublishBinaryAsync(pollTopic, Array.Empty<byte>());
                     }
                     else
                     {

@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+     <TargetFramework>net6.0</TargetFramework>
 	  <Nullable>enable</Nullable>
 	  <ImplicitUsings>enable</ImplicitUsings>
     <Title>MQTTnet Abstraction to create Mqtt clients.</Title>
     <Description>Provides abstraction APIs to create MQTT Devices</Description>
     <PackageIcon>iotpnp-128.png</PackageIcon>
-    
   </PropertyGroup>
 
   <ItemGroup>

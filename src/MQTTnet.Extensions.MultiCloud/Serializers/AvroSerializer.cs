@@ -23,9 +23,9 @@ public class AvroSerializer : IMessageSerializer
 
     public byte[] ToBytes<T>(T payload, string name = "")
     {
-        using MemoryStream ms = new MemoryStream();
-        BinaryEncoder encoder = new BinaryEncoder(ms);
-        SpecificDefaultWriter writer = new SpecificDefaultWriter(schema);
+        using MemoryStream ms = new();
+        BinaryEncoder encoder = new(ms);
+        SpecificDefaultWriter writer = new(schema);
         writer.Write(payload, encoder);
         ms.Position = 0;
         byte[] bytes = ms.ToArray();

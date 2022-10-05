@@ -19,7 +19,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
 
         public bool IsConnected => throw new NotImplementedException();
 
-        
+
         public MqttClientOptions Options => new() { ClientId = "mock" };
 
         public string payloadReceived;

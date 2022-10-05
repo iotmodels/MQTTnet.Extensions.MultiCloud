@@ -5,7 +5,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections;
 
 public static partial class MqttNetExtensions
 {
-    public static MqttClientOptionsBuilder WithTlsSettings(this MqttClientOptionsBuilder builder, ConnectionSettings cs)
+    internal static MqttClientOptionsBuilder WithTlsSettings(this MqttClientOptionsBuilder builder, ConnectionSettings cs)
     {
         var tls = new MqttClientOptionsBuilderTlsParameters
         {

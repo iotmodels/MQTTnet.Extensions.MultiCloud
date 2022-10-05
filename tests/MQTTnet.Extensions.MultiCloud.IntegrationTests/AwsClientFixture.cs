@@ -6,7 +6,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 {
     public class AwsClientFixture
     {
-        private readonly ConnectionSettings cs = new ConnectionSettings()
+        private readonly ConnectionSettings cs = new()
         {
             HostName = "a38jrw6jte2l2x-ats.iot.us-west-1.amazonaws.com",
             ClientId = "testdevice22",
@@ -22,7 +22,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             var awsClient = new AwsMqttClient(client);
             var shadow = await awsClient.GetShadowAsync();
             Assert.NotNull(shadow);
-            var updRes = await awsClient.UpdateShadowAsync(new
+            await awsClient.UpdateShadowAsync(new
             {
                 name = "rido3"
             });

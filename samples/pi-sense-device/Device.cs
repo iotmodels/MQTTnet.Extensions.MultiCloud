@@ -23,29 +23,28 @@ public class Device : BackgroundService
     private readonly TelemetryClient _telemetryClient;
 
     private const int default_interval = 5;
-    private readonly ConnectionSettings connectionSettings;
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
     {
         _logger = logger;
         _configuration = configuration;
         _telemetryClient = tc;
-        connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+        //connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
-        _logger.LogWarning($"Connecting to .. {cs}");
+        _logger.LogWarning("Connecting to .. {cs}", cs);
         var factory = new SenseHatFactory(_configuration);
-        client = await factory.CreateSenseHatClientAsync(_configuration.GetConnectionString("cs"));
-        _logger.LogWarning($"Connected to {SenseHatFactory.computedSettings}");
+        client = await factory.CreateSenseHatClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
+        _logger.LogWarning("Connected to {cs}", SenseHatFactory.computedSettings);
 
         client.Property_interval.OnMessage = Property_interval_UpdateHandler;
         client.Property_combineTelemetry.OnMessage = Property_combineTelemetry_UpdateHandler;
         client.Command_ChangeLCDColor.OnMessage = Cmd_ChangeLCDColor_Handler;
 
 
-        await client.Property_sdkInfo.SendMessageAsync(SenseHatFactory.NuGetPackageVersion);
+        await client.Property_sdkInfo.SendMessageAsync(SenseHatFactory.NuGetPackageVersion, stoppingToken);
 
         client.Property_interval.Value = default_interval;
         client.Property_combineTelemetry.Value = true;
@@ -56,11 +55,11 @@ public class Device : BackgroundService
         //await client.Property_combineTelemetry.InitPropertyAsync(client.InitialState, true, stoppingToken);
         //await client.Property_combineTelemetry.ReportPropertyAsync(stoppingToken);
 
-        await client.Property_piri.SendMessageAsync($"os: {Environment.OSVersion}, proc: {RuntimeInformation.ProcessArchitecture}, clr: {Environment.Version}");
+        await client.Property_piri.SendMessageAsync($"os: {Environment.OSVersion}, proc: {RuntimeInformation.ProcessArchitecture}, clr: {Environment.Version}", stoppingToken);
 
         var netInfo = "eth: " + GetLocalIPv4();
         _telemetryClient.TrackTrace(netInfo);
-        await client.Property_ipaddr.SendMessageAsync(netInfo);
+        await client.Property_ipaddr.SendMessageAsync(netInfo, stoppingToken);
         
         //var tp = new TelemetryProtobuf<Telemetries>(client.Connection, string.Empty) ;
 
@@ -70,7 +69,7 @@ public class Device : BackgroundService
             ArgumentNullException.ThrowIfNull(client);
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm)
             {
-                using SenseHat sh = new SenseHat();
+                using SenseHat sh = new();
                 _telemetryClient.TrackMetric("temp1", sh.Temperature.DegreesCelsius);
                 if (client.Property_combineTelemetry.Value)
                 {
@@ -132,7 +131,7 @@ public class Device : BackgroundService
                 }
             }
             int interval = client!.Property_interval.Value;
-            _logger.LogInformation($"Waiting {interval} s to send telemetry");
+            _logger.LogInformation("Waiting {interval} s to send telemetry", interval);
             await Task.Delay(interval * 1000, stoppingToken);
         }
     }
@@ -185,7 +184,7 @@ public class Device : BackgroundService
 
         if (RuntimeInformation.ProcessArchitecture == Architecture.Arm)
         {
-            using SenseHat sh = new SenseHat();
+            using SenseHat sh = new ();
             sh.Fill(color);
         }
         else
@@ -233,7 +232,7 @@ public class Device : BackgroundService
         return output;
     }
 
-    private readonly Random random = new Random();
+    private readonly Random random = new ();
 
     private double GenerateSensorReading(double currentValue, double min, double max)
     {

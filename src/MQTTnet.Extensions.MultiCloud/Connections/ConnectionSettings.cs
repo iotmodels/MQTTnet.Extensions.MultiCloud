@@ -52,7 +52,7 @@ public class ConnectionSettings
         CleanSession = Default_CleanSession == "true";
     }
 
-    public static ConnectionSettings FromConnectionString(string cs) => new ConnectionSettings(cs);
+    public static ConnectionSettings FromConnectionString(string cs) => new(cs);
     public ConnectionSettings(string cs) => ParseConnectionString(cs);
 
     private static string GetStringValue(IDictionary<string, string> dict, string propertyName, string defaultValue = "")
