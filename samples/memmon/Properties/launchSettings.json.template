@@ -40,7 +40,7 @@
     "mosquitto_tls": {
       "commandName": "Project",
       "environmentVariables": {
-        "ConnectionStrings__cs": "HostName=test.mosquitto.org;ClientId=memmon01;CaFile=test.mosquitto.org.crt"
+        "ConnectionStrings__cs": "HostName=test.mosquitto.org;ClientId=memmon01;CaFile=test.mosquitto.org.pem"
       }
     }
   }
