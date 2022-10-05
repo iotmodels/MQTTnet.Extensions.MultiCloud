@@ -33,7 +33,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="*.g.cs">
-		  <DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
+		  <DependentUpon>dtmi_rido_memmon-2.json</DependentUpon>
 		</Compile>
 	</ItemGroup>
 	

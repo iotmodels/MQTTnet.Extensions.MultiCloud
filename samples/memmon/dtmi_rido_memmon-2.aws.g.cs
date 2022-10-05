@@ -2,27 +2,31 @@
 
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.AwsIoTClient;
+using MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
+namespace dtmi_rido_memmon.aws;
 
-namespace dtmi_rido_pnp_memmon.mqtt;
-
-public class memmon : Imemmon
+public class memmon : AwsMqttClient, Imemmon
 {
-    public IMqttClient Connection { get; set; }
-    public string InitialState { get; set; }
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_workingSet { get; set; }
     public ICommand<DiagnosticsMode, Dictionary<string, string>> Command_getRuntimeStats { get; set; }
 
-    internal memmon(IMqttClient c) 
+    public string InitialState => String.Empty;
+
+    public ICommand<int, bool> Command_isPrime { get; set; }
+    public ICommand<int, object> Command_malloc { get; set; }
+    public ICommand<object, object> Command_free { get; set; }
+
+    internal memmon(IMqttClient c) : base(c, Imemmon.ModelId)
     {
-        Connection = c;
         Property_started = new ReadOnlyProperty<DateTime>(c, "started");
         Property_interval = new WritableProperty<int>(c, "interval");
-        Property_enabled = new WritableProperty<bool>(c, "enabled");
+        Property_enabled = new AwsWritablePropertyUTFJson<bool>(c, "enabled");
         Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
         Command_getRuntimeStats = new Command<DiagnosticsMode, Dictionary<string, string>>(c, "getRuntimeStats");
     }
