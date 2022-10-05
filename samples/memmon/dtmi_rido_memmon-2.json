@@ -1,6 +1,6 @@
 {
   "@context": "dtmi:dtdl:context;2",
-  "@id": "dtmi:rido:pnp:memmon;1",
+  "@id": "dtmi:rido:memmon;2",
   "@type": "Interface",
   "contents": [
     {
@@ -19,13 +19,37 @@
       "name": "interval",
       "schema": "integer",
       "writable": true,
-      "unit": "second"
+      "unit": "millisecond"
     },
     {
       "@type": ["Telemetry", "DataSize"],
       "name": "workingSet",
       "schema": "double",
       "unit": "byte"
+    },
+    {
+      "@type": "Command",
+      "name": "isPrime",
+      "request": {
+        "name": "isPrimeReq",
+        "schema": "integer"
+      },
+      "response": {
+        "name": "isPrimeRes",
+        "schema": "boolean"
+      }
+    },
+    {
+      "@type": "Command",
+      "name": "malloc",
+      "request": {
+        "name": "allocations",
+        "schema": "integer"
+      }
+    },
+    {
+      "@type": "Command",
+      "name": "free"
     },
     {
       "@type": "Command",
