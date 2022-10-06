@@ -25,7 +25,7 @@ public class Device : BackgroundService
 
     private double telemetryWorkingSet = 0;
     private const bool default_enabled = true;
-    private const int default_interval = 45;
+    private const int default_interval = 500;
 
     private string lastDiscconectReason = string.Empty;
 
@@ -170,16 +170,16 @@ public class Device : BackgroundService
 
     }
 
-    private async Task<object> Command_malloc_Hanlder(int number)
+    private async Task<string> Command_malloc_Hanlder(int number)
     {
         Marshal.AllocHGlobal(number);
-        return await Task.FromResult(new object());
+        return await Task.FromResult(string.Empty);
     }
 
-    private async Task<object> Command_free_Hanlder(object o)
+    private async Task<string> Command_free_Hanlder(string empty)
     {
         GC.Collect();
-        return await Task.FromResult(new object());
+        return await Task.FromResult(string.Empty);
     }
 
 

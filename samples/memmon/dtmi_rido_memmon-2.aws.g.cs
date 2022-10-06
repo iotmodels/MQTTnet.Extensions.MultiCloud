@@ -19,8 +19,8 @@ public class memmon : AwsMqttClient, Imemmon
     public string InitialState => String.Empty;
 
     public ICommand<int, bool> Command_isPrime { get; set; }
-    public ICommand<int, object> Command_malloc { get; set; }
-    public ICommand<object, object> Command_free { get; set; }
+    public ICommand<int> Command_malloc { get; set; }
+    public ICommand Command_free { get; set; }
 
     internal memmon(IMqttClient c) : base(c, Imemmon.ModelId)
     {
