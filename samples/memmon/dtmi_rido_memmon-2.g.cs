@@ -18,8 +18,8 @@ public interface Imemmon
     public ITelemetry<double> Telemetry_workingSet { get; set; }
     public ICommand<DiagnosticsMode, Dictionary<string, string>> Command_getRuntimeStats { get; set; }
     public ICommand<int, bool> Command_isPrime { get; set; }
-    public ICommand<int, object> Command_malloc { get; set; }
-    public ICommand<object, object> Command_free { get; set; }
+    public ICommand<int> Command_malloc { get; set; }
+    public ICommand Command_free { get; set; }
 }
 
 public enum DiagnosticsMode

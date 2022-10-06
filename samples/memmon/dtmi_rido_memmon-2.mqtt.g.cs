@@ -17,8 +17,8 @@ public class memmon : Imemmon
     public ITelemetry<double> Telemetry_workingSet { get; set; }
     public ICommand<DiagnosticsMode, Dictionary<string, string>> Command_getRuntimeStats { get; set; }
     public ICommand<int, bool> Command_isPrime { get; set; }
-    public ICommand<int, object> Command_malloc { get; set; }
-    public ICommand<object, object> Command_free { get; set; }
+    public ICommand<int> Command_malloc { get; set; }
+    public ICommand Command_free { get; set; }
 
     internal memmon(IMqttClient c) 
     {
@@ -29,7 +29,7 @@ public class memmon : Imemmon
         Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
         Command_getRuntimeStats = new Command<DiagnosticsMode, Dictionary<string, string>>(c, "getRuntimeStats");
         Command_isPrime = new Command<int, bool>(c, "isPrime");
-        Command_malloc = new Command<int, object>(c, "malloc");
-        Command_free = new Command<object, object>(c, "free");
+        Command_malloc = new Command<int>(c, "malloc");
+        Command_free = new Command(c, "free");
     }
 }
