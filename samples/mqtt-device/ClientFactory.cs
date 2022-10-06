@@ -12,8 +12,8 @@ namespace mqtt_device
         internal static string ComputeDeviceKey(string masterKey, string deviceId) =>
             Convert.ToBase64String(new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(masterKey)).ComputeHash(System.Text.Encoding.UTF8.GetBytes(deviceId)));
 
-        static internal ConnectionSettings computedSettings = new ConnectionSettings();
-        IConfiguration _configuration;
+        static internal ConnectionSettings computedSettings = new();
+        readonly IConfiguration _configuration;
 
         public ClientFactory(IConfiguration configuration)
         {
@@ -59,11 +59,11 @@ namespace mqtt_device
         static async Task<dtmi_com_example_devicetemplate.hub.devicetemplate> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
             var cs = connectionString + ";ModelId=" + Idevicetemplate.ModelId;
-            var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
+            var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, cancellationToken);
             var client = new dtmi_com_example_devicetemplate.hub.devicetemplate(hub);
-            computedSettings = HubDpsFactory.ComputedSettings;
+            computedSettings = HubDpsFactory.ComputedSettings!;
             nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;
-            await client.InitState();
+            //await client.InitState();
             return client;
         }
     }

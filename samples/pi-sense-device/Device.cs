@@ -1,11 +1,16 @@
-using dtmi_rido_pnp_sensehat;
 using Iot.Device.SenseHat;
+
 using Microsoft.ApplicationInsights;
+
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
+
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using Color = System.Drawing.Color;
+
+using pi_sense_device_protos;
+using dtmi_rido_pnp_sensehat;
 
 namespace pi_sense_device;
 
@@ -15,48 +20,48 @@ public class Device : BackgroundService
 
     private readonly ILogger<Device> _logger;
     private readonly IConfiguration _configuration;
-    private TelemetryClient _telemetryClient;
+    private readonly TelemetryClient _telemetryClient;
 
-    private const int default_interval = 45;
-
-    ConnectionSettings connectionSettings;
+    private const int default_interval = 5;
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
     {
         _logger = logger;
         _configuration = configuration;
         _telemetryClient = tc;
-        connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+        //connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
-        _logger.LogWarning($"Connecting to .. {cs}");
+        _logger.LogWarning("Connecting to .. {cs}", cs);
         var factory = new SenseHatFactory(_configuration);
-        client = await factory.CreateSenseHatClientAsync(_configuration.GetConnectionString("cs"));
-        _logger.LogWarning($"Connected to {SenseHatFactory.computedSettings}");
+        client = await factory.CreateSenseHatClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
+        _logger.LogWarning("Connected to {cs}", SenseHatFactory.computedSettings);
 
-        client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
-        client.Property_combineTelemetry.OnProperty_Updated = Property_combineTelemetry_UpdateHandler;
-        client.Command_ChangeLCDColor.OnCmdDelegate = Cmd_ChangeLCDColor_Handler;
+        client.Property_interval.OnMessage = Property_interval_UpdateHandler;
+        client.Property_combineTelemetry.OnMessage = Property_combineTelemetry_UpdateHandler;
+        client.Command_ChangeLCDColor.OnMessage = Cmd_ChangeLCDColor_Handler;
 
 
-        client.Property_sdkInfo.PropertyValue = SenseHatFactory.NuGetPackageVersion;
-        await client.Property_sdkInfo.ReportPropertyAsync();
+        await client.Property_sdkInfo.SendMessageAsync(SenseHatFactory.NuGetPackageVersion, stoppingToken);
 
-        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-        await client.Property_interval.ReportPropertyAsync(stoppingToken);
+        client.Property_interval.Value = default_interval;
+        client.Property_combineTelemetry.Value = true;
 
-        await client.Property_combineTelemetry.InitPropertyAsync(client.InitialState, true, stoppingToken);
-        await client.Property_combineTelemetry.ReportPropertyAsync(stoppingToken);
+        //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
 
-        client.Property_piri.PropertyValue = $"os: {Environment.OSVersion}, proc: {RuntimeInformation.ProcessArchitecture}, clr: {Environment.Version}";
-        await client.Property_piri.ReportPropertyAsync(stoppingToken);
+
+        //await client.Property_combineTelemetry.InitPropertyAsync(client.InitialState, true, stoppingToken);
+        //await client.Property_combineTelemetry.ReportPropertyAsync(stoppingToken);
+
+        await client.Property_piri.SendMessageAsync($"os: {Environment.OSVersion}, proc: {RuntimeInformation.ProcessArchitecture}, clr: {Environment.Version}", stoppingToken);
 
         var netInfo = "eth: " + GetLocalIPv4();
-        client.Property_ipaddr.PropertyValue = netInfo;
         _telemetryClient.TrackTrace(netInfo);
-        await client.Property_ipaddr.ReportPropertyAsync(stoppingToken);
+        await client.Property_ipaddr.SendMessageAsync(netInfo, stoppingToken);
+        
+        //var tp = new TelemetryProtobuf<Telemetries>(client.Connection, string.Empty) ;
 
         double t1 = 21;
         while (!stoppingToken.IsCancellationRequested)
@@ -64,9 +69,9 @@ public class Device : BackgroundService
             ArgumentNullException.ThrowIfNull(client);
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm)
             {
-                using SenseHat sh = new SenseHat();
+                using SenseHat sh = new();
                 _telemetryClient.TrackMetric("temp1", sh.Temperature.DegreesCelsius);
-                if (client.Property_combineTelemetry.PropertyValue.Value)
+                if (client.Property_combineTelemetry.Value)
                 {
                     await client.SendTelemetryAsync(new AllTelemetries
                     {
@@ -74,14 +79,21 @@ public class Device : BackgroundService
                         t2 = sh.Temperature2.DegreesCelsius,
                         h = sh.Humidity.Percent,
                         p = sh.Pressure.Pascals
-                    }, stoppingToken); ;
+                    }, stoppingToken);
+                    //await tp.SendMessageAsync(new Telemetries
+                    //{
+                    //    Temperature1 = sh.Temperature.DegreesCelsius,
+                    //    Temperature2 = sh.Temperature2.DegreesCelsius,
+                    //    Humidity = sh.Humidity.Percent,
+                    //    Pressure =sh.Pressure.Bars
+                    //});
                 }
                 else
                 {
-                    await client.Telemetry_t1.SendTelemetryAsync(sh.Temperature.DegreesCelsius, stoppingToken);
-                    await client.Telemetry_t2.SendTelemetryAsync(sh.Temperature2.DegreesCelsius, stoppingToken);
-                    await client.Telemetry_h.SendTelemetryAsync(sh.Humidity.Percent, stoppingToken);
-                    await client.Telemetry_p.SendTelemetryAsync(sh.Pressure.Pascals, stoppingToken);
+                    await client.Telemetry_t1.SendMessageAsync(sh.Temperature.DegreesCelsius, stoppingToken);
+                    await client.Telemetry_t2.SendMessageAsync(sh.Temperature2.DegreesCelsius, stoppingToken);
+                    await client.Telemetry_h.SendMessageAsync(sh.Humidity.Percent, stoppingToken);
+                    await client.Telemetry_p.SendMessageAsync(sh.Pressure.Pascals, stoppingToken);
                 }
 
             }
@@ -90,99 +102,105 @@ public class Device : BackgroundService
                 _telemetryClient.TrackMetric("temp1", 2);
                 t1 = GenerateSensorReading(t1, 10, 40);
 
-                if (client.Property_combineTelemetry.PropertyValue.Value)
+                if (client.Property_combineTelemetry.Value)
                 {
+
                     await client.SendTelemetryAsync(new AllTelemetries
                     {
                         t1 = t1,
                         t2 = GenerateSensorReading(t1, 5, 35),
                         h = Environment.WorkingSet / 1000000,
                         p = Environment.WorkingSet / 1000000
-                    }, stoppingToken); ;
+                    }, stoppingToken);
+
+                    //await tp.SendMessageAsync(new Telemetries
+                    //{
+                    //    Temperature1 = t1,
+                    //    Temperature2 = GenerateSensorReading(t1, 5, 35),
+                    //    Humidity = Environment.WorkingSet / 1000000,
+                    //    Pressure = Environment.WorkingSet / 1000000
+                    //}, stoppingToken);
+
                 }
                 else
                 {
-                    await client.Telemetry_t1.SendTelemetryAsync(t1, stoppingToken);
-                    await client.Telemetry_t2.SendTelemetryAsync(GenerateSensorReading(t1, 5, 35), stoppingToken);
-                    await client.Telemetry_h.SendTelemetryAsync(Environment.WorkingSet / 1000000, stoppingToken);
-                    await client.Telemetry_p.SendTelemetryAsync(Environment.WorkingSet / 1000000, stoppingToken);
+                    await client.Telemetry_t1.SendMessageAsync(t1, stoppingToken);
+                    await client.Telemetry_t2.SendMessageAsync(GenerateSensorReading(t1, 5, 35), stoppingToken);
+                    await client.Telemetry_h.SendMessageAsync(Environment.WorkingSet / 1000000, stoppingToken);
+                    await client.Telemetry_p.SendMessageAsync(Environment.WorkingSet / 1000000, stoppingToken);
                 }
             }
-            var interval = client?.Property_interval.PropertyValue?.Value;
-            _logger.LogInformation($"Waiting {interval} s to send telemetry");
-            await Task.Delay(interval.HasValue ? interval.Value * 1000 : 1000, stoppingToken);
+            int interval = client!.Property_interval.Value;
+            _logger.LogInformation("Waiting {interval} s to send telemetry", interval);
+            await Task.Delay(interval * 1000, stoppingToken);
         }
     }
 
-    private  PropertyAck<int> Property_interval_UpdateHandler(PropertyAck<int> p)
+    private async Task<Ack<int>> Property_interval_UpdateHandler(int p)
     {
         ArgumentNullException.ThrowIfNull(client);
         _logger.LogInformation($"New prop received");
-        var ack = new PropertyAck<int>(p.Name);
+        var ack = new Ack<int>();
 
-        if (p.Value > 0)
+        if (p > 0)
         {
             ack.Description = "desired notification accepted";
             ack.Status = 200;
-            ack.Version = p.Version;
-            ack.Value = p.Value;
-            ack.LastReported = p.Value;
+            ack.Version = client.Property_interval.Version;
+            ack.Value = p;
+            client.Property_interval.Value = p;
+            //ack.LastReported = p.Value;
         }
         else
         {
             ack.Description = "negative values not accepted";
             ack.Status = 405;
-            ack.Version = p.Version;
-            ack.Value = client.Property_interval.PropertyValue.LastReported > 0 ?
-                            client.Property_interval.PropertyValue.LastReported :
-                            default_interval;
+            ack.Version = client.Property_interval.Version;
+            ack.Value = client.Property_interval.Value;
         };
-        client.Property_interval.PropertyValue = ack;
-        return ack;
+        return await Task.FromResult(ack);
     }
 
-    private PropertyAck<bool> Property_combineTelemetry_UpdateHandler(PropertyAck<bool> p)
+    private async Task<Ack<bool>> Property_combineTelemetry_UpdateHandler(bool p)
     {
         ArgumentNullException.ThrowIfNull(client);
-        var ack = new PropertyAck<bool>(p.Name);
-        ack.Description = "desired notification accepted";
-        ack.Status = 200;
-        ack.Version = p.Version;
-        ack.Value = p.Value;
-        ack.LastReported = p.Value;
-        client.Property_combineTelemetry.PropertyValue = ack;
-        return ack;
+        var ack = new Ack<bool>
+        {
+            Description = "desired notification accepted",
+            Status = 200,
+            Version = client.Property_combineTelemetry.Version,
+            Value = p
+        };
+        client.Property_combineTelemetry.Value = p;
+        //ack.LastReported = p.Value;
+        return await Task.FromResult(ack);
     }
 
-    string oldColor = "white";
-    private Cmd_ChangeLCDColor_Response Cmd_ChangeLCDColor_Handler(Cmd_ChangeLCDColor_Request req)
+    private string oldColor = "white";
+    private async Task<string> Cmd_ChangeLCDColor_Handler(string req)
     {
         _logger.LogInformation($"New Command received");
-        var color = Color.FromName(req.request);
+        var color = Color.FromName(req);
 
         if (RuntimeInformation.ProcessArchitecture == Architecture.Arm)
         {
-            using SenseHat sh = new SenseHat();
+            using SenseHat sh = new ();
             sh.Fill(color);
         }
         else
         {
             var orig = Console.BackgroundColor;
-            Console.BackgroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), req.request, true);
+            Console.BackgroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), req, true);
             for (int i = 0; i < 10; i++)
             {
                 Console.WriteLine(" ");
-                Task.Delay(100);
+                await Task.Delay(100);
             }
             Console.BackgroundColor = orig;
 
         }
-        var result = new Cmd_ChangeLCDColor_Response()
-        {
-            Status = 200,
-            ReponsePayload = oldColor
-        };
-        oldColor = req.request;
+        string result = oldColor;
+        oldColor = req;
         return result;
     }
 
@@ -214,8 +232,9 @@ public class Device : BackgroundService
         return output;
     }
 
-    Random random = new Random();
-    double GenerateSensorReading(double currentValue, double min, double max)
+    private readonly Random random = new ();
+
+    private double GenerateSensorReading(double currentValue, double min, double max)
     {
         double percentage = 15;
         double value = currentValue * (1 + (percentage / 100 * (2 * random.NextDouble() - 1)));

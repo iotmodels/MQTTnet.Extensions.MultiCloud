@@ -1,17 +1,20 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
-namespace MQTTnet.Extensions.MultiCloud
+namespace MQTTnet.Extensions.MultiCloud;
+
+public static class TaskTimeoutExtension
 {
-    public static class TaskTimeoutExtension
+    public static async Task<T> TimeoutAfter<T>(this Task<T> source, TimeSpan timeout)
     {
-        public static async Task<T> TimeoutAfter<T>(this Task<T> source, TimeSpan timeout)
+        var actualTimeout = timeout;
+        if (Debugger.IsAttached)
         {
-            if (await Task.WhenAny(source, Task.Delay(timeout)) != source)
-            {
-                throw new TimeoutException();
-            }
-            return await source;
+            actualTimeout = timeout.Add(TimeSpan.FromSeconds(300));
         }
+        if (await Task.WhenAny(source, Task.Delay(actualTimeout)) != source)
+        {
+            throw new TimeoutException();
+        }
+        return await source;
     }
 }

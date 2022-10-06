@@ -1,0 +1,25 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "iot_device_protos";
+
+message Telemetries {
+	double temperature = 1; 
+	double workingSet = 2;
+}
+
+message Properties {
+	string sdkInfo = 1;
+}
+
+service Commands {
+	rpc echoRepeater(echoRequest) returns (echoResponse);
+}
+
+message echoRequest {
+	int32 inEcho = 1;
+}
+
+message echoResponse {
+	int32 status = 1;
+	string outEcho = 2;
+}

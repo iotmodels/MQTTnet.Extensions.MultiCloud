@@ -1,14 +1,11 @@
-﻿using System;
-using Xunit;
-
-namespace MQTTnet.Extensions.MultiCloud.UnitTests
+﻿namespace MQTTnet.Extensions.MultiCloud.UnitTests
 {
     internal class AComplexObj
     {
         public string AStringProp { get; set; } = string.Empty;
         public int AIntProp { get; set; }
     }
-
+    /*
     public class PropertyAckFixture
     {
         private static string Stringify(object o) => System.Text.Json.JsonSerializer.Serialize(o);
@@ -174,4 +171,5 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
 
         }
     }
+    */
 }

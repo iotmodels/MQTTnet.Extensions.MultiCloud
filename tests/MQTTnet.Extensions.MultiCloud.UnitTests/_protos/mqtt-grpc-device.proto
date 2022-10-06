@@ -1,0 +1,59 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "mqtt_grpc_device_protos";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+// @topic: -> device/{clientId}/tel[/{telName}]
+message Telemetries {
+	double temperature = 1; 
+	double workingSet = 2;
+}
+// @topic: -> device/{clientId}/props[/{propName}] (r)
+message Properties {
+	string sdkInfo = 1;
+	google.protobuf.Timestamp started = 2;
+	int32 interval = 3;
+}
+
+// @topic: <- device/{clientId}/props[/{propName}]/set (r)
+// @topic: -> device/{clientId}/props[/{propName}]/ack (r)
+service PropertiesSetter {
+	rpc set_interval(Properties) returns (ack);
+}
+
+// @topic: <- device/{clientId}/cmd/{cmdName}
+// @topic: -> device/{clientId}/cmd/{cmdName}/resp
+service Commands {
+	rpc echo(echoRequest) returns (echoResponse);
+	rpc getRuntimeStats(getRuntimeStatsRequest) returns (getRuntimeStatsResponse);
+}
+
+message ack {
+	int32 status = 1;
+	string description = 2;
+	google.protobuf.Any value =3;
+}
+
+message echoRequest {
+	string inEcho = 1;
+}
+
+message echoResponse {
+	int32 status = 1;
+	string outEcho = 2;
+}
+
+enum getRuntimeStatsMode {
+	BASIC = 0;
+	NORMAL = 1;
+	FULL = 2;
+}
+message getRuntimeStatsRequest {
+	getRuntimeStatsMode mode = 1;
+}
+
+message getRuntimeStatsResponse {
+	int32 status = 1;
+	map<string,string> diagResults = 2;
+}

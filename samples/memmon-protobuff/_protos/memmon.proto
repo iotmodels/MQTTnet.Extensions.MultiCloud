@@ -1,0 +1,46 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "memmon_model_protos";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+package rido.memmon;
+
+message Telemetries {
+	double workingSet = 1;
+}
+message Properties {
+	google.protobuf.Timestamp started = 1;
+	int32 interval = 2;
+	bool enabled = 3;
+}
+
+service PropertiesSetter {
+	rpc set_interval(Properties) returns (ack);
+	rpc set_enabled(Properties) returns (ack);
+}
+
+service Commands {
+	rpc getRuntimeStats(getRuntimeStatsRequest) returns (getRuntimeStatsResponse);
+}
+
+message ack {
+	google.protobuf.Any value = 1;
+	int32 version = 2;
+	int32 status = 3;
+	string description = 4;
+}
+
+enum getRuntimeStatsMode {
+	BASIC = 0;
+	NORMAL = 1;
+	FULL = 2;
+}
+message getRuntimeStatsRequest {
+	getRuntimeStatsMode mode = 1;
+}
+
+message getRuntimeStatsResponse {
+	int32 status = 1;
+	map<string,string> diagResults = 2;
+}

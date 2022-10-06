@@ -19,7 +19,7 @@
 ### Using `test.mosquitto.org`
 
 - Navigate to the Memory Monitor sample in `samples/memmon` and run it with `dotnet run` (or in Visual Studio hit `F5`). The console app will connect by default to `test.mosquitto.org:8886` (encrypted/no auth) by default.
-- Browse to [https://iotmodels.github.io/pnp-mqtt](https://iotmodels.github.io/pnp-mqtt) and connect to `test.mosquitto.org:8081` (websockets, encrypted/no auth)
+- Browse to [https://iotmodels.github.io/iotux-mqtt](https://iotmodels.github.io/iotux-mqtt) and connect to `test.mosquitto.org:8081` (websockets, encrypted/no auth)
 - You should see a list of devices, select a device matching your machine name. Invoke the command, or change a property. The console application should show those changes.
 
 ![test.mosquitto.org](docs/tmo.gif)
@@ -28,7 +28,7 @@
  - The same app can be executed with a local mosquitto server, you can use a pre-configured docker image like: [mosquitto-local](https://github.com/ridomin/mosquitto-local) 
  - Start mosquitto with `docker run -it --rm -p 8080:8080 -p 1883:1883 -p 8883:8883 -p 8884:8884 -p 8443:8443  ridomin/mosquitto-local:dev`
  - Update the connection settings: `dotnet run /ConnectionSettings:cs="HostName=localhost;TcpPort=8883;ClientId=memmon-device;Username=user;Password=password;CaFile=RidoFY23CA.crt"`
- - Connect [https://iotmodels.github.io/pnp-mqtt](https://iotmodels.github.io/pnp-mqtt) to `localhost:8443` to interact with your device
+ - Connect [https://iotmodels.github.io/iotux-mqtt](https://iotmodels.github.io/iotux-mqtt) to `localhost:8443` to interact with your device
 
 ### Using `Azure IoT Central`
 
@@ -53,7 +53,7 @@ Start from this [device-template](https://github.com/iotmodels/device-template/g
 2. Create the base libraries to implement the DTDL interface for each cloud vendor. See the [Memory Monitor sample](samples/memmon/dtmi_rido_pnp_memmon-1.g.cs)
 3. Implement the device logic, by using the interface, the device logic can be reused across different cloud vendor implementations. [Device Logic](samples/memmon/Device.cs)
 4. Connect the device using different [Connection Settings](docs/ConnectionSettings.md)
-5. Interact with the device with a DTDL enabled solution. Like [Azure IoT Central](https://www.azureiotcentral.com), [IoTExplorer](https://docs.microsoft.com/en-us/azure/iot-fundamentals/howto-use-iot-explorer) or [Pnp-Mqtt](https://iotmodels.github.io/pnp-mqtt/)
+5. Interact with the device with a DTDL enabled solution. Like [Azure IoT Central](https://www.azureiotcentral.com), [IoTExplorer](https://docs.microsoft.com/en-us/azure/iot-fundamentals/howto-use-iot-explorer) or [Pnp-Mqtt](https://iotmodels.github.io/iotux-mqtt/)
 
 
 ## TL;DR;
@@ -69,7 +69,7 @@ This repo focuses on the first part: how to implement things/devices that can wo
    - Commands. To invoke specific actions in the device from the solution, acka _c2d messages_
    - Properties. To manage the device state, reported by the _device_ and optionally being managed from the _solution_. eg How often the telemetry must be sent. _d2c+c2d messages_
 
-3. Enable solutions to reflect those _interaction patterns_ to create UI experiences, IoT Central, IoTExplorer or [Pnp-Mqtt](https://iotmodels.github.io/pnp-mqtt/) are examples of PnP enabled solutions.
+3. Enable solutions to reflect those _interaction patterns_ to create UI experiences, IoT Central, IoTExplorer or [iotux-mqtt](https://iotmodels.github.io/iotux-mqtt/) are examples of PnP enabled solutions.
 
 Read the [IoT Plug and Play convention](https://docs.microsoft.com/azure/iot-develop/overview-iot-plug-and-play) for more details.
 
@@ -128,7 +128,7 @@ Read and Update the Device Twin:
 
 ```cs
 var twin = await client.GetTwinAsync(stoppingToken);
-var version = await client.ReportPropertyAsync(new { started = DateTime.Now });
+var version = await client.UpdateTwinAsync(new { started = DateTime.Now });
 ```
 
 Properties Updates (aka Writable Properties) handling:
@@ -218,7 +218,7 @@ public class memmon : AwsMqttClient, Imemmon
 For any MQTT compatible broker
 
 ```cs
-public class memmon : PnPMqttClient, Imemmon
+public class memmon : Imemmon
 ```
 
 ### X509 Support

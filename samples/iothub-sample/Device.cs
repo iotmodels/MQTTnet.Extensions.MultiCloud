@@ -1,13 +1,13 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
+using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using MQTTnet.Extensions.MultiCloud;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using MQTTnet.Extensions.MultiCloud.Connections;
 
 namespace iothub_sample;
 public class Device : BackgroundService
@@ -24,16 +24,12 @@ public class Device : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
-        _logger.LogWarning($"Connecting to: {connectionSettings}");
+        _logger.LogWarning("Connecting to: {connectionSettings}", connectionSettings);
 
         var client = new HubMqttClient(await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionSettings, stoppingToken));
-        await client.InitState();
-
-        Console.Write(" Initial State: ");
-        Console.WriteLine(client.InitialState);
-
-        var v = await client.ReportPropertyAsync(new { started = DateTime.Now }, stoppingToken);
-        Console.Write(" Updated Twin: ");
+        
+        var v = await client.UpdateTwinAsync(new { started = DateTime.Now }, stoppingToken);
+        _logger.LogInformation("Updated Twin to verison: {v}", v);
         var twin = await client.GetTwinAsync(stoppingToken);
         Console.WriteLine(twin);
         
@@ -51,7 +47,6 @@ public class Device : BackgroundService
         client.OnPropertyUpdateReceived = m =>
         {
             Console.WriteLine(m.ToString());
-
             return new GenericPropertyAck
             {
                 Value = m.ToJsonString(),

@@ -10,7 +10,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void DoNotInferClientFromUserNameWhenNotSet()
         {
-            MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder();
+            MqttClientOptionsBuilder builder = new();
             var cs = new ConnectionSettings { UserName = "user", Password = "password" };
             builder.WithConnectionSettings(cs);
             Assert.Null(cs.ClientId);
@@ -19,7 +19,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void BasicAuthRespectedClientId()
         {
-            MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder();
+            MqttClientOptionsBuilder builder = new();
             var cs = new ConnectionSettings { UserName = "user", Password = "password", ClientId = "client" };
             builder.WithConnectionSettings(cs);
             Assert.Equal("client", cs.ClientId);
@@ -28,7 +28,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void ClientIDMachineNanme()
         {
-            MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder();
+            MqttClientOptionsBuilder builder = new ();
             var cs = new ConnectionSettings { UserName = "user", Password = "password", ClientId = "client" };
             builder.WithConnectionSettings(cs);
             Assert.Equal("client", cs.ClientId);
@@ -41,7 +41,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             builder.WithConnectionSettings(cs);
             Assert.Equal(Environment.MachineName, cs.ClientId);
 
-            cs = new ConnectionSettings { X509Key="onething.pfx|1234", ClientId = "{machineName}" };
+            cs = new ConnectionSettings { X509Key = "onething.pfx|1234", ClientId = "{machineName}" };
             builder.WithConnectionSettings(cs);
             Assert.Equal(Environment.MachineName, cs.ClientId);
 
@@ -54,7 +54,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void InferClientFromCertWhenNotSet()
         {
-            MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder();
+            MqttClientOptionsBuilder builder = new();
             var cs = new ConnectionSettings { X509Key = "onething.pfx|1234" };
             builder.WithConnectionSettings(cs);
             Assert.Equal("onething", cs.ClientId);
@@ -63,7 +63,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void X509AuthRespectedClientId()
         {
-            MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder();
+            MqttClientOptionsBuilder builder = new();
             var cs = new ConnectionSettings { X509Key = "onething.pfx|1234", ClientId = "client" };
             builder.WithConnectionSettings(cs);
             Assert.Equal("client", cs.ClientId);

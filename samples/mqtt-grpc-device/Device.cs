@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using mqtt_grpc_device_protos;
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
+using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,31 +17,34 @@ namespace mqtt_grpc_device
     {
         private readonly ILogger<Device> _logger;
         private readonly IConfiguration _configuration;
+        IMqttClient? connection;
+        mqtt_grpc_sample_device? client;
+
         public Device(ILogger<Device> logger, IConfiguration config)
         {
             _logger = logger;
             _configuration = config;
         }
 
-        private mqtt_grpc_sample_device? client;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            IMqttClient connection = await BrokerClientFactory.CreateFromConnectionSettingsAsync(_configuration.GetConnectionString("cs"), true, stoppingToken);
+            ConnectionSettings cs = new(_configuration.GetConnectionString("cs")) { ModelId = mqtt_grpc_sample_device.ModelId };
+            connection = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
 
             client = new mqtt_grpc_sample_device(connection);
 
             connection.DisconnectedAsync += MqttClient_DisconnectedAsync;
             connection.ConnectedAsync += MqttClient_ConnectedAsync;
 
-            client.PropSetterInterval.OnCallbackDelegate = OnPropIntervalReceivedHandler;
-            client.CommandEcho.OnCallbackDelegate = OnMqttCommandEchoReceivedHandler;
-            client.CommandGetRuntimeStats.OnCallbackDelegate = OnCommandGetRuntimeStatsHanlder;
+            client.Interval.OnMessage = OnPropIntervalReceivedHandler;
+            client.Echo.OnMessage = OnMqttCommandEchoReceivedHandler;
+            client.GetRuntimeStats.OnMessage = OnCommandGetRuntimeStatsHanlder;
 
             client.Props.Interval = 30;
             client.Props.SdkInfo = BrokerClientFactory.NuGetPackageVersion;
             client.Props.Started = DateTime.UtcNow.ToTimestamp();
-            await client.ReportPropertiesAsync(stoppingToken);
+            await client.AllProperties.SendMessageAsync(client.Props, stoppingToken);
 
             var lastTemperature = 21.0;
             while (!stoppingToken.IsCancellationRequested)
@@ -49,78 +53,67 @@ namespace mqtt_grpc_device
                 var telemetries = new Telemetries()
                 {
                     Temperature = lastTemperature,
-                    WorkingSet = Environment.WorkingSet
+                    WorkingSet = Environment.WorkingSet / 500000
                 };
-                await client.SendTelemetryAsync(telemetries, stoppingToken);
+                await client.AllTelemetries.SendMessageAsync(telemetries, stoppingToken);
                 _logger.LogInformation("LastTemp {lastTemp}. Waiting {interval}s", lastTemperature, client.Props.Interval);
                 await Task.Delay(client.Props.Interval * 1000, stoppingToken);
             }
         }
 
-        async Task<byte[]> OnMqttCommandEchoReceivedHandler(byte[] requestPayload)
+        async Task<echoResponse> OnMqttCommandEchoReceivedHandler(echoRequest request)
         {
-            var request = echoRequest.Parser.ParseFrom(requestPayload);
             _logger.LogInformation("Cmd echo Received: {req}", request.InEcho);
             var responsePayload = new echoResponse()
             {
                 OutEcho = request.InEcho + " " + request.InEcho
             };
-            return await Task.FromResult(responsePayload.ToByteArray());
+            return await Task.FromResult(responsePayload);
         }
 
-        async Task<byte[]> OnCommandGetRuntimeStatsHanlder(byte[] payload)
+        async Task<getRuntimeStatsResponse> OnCommandGetRuntimeStatsHanlder(getRuntimeStatsRequest request)
         {
-            var request = getRuntimeStatsRequest.Parser.ParseFrom(payload);
             _logger.LogInformation("Cmd getRuntimeStats Received: {req}", request.Mode.ToString());
-            var responsePayload = new getRuntimeStatsResponse();
+            var response = new getRuntimeStatsResponse();
             if (request.Mode == getRuntimeStatsMode.Basic)
             {
-                responsePayload.DiagResults.Add("machineName", Environment.MachineName);
+                response.DiagResults.Add("machineName", Environment.MachineName);
             }
             if (request.Mode == getRuntimeStatsMode.Normal)
             {
-                responsePayload.DiagResults.Add("machineName", Environment.MachineName);
-                responsePayload.DiagResults.Add("OsVersion", Environment.OSVersion.ToString());
+                response.DiagResults.Add("machineName", Environment.MachineName);
+                response.DiagResults.Add("OsVersion", Environment.OSVersion.ToString());
             }
             if (request.Mode == getRuntimeStatsMode.Full)
             {
-                responsePayload.DiagResults.Add("machineName", Environment.MachineName);
-                responsePayload.DiagResults.Add("OsVersion", Environment.OSVersion.ToString());
-                responsePayload.DiagResults.Add("SDKInfo", BrokerClientFactory.NuGetPackageVersion);
+                response.DiagResults.Add("machineName", Environment.MachineName);
+                response.DiagResults.Add("OsVersion", Environment.OSVersion.ToString());
+                response.DiagResults.Add("SDKInfo", BrokerClientFactory.NuGetPackageVersion);
             }
-            return await Task.FromResult(responsePayload.ToByteArray());
+            return await Task.FromResult(response);
+        }
+        async Task<ack> OnPropIntervalReceivedHandler(Properties desired)
+        {
+            ArgumentNullException.ThrowIfNull(connection);
+            ack ack = new();
+            if (desired.Interval > 0)
+            {
+                client!.Props.Interval= desired.Interval;
+                ack.Status = 200;
+                ack.Version = client.Interval.Version!.Value;
+                ack.Description = "property accepted";
+                ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(desired);
+            }
+            else
+            {
+                ack.Status = 200;
+                ack.Version = client!.Interval.Version!.Value;
+                ack.Description = "negative values not accepted";
+                ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(client!.Props);
+            }
+            return await Task.FromResult(ack);
         }
 
-        async Task<byte[]> OnPropIntervalReceivedHandler(byte[] requestPayload)
-        {
-            ArgumentNullException.ThrowIfNull(client);
-            var response = new ack()
-            {
-                Description = "intialize",
-                Status = 0
-            };
-            if (requestPayload != null)
-            {
-                var request = Properties.Parser.ParseFrom(requestPayload);
-                _logger.LogInformation("Prop interval Received: {req}", request.Interval);
-                if (request.Interval > 0)
-                {
-                    client.Props.Interval = request.Interval;
-                    await client.ReportPropertiesAsync();
-                    response.Description = "property accepted";
-                    response.Status = 200;
-                    response.Value = Google.Protobuf.WellKnownTypes.Any.Pack(request);
-                }
-                else
-                {
-                    response.Value = Google.Protobuf.WellKnownTypes.Any.Pack(client.Props);
-                    response.Description = "negative values not accepted";
-                    response.Status = 403;
-                }
-            }
-            await Task.Delay(1500);
-            return response.ToByteArray();
-        }
 
         private async Task MqttClient_ConnectedAsync(MqttClientConnectedEventArgs arg)
         {
@@ -138,4 +131,6 @@ namespace mqtt_grpc_device
             await Task.Yield();
         }
     }
+
 }
+

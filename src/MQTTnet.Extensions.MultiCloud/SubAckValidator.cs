@@ -1,17 +1,15 @@
 ﻿using MQTTnet.Client;
 using System.Diagnostics;
-using System.Linq;
 
-namespace MQTTnet.Extensions.MultiCloud
+namespace MQTTnet.Extensions.MultiCloud;
+
+public static class SubAckExtensions
 {
-    public static class SubAckExtensions
+    public static void TraceErrors(this MqttClientSubscribeResult subAck)
     {
-        public static void TraceErrors(this MqttClientSubscribeResult subAck)
-        {
-            subAck.Items?
-                .Where(s => (int)s.ResultCode > 0x02)
-                .ToList()
-                .ForEach(i => Trace.TraceWarning($"{i.TopicFilter.Topic} {i.ResultCode}"));
-        }
+        subAck.Items?
+            .Where(s => (int)s.ResultCode > 0x02)
+            .ToList()
+            .ForEach(i => Trace.TraceWarning($"{i.TopicFilter.Topic} {i.ResultCode}"));
     }
 }

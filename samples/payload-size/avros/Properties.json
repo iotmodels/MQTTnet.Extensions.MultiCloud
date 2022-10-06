@@ -1,0 +1,14 @@
+{
+  "name": "AvroTests.Properties",
+  "type": "record",
+  "fields": [
+    {
+      "name": "SdkInfo",
+      "type": [ "null", "string" ]
+    },
+    {
+      "name": "Started",
+      "type": "long"
+    }
+  ]
+}

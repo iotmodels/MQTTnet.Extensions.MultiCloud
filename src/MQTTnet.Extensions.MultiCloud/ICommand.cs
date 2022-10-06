@@ -1,11 +1,7 @@
-﻿using System;
+﻿namespace MQTTnet.Extensions.MultiCloud;
 
-namespace MQTTnet.Extensions.MultiCloud
-{
-    public interface ICommand<T, TResponse>
-        where T : IBaseCommandRequest<T>, new()
-        where TResponse : IBaseCommandResponse
-    {
-        Func<T, TResponse>? OnCmdDelegate { get; set; }
-    }
-}
+public interface ICommand : ICloudToDevice<string, string> { }
+
+public interface ICommand<T> : ICloudToDevice<T, string> { }
+
+public interface ICommand<T, TResp> : ICloudToDevice<T, TResp> { }

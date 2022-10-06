@@ -22,7 +22,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             };
             var client = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             Assert.True(client.IsConnected);
-            Assert.Equal(Environment.GetEnvironmentVariable("TestHubName"), HubDpsFactory.ComputedSettings.HostName);
+            Assert.Equal(Environment.GetEnvironmentVariable("TestHubName"), HubDpsFactory.ComputedSettings!.HostName);
             await client.DisconnectAsync(
                 new MqttClientDisconnectOptionsBuilder()
                         .WithReason(MqttClientDisconnectReason.NormalDisconnection)
@@ -39,7 +39,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             };
             var client = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             Assert.True(client.IsConnected);
-            Assert.Equal(Environment.GetEnvironmentVariable("TestHubName"), HubDpsFactory.ComputedSettings.HostName);
+            Assert.Equal(Environment.GetEnvironmentVariable("TestHubName"), HubDpsFactory.ComputedSettings!.HostName);
             await client.DisconnectAsync(
                 new MqttClientDisconnectOptionsBuilder()
                         .WithReason(MqttClientDisconnectReason.NormalDisconnection)

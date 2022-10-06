@@ -20,7 +20,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         public void LoadCertFromStore()
         {
             var testCert = X509ClientCertificateLocator.Load("onething.pfx|1234");
-            X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            X509Store store = new (StoreName.My, StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadWrite);
             store.Add(testCert);
 
