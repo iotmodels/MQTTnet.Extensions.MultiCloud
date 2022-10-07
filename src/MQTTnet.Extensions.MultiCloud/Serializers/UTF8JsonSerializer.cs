@@ -28,11 +28,6 @@ public class UTF8JsonSerializer : IMessageSerializer
             })!;
     }
 
-    // TODO convert to TryReadFromBytes
-    public T? FromBytes<T>(byte[] payload, string name = "")
-    {
-        return Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
-    }
     public byte[] ToBytes<T>(T payload, string name = "")
     {
         if (string.IsNullOrEmpty(name))
