@@ -63,14 +63,6 @@ public class Device : BackgroundService
             await PropertyInitializer.InitPropertyAsync(client.Property_combineTelemetry, true);
         }
 
-
-
-        //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-
-
-        //await client.Property_combineTelemetry.InitPropertyAsync(client.InitialState, true, stoppingToken);
-        //await client.Property_combineTelemetry.ReportPropertyAsync(stoppingToken);
-
         await client.Property_piri.SendMessageAsync($"os: {Environment.OSVersion}, proc: {RuntimeInformation.ProcessArchitecture}, clr: {Environment.Version}", stoppingToken);
 
         var netInfo = "eth: " + GetLocalIPv4();
@@ -96,13 +88,6 @@ public class Device : BackgroundService
                         h = sh.Humidity.Percent,
                         p = sh.Pressure.Pascals
                     }, stoppingToken);
-                    //await tp.SendMessageAsync(new Telemetries
-                    //{
-                    //    Temperature1 = sh.Temperature.DegreesCelsius,
-                    //    Temperature2 = sh.Temperature2.DegreesCelsius,
-                    //    Humidity = sh.Humidity.Percent,
-                    //    Pressure =sh.Pressure.Bars
-                    //});
                 }
                 else
                 {
@@ -128,15 +113,7 @@ public class Device : BackgroundService
                         h = Environment.WorkingSet / 1000000,
                         p = Environment.WorkingSet / 1000000
                     }, stoppingToken);
-
-                    //await tp.SendMessageAsync(new Telemetries
-                    //{
-                    //    Temperature1 = t1,
-                    //    Temperature2 = GenerateSensorReading(t1, 5, 35),
-                    //    Humidity = Environment.WorkingSet / 1000000,
-                    //    Pressure = Environment.WorkingSet / 1000000
-                    //}, stoppingToken);
-
+               
                 }
                 else
                 {

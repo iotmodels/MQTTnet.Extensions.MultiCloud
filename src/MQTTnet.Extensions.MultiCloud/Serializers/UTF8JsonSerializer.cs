@@ -31,16 +31,7 @@ public class UTF8JsonSerializer : IMessageSerializer
     // TODO convert to TryReadFromBytes
     public T? FromBytes<T>(byte[] payload, string name = "")
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
-        }
-        JsonDocument jdoc = JsonDocument.Parse(payload);
-        if (jdoc.RootElement.TryGetProperty(name, out JsonElement prop))
-        {
-            return prop.Deserialize<T>()!;
-        }
-        return default;
+        return Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
     }
     public byte[] ToBytes<T>(T payload, string name = "")
     {
@@ -57,11 +48,17 @@ public class UTF8JsonSerializer : IMessageSerializer
 
     public bool TryReadFromBytes<T>(byte[] payload, string name, out T result)
     {
+        if (payload == null || payload.Length==0)
+        {
+            result = default!;
+            return false;
+        }
+
         bool found = false;
         if (string.IsNullOrEmpty(name))
         {
             found = true;
-            result = FromBytes<T>(payload)!;
+            result = Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
         }
         else
         {
