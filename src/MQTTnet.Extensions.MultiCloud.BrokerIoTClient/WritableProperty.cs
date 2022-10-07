@@ -19,6 +19,7 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
         RequestTopicPattern = "device/{clientId}/props/{name}/set/#";
         ResponseTopicPattern = "device/{clientId}/props/{name}/ack";
         RetainResponse = true;
+        CleanRetained = true;
         PreProcessMessage = tp =>
         {
             Version = tp.Version;
