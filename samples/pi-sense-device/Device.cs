@@ -11,6 +11,8 @@ using Color = System.Drawing.Color;
 
 using pi_sense_device_protos;
 using dtmi_rido_pnp_sensehat;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 namespace pi_sense_device;
 
@@ -48,6 +50,20 @@ public class Device : BackgroundService
 
         client.Property_interval.Value = default_interval;
         client.Property_combineTelemetry.Value = true;
+
+        if (client is HubMqttClient hubClient)
+        {
+            client.InitialState = await hubClient.GetTwinAsync(stoppingToken);
+            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
+            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_combineTelemetry, "combineTelemetry", true);
+        }
+        else
+        {
+            await PropertyInitializer.InitPropertyAsync(client.Property_interval, default_interval);
+            await PropertyInitializer.InitPropertyAsync(client.Property_combineTelemetry, true);
+        }
+
+
 
         //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
 

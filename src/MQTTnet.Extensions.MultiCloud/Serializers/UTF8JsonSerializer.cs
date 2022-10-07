@@ -54,4 +54,29 @@ public class UTF8JsonSerializer : IMessageSerializer
             return Encoding.UTF8.GetBytes(Json.Stringify(patch));
         }
     }
+
+    public bool TryReadFromBytes<T>(byte[] payload, string name, out T result)
+    {
+        bool found = false;
+        if (string.IsNullOrEmpty(name))
+        {
+            found = true;
+            result = FromBytes<T>(payload)!;
+        }
+        else
+        {
+            string payloadString = Encoding.UTF8.GetString(payload);
+            JsonDocument payloadJson = JsonDocument.Parse(payloadString);
+            if (payloadJson.RootElement.TryGetProperty(name, out JsonElement propValue))
+            {
+                found = true;
+                result = propValue.Deserialize<T>()!;
+            }
+            else
+            {
+                result = default!;
+            }
+        }
+        return found;
+    }
 }

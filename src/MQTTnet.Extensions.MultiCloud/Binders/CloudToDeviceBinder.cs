@@ -35,12 +35,11 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
             {
                 if (OnMessage != null)
                 {
-                    var tp = TopicParser.ParseTopic(topic);
-                    PreProcessMessage?.Invoke(tp);
-
-                    T req = serializer.FromBytes<T>(m.ApplicationMessage.Payload, UnwrapRequest ? _name : string.Empty)!;
-                    if (req != null)
+                    if (serializer.TryReadFromBytes<T>(m.ApplicationMessage.Payload, UnwrapRequest ? _name : string.Empty, out T req))
                     {
+                        var tp = TopicParser.ParseTopic(topic);
+                        PreProcessMessage?.Invoke(tp);
+
                         TResp resp = await OnMessage.Invoke(req);
                         byte[] responseBytes = serializer.ToBytes(resp, WrapResponse ? _name : string.Empty);
 
@@ -55,10 +54,6 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                                 .WithRetainFlag(RetainResponse)
                                 .Build());
-                    }
-                    else
-                    {
-                        Trace.TraceWarning($"Cannot parse incoming message name: {_name} payload: {Encoding.UTF8.GetString(m.ApplicationMessage.Payload)}");
                     }
                 }
             }

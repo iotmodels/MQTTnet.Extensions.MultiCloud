@@ -31,4 +31,9 @@ public class AvroSerializer : IMessageSerializer
         byte[] bytes = ms.ToArray();
         return bytes;
     }
+
+    public bool TryReadFromBytes<T>(byte[] payload, string name, out T result)
+    {
+        throw new NotImplementedException();
+    }
 }
