@@ -11,16 +11,6 @@ public class AvroSerializer : IMessageSerializer
         schema = s;
     }
 
-    public T? FromBytes<T>(byte[] payload, string name = "")
-    {
-        using MemoryStream mem = new(payload);
-        BinaryDecoder decoder = new(mem);
-        SpecificDefaultReader reader = new(schema, schema);
-        T result = default!;
-        reader.Read(result, decoder);
-        return result;
-    }
-
     public byte[] ToBytes<T>(T payload, string name = "")
     {
         using MemoryStream ms = new();
@@ -34,6 +24,12 @@ public class AvroSerializer : IMessageSerializer
 
     public bool TryReadFromBytes<T>(byte[] payload, string name, out T result)
     {
-        throw new NotImplementedException();
+        using MemoryStream mem = new(payload);
+        BinaryDecoder decoder = new(mem);
+        SpecificDefaultReader reader = new(schema, schema);
+        T val = default!;
+        reader.Read(val, decoder);
+        result = val;
+        return true;
     }
 }
