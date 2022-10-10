@@ -15,17 +15,23 @@
       "writable": true
     },
     {
-      "@type": ["Property", "TimeSpan"],
+      "@type": [ "Property", "TimeSpan" ],
       "name": "interval",
       "schema": "integer",
       "writable": true,
       "unit": "millisecond"
     },
     {
-      "@type": ["Telemetry", "DataSize"],
+      "@type": [ "Telemetry", "DataSize" ],
       "name": "workingSet",
       "schema": "double",
-      "unit": "byte"
+      "unit": "mebibyte"
+    },
+    {
+      "@type": [ "Telemetry", "DataSize" ],
+      "name": "managedMemory",
+      "schema": "double",
+      "unit": "mebibyte"
     },
     {
       "@type": "Command",
