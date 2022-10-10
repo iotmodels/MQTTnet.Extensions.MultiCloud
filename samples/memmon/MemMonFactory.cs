@@ -60,7 +60,10 @@ internal class MemMonFactory
         var cs = new ConnectionSettings(connectionString) { ModelId = Imemmon.ModelId };
         var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
         connectionSettings = BrokerClientFactory.ComputedSettings;
-        var client = new dtmi_rido_memmon.mqtt.memmon(mqtt);
+        var client = new dtmi_rido_memmon.mqtt.memmon(mqtt)
+        {
+            InitialState = String.Empty
+        };
         nugetPackageVersion = BrokerClientFactory.NuGetPackageVersion;
         return client;
     }

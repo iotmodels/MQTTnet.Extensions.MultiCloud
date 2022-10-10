@@ -15,8 +15,10 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void TryDeserialize()
         {
-            Properties props = new();
-            props.Interval = 3;
+            Properties props = new()
+            {
+                Interval = 3
+            };
             ProtobufSerializer ser = new(Properties.Parser);
             byte[] payload = props.ToByteArray();
             if (ser.TryReadFromBytes(payload, "interval", out Properties propVal))

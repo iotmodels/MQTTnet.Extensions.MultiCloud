@@ -35,4 +35,19 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
         };
         await prop.SendMessageAsync(payload, cancellationToken);
     }
+
+    public async Task InitPropertyAsync(string intialState, T defaultValue, CancellationToken cancellationToken = default)
+    {
+        Ack<T> ack = new()
+        {
+            Value = defaultValue,
+            Version = 0,
+            Status = 203,
+            Description = "init from default value"
+        };
+        Value = ack.Value;
+        Version = ack.Version;
+        await SendMessageAsync(ack, cancellationToken);
+
+    }
 }

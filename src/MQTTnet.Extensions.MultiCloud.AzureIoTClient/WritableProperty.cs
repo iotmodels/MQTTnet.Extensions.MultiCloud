@@ -30,4 +30,12 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
         var prop = new ReadOnlyProperty<Ack<T>>(_connection, _name);
         await prop.SendMessageAsync(payload, cancellationToken);
     }
+
+    public async Task InitPropertyAsync(string intialState, T defaultValue, CancellationToken cancellationToken = default)
+    {
+        Ack<T> ack = TwinInitializer.InitFromTwin(intialState, _name, defaultValue);
+        Version = ack.Version;
+        Value = ack.Value;
+        await SendMessageAsync(ack, cancellationToken);
+    }
 }
