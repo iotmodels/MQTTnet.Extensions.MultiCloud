@@ -6,7 +6,7 @@ using MQTTnet.Extensions.MultiCloud.Connections;
 
 namespace memmon;
 
-internal class MemMonFactory
+public class MemMonFactory
 {
     static string nugetPackageVersion = string.Empty;
     public static string NuGetPackageVersion => nugetPackageVersion;
@@ -14,18 +14,22 @@ internal class MemMonFactory
             Convert.ToBase64String(new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(masterKey)).ComputeHash(System.Text.Encoding.UTF8.GetBytes(deviceId)));
 
     readonly IConfiguration _configuration;
+    readonly ILogger<MemMonFactory> _logger;
 
     internal static ConnectionSettings connectionSettings;
 
-    public MemMonFactory(IConfiguration configuration)
+    public MemMonFactory(IConfiguration configuration, ILogger<MemMonFactory> logger)
     {
-        this._configuration = configuration;
+        _configuration = configuration;
+        _logger = logger;
     }
 
-    public async Task<Imemmon> CreateMemMonClientAsync(string connectionString, CancellationToken cancellationToken = default)
+    public async Task<Imemmon> CreateMemMonClientAsync(string connectinStringName, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(connectionString, nameof(connectionString));
-        connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+        Imemmon client;
+        string connectionString = _configuration.GetConnectionString(connectinStringName);
+        connectionSettings = new ConnectionSettings(connectionString);
+        _logger.LogWarning("Connecting to..{cs}", connectionSettings);
         if (connectionString.Contains("IdScope") || connectionString.Contains("SharedAccessKey"))
         {
             if (connectionSettings.IdScope != null && _configuration["masterKey"] != null)
@@ -34,25 +38,28 @@ internal class MemMonFactory
                 var masterKey = _configuration.GetValue<string>("masterKey");
                 var deviceKey = ComputeDeviceKey(masterKey, deviceId);
                 var newCs = $"IdScope={connectionSettings.IdScope};DeviceId={deviceId};SharedAccessKey={deviceKey};SasMinutes={connectionSettings.SasMinutes}";
-                return await CreateHubClientAsync(newCs, cancellationToken);
+                client =  await CreateHubClientAsync(newCs, cancellationToken);
             }
             else
             {
-                return await CreateHubClientAsync(connectionString, cancellationToken);
+                client = await CreateHubClientAsync(connectionString, cancellationToken);
             }
         }
         else if (connectionSettings.HostName.Contains("amazonaws.com"))
         {
-            return await CreateAwsClientAsync(connectionString, cancellationToken);
+            client = await CreateAwsClientAsync(connectionString, cancellationToken);
         }
         else if (connectionSettings.HostName.Contains("azure-devices.net"))
         {
-            return await CreateHubClientAsync(connectionString, cancellationToken);
+            client =  await CreateHubClientAsync(connectionString, cancellationToken);
         }
         else
         {
-            return await CreateBrokerClientAsync(connectionString, cancellationToken);
+            client = await CreateBrokerClientAsync(connectionString, cancellationToken);
         }
+
+        _logger.LogWarning("Connected");
+        return client;
     }
 
     static async Task<dtmi_rido_memmon.mqtt.memmon> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)

@@ -30,26 +30,25 @@ public class Device : BackgroundService
 
     private Imemmon client;
     private ConnectionSettings connectionSettings;
+    private MemMonFactory memmonFactory;
 
     private string infoVersion = string.Empty;
 
-    public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
+    public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc, MemMonFactory clientFactory)
     {
         _logger = logger;
         _configuration = configuration;
         _telemetryClient = tc;
+        memmonFactory = clientFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
-        _logger.LogWarning("Connecting to..{cs}", cs);
-        var memmonFactory = new MemMonFactory(_configuration);
-        client = await memmonFactory.CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
-        client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
-        connectionSettings = MemMonFactory.connectionSettings;
-        _logger.LogWarning("Connected");
+        client = await memmonFactory.CreateMemMonClientAsync("cs", stoppingToken);
 
+        client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
+        
+        connectionSettings = MemMonFactory.connectionSettings;
         infoVersion = MemMonFactory.NuGetPackageVersion;
         
         client.Property_enabled.OnMessage = Property_enabled_UpdateHandler;

@@ -8,6 +8,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddApplicationInsightsTelemetryWorkerService();
+        services.AddSingleton<MemMonFactory>();
         services.AddHostedService<Device>();
     })
     .Build();
