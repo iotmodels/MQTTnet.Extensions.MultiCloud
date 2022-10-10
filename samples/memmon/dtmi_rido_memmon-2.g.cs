@@ -16,6 +16,7 @@ public interface Imemmon
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_workingSet { get; set; }
+    public ITelemetry<double> Telemetry_managedMemory { get; set; }
     public ICommand<DiagnosticsMode, Dictionary<string, string>> Command_getRuntimeStats { get; set; }
     public ICommand<int, bool> Command_isPrime { get; set; }
     public ICommand<int> Command_malloc { get; set; }

@@ -24,6 +24,7 @@ public class Device : BackgroundService
     private int reconnectCounter = 0;
 
     private double telemetryWorkingSet = 0;
+    private double managedMemory = 0;
     private const bool default_enabled = true;
     private const int default_interval = 500;
 
@@ -52,7 +53,7 @@ public class Device : BackgroundService
         _logger.LogWarning("Connected");
 
         infoVersion = MemMonFactory.NuGetPackageVersion;
-
+        
         client.Property_enabled.OnMessage = Property_enabled_UpdateHandler;
         client.Property_interval.OnMessage= Property_interval_UpdateHandler;
         client.Command_getRuntimeStats.OnMessage= Command_getRuntimeStats_Handler;
@@ -81,10 +82,13 @@ public class Device : BackgroundService
         {
             if (client.Property_enabled.Value == true)
             {
-                telemetryWorkingSet = Environment.WorkingSet;
+                telemetryWorkingSet = Environment.WorkingSet.Bytes().Megabytes;
+                managedMemory = GC.GetTotalAllocatedBytes().Bytes().Megabytes;
                 await client.Telemetry_workingSet.SendMessageAsync(telemetryWorkingSet, stoppingToken);
+                await client.Telemetry_managedMemory.SendMessageAsync(managedMemory, stoppingToken);
                 telemetryCounter++;
                 _telemetryClient.TrackMetric("WorkingSet", telemetryWorkingSet);
+                _telemetryClient.TrackMetric("managedMemory", managedMemory);
             }
             await Task.Delay(client.Property_interval.Value, stoppingToken);
         }
@@ -157,6 +161,7 @@ public class Device : BackgroundService
 
     private async Task<bool> Command_isPrime_Handler(int number)
     {
+        commandCounter++;
         IEnumerable<string> Multiples(int number)
         {
             return from n1 in Enumerable.Range(2, number / 2)
@@ -170,15 +175,31 @@ public class Device : BackgroundService
 
     }
 
+    List<string> memory = new List<string>();
+    IntPtr memoryPtr = IntPtr.Zero;
     private async Task<string> Command_malloc_Hanlder(int number)
     {
-        Marshal.AllocHGlobal(number);
+        commandCounter++;
+        for (int i = 0; i < number; i++)
+        {
+            memory.Add(i.ToOrdinalWords());
+        }
+
+        memoryPtr = Marshal.AllocHGlobal(number);
         return await Task.FromResult(string.Empty);
     }
 
     private async Task<string> Command_free_Hanlder(string empty)
     {
-        GC.Collect();
+        commandCounter++;
+        await _telemetryClient.FlushAsync(CancellationToken.None);
+        memory = new List<string>();
+        GC.Collect(2, GCCollectionMode.Forced, false);
+        if (memoryPtr != IntPtr.Zero)
+        {
+            Marshal.FreeHGlobal(memoryPtr);
+            memoryPtr = IntPtr.Zero;
+        }    
         return await Task.FromResult(string.Empty);
     }
 
@@ -213,6 +234,8 @@ public class Device : BackgroundService
             result.Add("telemetry: ", telemetryCounter.ToString());
             result.Add("command: ", commandCounter.ToString());
             result.Add("reconnects: ", reconnectCounter.ToString());
+            result.Add("workingSet", Environment.WorkingSet.Bytes().ToString());
+            result.Add("GC Memmory", GC.GetTotalAllocatedBytes().Bytes().ToString());
         }
         return await Task.FromResult(result);
     }
@@ -245,7 +268,8 @@ public class Device : BackgroundService
             //AppendLineWithPadRight(sb, $"Twin send: {RidCounter.Current}");
             AppendLineWithPadRight(sb, $"Command messages: {commandCounter}");
             AppendLineWithPadRight(sb, " ");
-            AppendLineWithPadRight(sb, $"WorkingSet: {telemetryWorkingSet.Bytes()}");
+            AppendLineWithPadRight(sb, $"WorkingSet: {telemetryWorkingSet} MB");
+            AppendLineWithPadRight(sb, $"ManagedMemory: {managedMemory} MB");
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
             AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");
