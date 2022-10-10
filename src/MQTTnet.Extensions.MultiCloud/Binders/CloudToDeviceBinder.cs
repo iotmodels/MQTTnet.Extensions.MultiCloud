@@ -13,10 +13,9 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 
     protected bool UnwrapRequest = false;
     protected bool WrapResponse = false;
-
     protected bool RetainResponse = false;
-
     protected bool CleanRetained = false;
+    
 
     public Func<T, Task<TResp>>? OnMessage { get; set; }
 
@@ -71,7 +70,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
         set
         {
             requestTopicPattern = value?.Replace("{clientId}", _connection.Options.ClientId).Replace("{name}", _name)!;
-            _ = _connection.SubscribeWithReplyAsync(requestTopicPattern);
+            
         }
     }
 
@@ -82,6 +81,17 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
         set
         {
             responseTopicPattern = value?.Replace("{clientId}", _connection.Options.ClientId).Replace("{name}", _name)!;
+        }
+    }
+
+    private string? subscribeTopicPattern;
+    protected string? SubscribeTopicPattern 
+    { 
+        get => subscribeTopicPattern;
+        set
+        {
+            subscribeTopicPattern = value?.Replace("{clientId}", _connection.Options.ClientId).Replace("{name}", _name)!;
+            _ = _connection.SubscribeWithReplyAsync(subscribeTopicPattern);
         }
     }
 }

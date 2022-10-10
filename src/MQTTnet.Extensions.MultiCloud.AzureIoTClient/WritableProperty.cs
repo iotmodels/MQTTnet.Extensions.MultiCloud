@@ -15,6 +15,7 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
     {
         _name = name;
         _connection = c;
+        SubscribeTopicPattern = "$iothub/twin/PATCH/properties/desired/#";
         RequestTopicPattern = "$iothub/twin/PATCH/properties/desired/#";
         ResponseTopicPattern = "$iothub/twin/PATCH/properties/reported/?$rid={rid}";
         UnwrapRequest = true;

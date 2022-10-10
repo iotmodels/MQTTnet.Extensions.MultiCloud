@@ -16,7 +16,8 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
         _name = name;
         _connection = c;
 
-        RequestTopicPattern = "device/{clientId}/props/{name}/set/#";
+        SubscribeTopicPattern = "device/{clientId}/props/{name}/set/#";
+        RequestTopicPattern = "device/{clientId}/props/{name}/set";
         ResponseTopicPattern = "device/{clientId}/props/{name}/ack";
         RetainResponse = true;
         CleanRetained = true;
