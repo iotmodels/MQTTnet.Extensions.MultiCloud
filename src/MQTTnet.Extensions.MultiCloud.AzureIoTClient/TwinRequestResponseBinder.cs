@@ -63,7 +63,7 @@ public class TwinRequestResponseBinder
     public async Task<string> GetTwinAsync(CancellationToken cancellationToken = default)
     {
 
-        _ = connection.SubscribeWithReplyAsync("$iothub/twin/res/#", cancellationToken);
+        await connection.SubscribeWithReplyAsync("$iothub/twin/res/#", cancellationToken);
 
         var rid = RidCounter.NextValue();
         lastRid = rid; // for testing
