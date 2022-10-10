@@ -62,10 +62,8 @@ public class TwinRequestResponseBinder
 
     public async Task<string> GetTwinAsync(CancellationToken cancellationToken = default)
     {
-        await connection.SubscribeAsync(new MqttClientSubscribeOptionsBuilder()
-            .WithTopicFilter("$iothub/twin/res/#")
-            .Build(), 
-            cancellationToken);
+
+        _ = connection.SubscribeWithReplyAsync("$iothub/twin/res/#", cancellationToken);
 
         var rid = RidCounter.NextValue();
         lastRid = rid; // for testing
