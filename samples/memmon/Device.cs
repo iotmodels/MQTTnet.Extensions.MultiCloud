@@ -2,11 +2,8 @@ using dtmi_rido_memmon;
 using Humanizer;
 using Microsoft.ApplicationInsights;
 using MQTTnet.Extensions.MultiCloud;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace memmon;

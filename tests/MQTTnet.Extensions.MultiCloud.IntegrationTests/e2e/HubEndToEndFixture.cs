@@ -29,7 +29,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         }
 
         //[Fact, Trait("e2e", "hub")]
-        public async Task NewDeviceSendDefaults()
+        internal async Task NewDeviceSendDefaults()
         {
             var deviceId = "memmon-test" + new Random().Next(100);
             var device = await GetOrCreateDeviceAsync(deviceId);
@@ -61,7 +61,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         }
 
         //[Fact(Skip = "investigate timeout")]
-        public async Task DeviceReadsSettingsAtStartup()
+        internal async Task DeviceReadsSettingsAtStartup()
         {
 
             var deviceId = "memmon-test" + new Random().Next(100);
@@ -175,7 +175,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         }
 
         //[Fact, Trait("e2e", "hub")]
-        public async Task CommandsGetCalled()
+        internal async Task CommandsGetCalled()
         {
             var deviceId = "memmon-test" + new Random().Next(100);
             var device = await GetOrCreateDeviceAsync(deviceId);
