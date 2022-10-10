@@ -61,19 +61,9 @@ public class Device : BackgroundService
         client.Command_malloc.OnMessage = Command_malloc_Hanlder;
         client.Command_free.OnMessage = Command_free_Hanlder;
 
-
-        if (client is HubMqttClient)
-        {
-            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
-            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_enabled, "enabled", default_enabled);
-        }
-        else
-        {
-            await PropertyInitializer.InitPropertyAsync(client.Property_interval, default_interval);
-            await PropertyInitializer.InitPropertyAsync(client.Property_enabled, default_enabled);
-        }
+        await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
+        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
          
-        
         await client.Property_started.SendMessageAsync(DateTime.Now, stoppingToken);
 
         RefreshScreen(this);
@@ -83,7 +73,7 @@ public class Device : BackgroundService
             if (client.Property_enabled.Value == true)
             {
                 telemetryWorkingSet = Environment.WorkingSet.Bytes().Megabytes;
-                managedMemory = GC.GetTotalAllocatedBytes().Bytes().Megabytes;
+                managedMemory = GC.GetTotalMemory(true).Bytes().Megabytes;
                 await client.Telemetry_workingSet.SendMessageAsync(telemetryWorkingSet, stoppingToken);
                 await client.Telemetry_managedMemory.SendMessageAsync(managedMemory, stoppingToken);
                 telemetryCounter++;
