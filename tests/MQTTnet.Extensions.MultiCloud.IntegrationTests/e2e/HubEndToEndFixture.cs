@@ -16,16 +16,18 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         private readonly RegistryManager rm = RegistryManager.CreateFromConnectionString(hubConnectionString);
 
 
-        [Fact(Skip = "hangs with async")]
+        [Fact(Skip = "hangs test")]
         public async Task GetTwinReturnsJson()
         {
-            var deviceId = "integ-test" + new Random().Next(100);
-            var device = await GetOrCreateDeviceAsync(deviceId);
-            var hubConnection = await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}");
+            //var deviceId = "integ-test" + new Random().Next(100);
+            //var device = await GetOrCreateDeviceAsync(deviceId);
+            //var hubConnection = await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}");
+            var cs = "HostName=rido-freetier.azure-devices.net;DeviceId=testdevice;SharedAccessKey=MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=";
+            var hubConnection = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
+            Assert.True(hubConnection.IsConnected);
             var hubClient = new HubMqttClient(hubConnection);
             var twin = await hubClient.GetTwinAsync();
             Assert.True(twin.Length > 0);
-            await rm.RemoveDeviceAsync(deviceId);
         }
 
         //[Fact, Trait("e2e", "hub")]
