@@ -10,4 +10,5 @@ public interface IWritableProperty<T> : ICloudToDevice<T, Ack<T>>, IDeviceToClou
 {
     T? Value { get; set; }
     int? Version { get; set; }
+    Task InitPropertyAsync(string intialState, T defaultValue, CancellationToken cancellationToken = default);
 }

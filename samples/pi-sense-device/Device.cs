@@ -51,17 +51,8 @@ public class Device : BackgroundService
         client.Property_interval.Value = default_interval;
         client.Property_combineTelemetry.Value = true;
 
-        if (client is HubMqttClient hubClient)
-        {
-            client.InitialState = await hubClient.GetTwinAsync(stoppingToken);
-            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
-            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_combineTelemetry, "combineTelemetry", true);
-        }
-        else
-        {
-            await PropertyInitializer.InitPropertyAsync(client.Property_interval, default_interval);
-            await PropertyInitializer.InitPropertyAsync(client.Property_combineTelemetry, true);
-        }
+        await client.Property_combineTelemetry.InitPropertyAsync(client.InitialState, true, stoppingToken);
+        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
 
         await client.Property_piri.SendMessageAsync($"os: {Environment.OSVersion}, proc: {RuntimeInformation.ProcessArchitecture}, clr: {Environment.Version}", stoppingToken);
 

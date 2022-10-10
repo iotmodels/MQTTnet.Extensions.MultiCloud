@@ -21,5 +21,6 @@ public class devicetemplate : Idevicetemplate
         Property_interval = new WritableProperty<int>(c, "interval");
         Telemetry_temp = new Telemetry<double>(c, "temp");
         Command_echo = new Command<string, string>(c, "echo");
+        InitialState = String.Empty;
     }
 }

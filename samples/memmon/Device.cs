@@ -24,6 +24,7 @@ public class Device : BackgroundService
     private int reconnectCounter = 0;
 
     private double telemetryWorkingSet = 0;
+    private double managedMemory = 0;
     private const bool default_enabled = true;
     private const int default_interval = 500;
 
@@ -52,26 +53,13 @@ public class Device : BackgroundService
         _logger.LogWarning("Connected");
 
         infoVersion = MemMonFactory.NuGetPackageVersion;
-
+        
         client.Property_enabled.OnMessage = Property_enabled_UpdateHandler;
         client.Property_interval.OnMessage= Property_interval_UpdateHandler;
         client.Command_getRuntimeStats.OnMessage= Command_getRuntimeStats_Handler;
-        client.Command_isPrime.OnMessage = Command_isPrime_Handler;
-        client.Command_malloc.OnMessage = Command_malloc_Hanlder;
-        client.Command_free.OnMessage = Command_free_Hanlder;
 
-
-        if (client is HubMqttClient)
-        {
-            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
-            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_enabled, "enabled", default_enabled);
-        }
-        else
-        {
-            await PropertyInitializer.InitPropertyAsync(client.Property_interval, default_interval);
-            await PropertyInitializer.InitPropertyAsync(client.Property_enabled, default_enabled);
-        }
-         
+        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
+        await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
         
         await client.Property_started.SendMessageAsync(DateTime.Now, stoppingToken);
 
@@ -81,10 +69,13 @@ public class Device : BackgroundService
         {
             if (client.Property_enabled.Value == true)
             {
-                telemetryWorkingSet = Environment.WorkingSet;
+                telemetryWorkingSet = Environment.WorkingSet.Bytes().Megabytes;
+                managedMemory = GC.GetTotalAllocatedBytes().Bytes().Megabytes;
                 await client.Telemetry_workingSet.SendMessageAsync(telemetryWorkingSet, stoppingToken);
+                
                 telemetryCounter++;
                 _telemetryClient.TrackMetric("WorkingSet", telemetryWorkingSet);
+                
             }
             await Task.Delay(client.Property_interval.Value, stoppingToken);
         }
@@ -155,34 +146,6 @@ public class Device : BackgroundService
         return await Task.FromResult(ack);
     }
 
-    private async Task<bool> Command_isPrime_Handler(int number)
-    {
-        IEnumerable<string> Multiples(int number)
-        {
-            return from n1 in Enumerable.Range(2, number / 2)
-                   from n2 in Enumerable.Range(2, n1)
-                   where n1 * n2 == number
-                   select $"{n1} x {n2} => {number}";
-        }
-        
-        bool result =  Multiples(number).Any();
-        return await Task.FromResult(!result);
-
-    }
-
-    private async Task<string> Command_malloc_Hanlder(int number)
-    {
-        Marshal.AllocHGlobal(number);
-        return await Task.FromResult(string.Empty);
-    }
-
-    private async Task<string> Command_free_Hanlder(string empty)
-    {
-        GC.Collect();
-        return await Task.FromResult(string.Empty);
-    }
-
-
     private async Task<Dictionary<string, string>> Command_getRuntimeStats_Handler(DiagnosticsMode req)
     {
         commandCounter++;
@@ -213,6 +176,8 @@ public class Device : BackgroundService
             result.Add("telemetry: ", telemetryCounter.ToString());
             result.Add("command: ", commandCounter.ToString());
             result.Add("reconnects: ", reconnectCounter.ToString());
+            result.Add("workingSet", Environment.WorkingSet.Bytes().ToString());
+            result.Add("GC Memmory", GC.GetTotalAllocatedBytes().Bytes().ToString());
         }
         return await Task.FromResult(result);
     }
@@ -245,7 +210,8 @@ public class Device : BackgroundService
             //AppendLineWithPadRight(sb, $"Twin send: {RidCounter.Current}");
             AppendLineWithPadRight(sb, $"Command messages: {commandCounter}");
             AppendLineWithPadRight(sb, " ");
-            AppendLineWithPadRight(sb, $"WorkingSet: {telemetryWorkingSet.Bytes()}");
+            AppendLineWithPadRight(sb, $"WorkingSet: {telemetryWorkingSet} MB");
+            AppendLineWithPadRight(sb, $"ManagedMemory: {managedMemory} MB");
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
             AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");

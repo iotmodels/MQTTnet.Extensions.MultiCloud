@@ -44,6 +44,7 @@ public class sensehat : Isensehat
         {
             WrapMessage = false
         };
+        InitialState = String.Empty;
     }
 
     public async Task SendTelemetryAsync(AllTelemetries payload, CancellationToken t = default)

@@ -33,7 +33,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
 
 
             var twin = await td.GetTwinAsync();
-            await TwinInitializer.InitPropertyAsync(td.Connection, twin, td.Property_interval, "interval", defaultInterval);
+            //await TwinInitializer.InitPropertyAsync(td.Connection, twin, td.Property_interval, "interval", defaultInterval);
             await Task.Delay(500);
             var serviceTwin = await rm.GetTwinAsync(deviceId);
             var intervalTwin = serviceTwin.Properties.Reported["interval"];
