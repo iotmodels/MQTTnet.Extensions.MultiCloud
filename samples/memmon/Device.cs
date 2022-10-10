@@ -1,4 +1,4 @@
-using dtmi_rido_pnp_memmon;
+using dtmi_rido_memmon;
 using Humanizer;
 using Microsoft.ApplicationInsights;
 using MQTTnet.Extensions.MultiCloud;
@@ -6,6 +6,7 @@ using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace memmon;
@@ -24,7 +25,7 @@ public class Device : BackgroundService
 
     private double telemetryWorkingSet = 0;
     private const bool default_enabled = true;
-    private const int default_interval = 45;
+    private const int default_interval = 500;
 
     private string lastDiscconectReason = string.Empty;
 
@@ -55,6 +56,10 @@ public class Device : BackgroundService
         client.Property_enabled.OnMessage = Property_enabled_UpdateHandler;
         client.Property_interval.OnMessage= Property_interval_UpdateHandler;
         client.Command_getRuntimeStats.OnMessage= Command_getRuntimeStats_Handler;
+        client.Command_isPrime.OnMessage = Command_isPrime_Handler;
+        client.Command_malloc.OnMessage = Command_malloc_Hanlder;
+        client.Command_free.OnMessage = Command_free_Hanlder;
+
 
         if (client is HubMqttClient)
         {
@@ -81,7 +86,7 @@ public class Device : BackgroundService
                 telemetryCounter++;
                 _telemetryClient.TrackMetric("WorkingSet", telemetryWorkingSet);
             }
-            await Task.Delay(client.Property_interval.Value * 1000, stoppingToken);
+            await Task.Delay(client.Property_interval.Value, stoppingToken);
         }
     }
 
@@ -149,6 +154,34 @@ public class Device : BackgroundService
         };
         return await Task.FromResult(ack);
     }
+
+    private async Task<bool> Command_isPrime_Handler(int number)
+    {
+        IEnumerable<string> Multiples(int number)
+        {
+            return from n1 in Enumerable.Range(2, number / 2)
+                   from n2 in Enumerable.Range(2, n1)
+                   where n1 * n2 == number
+                   select $"{n1} x {n2} => {number}";
+        }
+        
+        bool result =  Multiples(number).Any();
+        return await Task.FromResult(!result);
+
+    }
+
+    private async Task<string> Command_malloc_Hanlder(int number)
+    {
+        Marshal.AllocHGlobal(number);
+        return await Task.FromResult(string.Empty);
+    }
+
+    private async Task<string> Command_free_Hanlder(string empty)
+    {
+        GC.Collect();
+        return await Task.FromResult(string.Empty);
+    }
+
 
     private async Task<Dictionary<string, string>> Command_getRuntimeStats_Handler(DiagnosticsMode req)
     {

@@ -4,11 +4,11 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 
-namespace dtmi_rido_pnp_memmon;
+namespace dtmi_rido_memmon;
 
 public interface Imemmon 
 {
-    public const string ModelId = "dtmi:rido:pnp:memmon;1";
+    public const string ModelId = "dtmi:rido:memmon;2";
     public IMqttClient Connection { get; }
     public string InitialState { get; }
 
@@ -17,6 +17,9 @@ public interface Imemmon
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_workingSet { get; set; }
     public ICommand<DiagnosticsMode, Dictionary<string, string>> Command_getRuntimeStats { get; set; }
+    public ICommand<int, bool> Command_isPrime { get; set; }
+    public ICommand<int> Command_malloc { get; set; }
+    public ICommand Command_free { get; set; }
 }
 
 public enum DiagnosticsMode
