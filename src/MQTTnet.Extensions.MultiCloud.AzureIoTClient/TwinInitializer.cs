@@ -5,28 +5,9 @@ using System.Text.Json.Nodes;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
-    public class TwinInitializer
+    internal class TwinInitializer
     {
-        public static async Task InitPropertyAsync<T>(IMqttClient client, string twin, IWritableProperty<T> prop, string propName, T defaultValue)
-        {
-            var ack = InitFromTwin(twin, propName, defaultValue);
-            prop.Version = ack.Version;
-            Ack<T> acceptedAck;
-            if (prop.OnMessage != null)
-            {
-                acceptedAck = await prop.OnMessage.Invoke(ack.Value);
-            }
-            else
-            {
-                acceptedAck = ack;
-                acceptedAck.Description = "Init from default value";
-                acceptedAck.Status = 203;
-            }
-            var roBinder = new ReadOnlyProperty<Ack<T>>(client, propName);
-            await roBinder.SendMessageAsync(acceptedAck);
-        }
-
-        private static Ack<T> InitFromTwin<T>(string twinJson, string propName, T defaultValue)
+        internal static Ack<T> InitFromTwin<T>(string twinJson, string propName, T defaultValue)
         {
             if (string.IsNullOrEmpty(twinJson))
             {

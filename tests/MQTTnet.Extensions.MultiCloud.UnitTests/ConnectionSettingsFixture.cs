@@ -56,7 +56,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         public void InvalidValuesDontUseDefaults()
         {
             string cs = "HostName=<hubname>.azure-devices.net;DeviceId=<deviceId>;SharedAccessKey=<SasKey>;MaxRetries=-2;SasMinutes=aa;RetryInterval=4.3";
-            ConnectionSettings dcs = new ConnectionSettings(cs);
+            ConnectionSettings dcs = new(cs);
             Assert.Equal("<hubname>.azure-devices.net", dcs.HostName);
             Assert.Equal("<deviceId>", dcs.DeviceId);
             Assert.Equal("<SasKey>", dcs.SharedAccessKey);
@@ -103,7 +103,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void ToStringReturnConnectionString()
         {
-            ConnectionSettings dcs = new ConnectionSettings()
+            ConnectionSettings dcs = new()
             {
                 HostName = "h",
                 DeviceId = "d",
@@ -117,7 +117,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void ToStringReturnConnectionStringWithModule()
         {
-            ConnectionSettings dcs = new ConnectionSettings()
+            ConnectionSettings dcs = new()
             {
                 HostName = "h",
                 DeviceId = "d",

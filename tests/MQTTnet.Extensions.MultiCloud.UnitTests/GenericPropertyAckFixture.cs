@@ -8,7 +8,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void BuildAck()
         {
-            GenericPropertyAck ack = new GenericPropertyAck()
+            GenericPropertyAck ack = new()
             {
                 Status = 200,
                 Value = Json.Stringify(new { myProp = "myVal" })

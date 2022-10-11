@@ -1,16 +1,11 @@
+using dtmi_rido_pnp_sensehat;
 using Iot.Device.SenseHat;
-
 using Microsoft.ApplicationInsights;
-
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
-
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using Color = System.Drawing.Color;
-
-using pi_sense_device_protos;
-using dtmi_rido_pnp_sensehat;
 
 namespace pi_sense_device;
 
@@ -18,49 +13,40 @@ public class Device : BackgroundService
 {
     private Isensehat? client;
 
-    private readonly ILogger<Device> _logger;
-    private readonly IConfiguration _configuration;
     private readonly TelemetryClient _telemetryClient;
-
+    private readonly SenseHatFactory _senseHatFactory;
+    private readonly ILogger<Device> _logger;
     private const int default_interval = 5;
-    private readonly ConnectionSettings connectionSettings;
-    public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
+
+    public Device(SenseHatFactory factory, TelemetryClient tc, ILogger<Device> logger)
     {
-        _logger = logger;
-        _configuration = configuration;
+        _senseHatFactory = factory;
         _telemetryClient = tc;
-        connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+        _logger = logger;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
-        _logger.LogWarning($"Connecting to .. {cs}");
-        var factory = new SenseHatFactory(_configuration);
-        client = await factory.CreateSenseHatClientAsync(_configuration.GetConnectionString("cs"));
-        _logger.LogWarning($"Connected to {SenseHatFactory.computedSettings}");
+        client = await _senseHatFactory.CreateSenseHatClientAsync("cs", stoppingToken);
 
         client.Property_interval.OnMessage = Property_interval_UpdateHandler;
         client.Property_combineTelemetry.OnMessage = Property_combineTelemetry_UpdateHandler;
         client.Command_ChangeLCDColor.OnMessage = Cmd_ChangeLCDColor_Handler;
 
 
-        await client.Property_sdkInfo.SendMessageAsync(SenseHatFactory.NuGetPackageVersion);
+        await client.Property_sdkInfo.SendMessageAsync(SenseHatFactory.NuGetPackageVersion, stoppingToken);
 
         client.Property_interval.Value = default_interval;
         client.Property_combineTelemetry.Value = true;
 
-        //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
+        await client.Property_combineTelemetry.InitPropertyAsync(client.InitialState, true, stoppingToken);
+        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
 
-
-        //await client.Property_combineTelemetry.InitPropertyAsync(client.InitialState, true, stoppingToken);
-        //await client.Property_combineTelemetry.ReportPropertyAsync(stoppingToken);
-
-        await client.Property_piri.SendMessageAsync($"os: {Environment.OSVersion}, proc: {RuntimeInformation.ProcessArchitecture}, clr: {Environment.Version}");
+        await client.Property_piri.SendMessageAsync($"os: {Environment.OSVersion}, proc: {RuntimeInformation.ProcessArchitecture}, clr: {Environment.Version}", stoppingToken);
 
         var netInfo = "eth: " + GetLocalIPv4();
         _telemetryClient.TrackTrace(netInfo);
-        await client.Property_ipaddr.SendMessageAsync(netInfo);
+        await client.Property_ipaddr.SendMessageAsync(netInfo, stoppingToken);
         
         //var tp = new TelemetryProtobuf<Telemetries>(client.Connection, string.Empty) ;
 
@@ -70,7 +56,7 @@ public class Device : BackgroundService
             ArgumentNullException.ThrowIfNull(client);
             if (RuntimeInformation.ProcessArchitecture == Architecture.Arm)
             {
-                using SenseHat sh = new SenseHat();
+                using SenseHat sh = new();
                 _telemetryClient.TrackMetric("temp1", sh.Temperature.DegreesCelsius);
                 if (client.Property_combineTelemetry.Value)
                 {
@@ -81,13 +67,6 @@ public class Device : BackgroundService
                         h = sh.Humidity.Percent,
                         p = sh.Pressure.Pascals
                     }, stoppingToken);
-                    //await tp.SendMessageAsync(new Telemetries
-                    //{
-                    //    Temperature1 = sh.Temperature.DegreesCelsius,
-                    //    Temperature2 = sh.Temperature2.DegreesCelsius,
-                    //    Humidity = sh.Humidity.Percent,
-                    //    Pressure =sh.Pressure.Bars
-                    //});
                 }
                 else
                 {
@@ -113,15 +92,7 @@ public class Device : BackgroundService
                         h = Environment.WorkingSet / 1000000,
                         p = Environment.WorkingSet / 1000000
                     }, stoppingToken);
-
-                    //await tp.SendMessageAsync(new Telemetries
-                    //{
-                    //    Temperature1 = t1,
-                    //    Temperature2 = GenerateSensorReading(t1, 5, 35),
-                    //    Humidity = Environment.WorkingSet / 1000000,
-                    //    Pressure = Environment.WorkingSet / 1000000
-                    //}, stoppingToken);
-
+               
                 }
                 else
                 {
@@ -132,7 +103,7 @@ public class Device : BackgroundService
                 }
             }
             int interval = client!.Property_interval.Value;
-            _logger.LogInformation($"Waiting {interval} s to send telemetry");
+            _logger.LogInformation("Waiting {interval} s to send telemetry", interval);
             await Task.Delay(interval * 1000, stoppingToken);
         }
     }
@@ -185,7 +156,7 @@ public class Device : BackgroundService
 
         if (RuntimeInformation.ProcessArchitecture == Architecture.Arm)
         {
-            using SenseHat sh = new SenseHat();
+            using SenseHat sh = new ();
             sh.Fill(color);
         }
         else
@@ -233,7 +204,7 @@ public class Device : BackgroundService
         return output;
     }
 
-    private readonly Random random = new Random();
+    private readonly Random random = new ();
 
     private double GenerateSensorReading(double currentValue, double min, double max)
     {

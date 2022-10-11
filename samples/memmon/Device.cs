@@ -1,19 +1,16 @@
-using dtmi_rido_pnp_memmon;
+using dtmi_rido_memmon;
 using Humanizer;
 using Microsoft.ApplicationInsights;
 using MQTTnet.Extensions.MultiCloud;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace memmon;
 
 public class Device : BackgroundService
 {
-    private readonly ILogger<Device> _logger;
-    private readonly IConfiguration _configuration;
     private readonly TelemetryClient _telemetryClient;
 
     private readonly Stopwatch clock = Stopwatch.StartNew();
@@ -23,52 +20,44 @@ public class Device : BackgroundService
     private int reconnectCounter = 0;
 
     private double telemetryWorkingSet = 0;
+    private double managedMemory = 0;
     private const bool default_enabled = true;
-    private const int default_interval = 45;
+    private const int default_interval = 500;
 
     private string lastDiscconectReason = string.Empty;
 
     private Imemmon client;
     private ConnectionSettings connectionSettings;
+    private readonly MemMonFactory memmonFactory;
 
     private string infoVersion = string.Empty;
 
-    public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
+    public Device(TelemetryClient tc, MemMonFactory clientFactory)
     {
-        _logger = logger;
-        _configuration = configuration;
         _telemetryClient = tc;
+        memmonFactory = clientFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
-        _logger.LogWarning($"Connecting to..{cs}");
-        var memmonFactory = new MemMonFactory(_configuration);
-        client = await memmonFactory.CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
+        client = await memmonFactory.CreateMemMonClientAsync("cs", stoppingToken);
+
         client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
+        
         connectionSettings = MemMonFactory.connectionSettings;
-        _logger.LogWarning("Connected");
-
         infoVersion = MemMonFactory.NuGetPackageVersion;
-
+        
         client.Property_enabled.OnMessage = Property_enabled_UpdateHandler;
         client.Property_interval.OnMessage= Property_interval_UpdateHandler;
         client.Command_getRuntimeStats.OnMessage= Command_getRuntimeStats_Handler;
+        client.Command_isPrime.OnMessage = Command_isPrime_Handler;
+        client.Command_malloc.OnMessage = Command_malloc_Hanlder;
+        client.Command_free.OnMessage = Command_free_Hanlder;
 
-        if (client is HubMqttClient)
-        {
-            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
-            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_enabled, "enabled", default_enabled);
-        }
-        else
-        {
-            await PropertyInitializer.InitPropertyAsync(client.Property_interval, default_interval);
-            await PropertyInitializer.InitPropertyAsync(client.Property_enabled, default_enabled);
-        }
+        await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
+        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
          
-        
-        await client.Property_started.SendMessageAsync(DateTime.Now);
+        await client.Property_started.SendMessageAsync(DateTime.Now, stoppingToken);
 
         RefreshScreen(this);
 
@@ -76,12 +65,15 @@ public class Device : BackgroundService
         {
             if (client.Property_enabled.Value == true)
             {
-                telemetryWorkingSet = Environment.WorkingSet;
+                telemetryWorkingSet = Environment.WorkingSet.Bytes().Megabytes;
+                managedMemory = GC.GetTotalMemory(true).Bytes().Megabytes;
                 await client.Telemetry_workingSet.SendMessageAsync(telemetryWorkingSet, stoppingToken);
+                await client.Telemetry_managedMemory.SendMessageAsync(managedMemory, stoppingToken);
                 telemetryCounter++;
                 _telemetryClient.TrackMetric("WorkingSet", telemetryWorkingSet);
+                _telemetryClient.TrackMetric("managedMemory", managedMemory);
             }
-            await Task.Delay(client.Property_interval.Value * 1000, stoppingToken);
+            await Task.Delay(client.Property_interval.Value, stoppingToken);
         }
     }
 
@@ -150,6 +142,51 @@ public class Device : BackgroundService
         return await Task.FromResult(ack);
     }
 
+    private async Task<bool> Command_isPrime_Handler(int number)
+    {
+        commandCounter++;
+        IEnumerable<string> Multiples(int number)
+        {
+            return from n1 in Enumerable.Range(2, number / 2)
+                   from n2 in Enumerable.Range(2, n1)
+                   where n1 * n2 == number
+                   select $"{n1} x {n2} => {number}";
+        }
+        
+        bool result =  Multiples(number).Any();
+        return await Task.FromResult(!result);
+
+    }
+
+    List<string> memory = new();
+    IntPtr memoryPtr = IntPtr.Zero;
+    private async Task<string> Command_malloc_Hanlder(int number)
+    {
+        commandCounter++;
+        for (int i = 0; i < number; i++)
+        {
+            memory.Add(i.ToOrdinalWords());
+        }
+
+        memoryPtr = Marshal.AllocHGlobal(number);
+        return await Task.FromResult(string.Empty);
+    }
+
+    private async Task<string> Command_free_Hanlder(string empty)
+    {
+        commandCounter++;
+        await _telemetryClient.FlushAsync(CancellationToken.None);
+        memory = new List<string>();
+        GC.Collect(2, GCCollectionMode.Forced, false);
+        if (memoryPtr != IntPtr.Zero)
+        {
+            Marshal.FreeHGlobal(memoryPtr);
+            memoryPtr = IntPtr.Zero;
+        }    
+        return await Task.FromResult(string.Empty);
+    }
+
+
     private async Task<Dictionary<string, string>> Command_getRuntimeStats_Handler(DiagnosticsMode req)
     {
         commandCounter++;
@@ -180,6 +217,8 @@ public class Device : BackgroundService
             result.Add("telemetry: ", telemetryCounter.ToString());
             result.Add("command: ", commandCounter.ToString());
             result.Add("reconnects: ", reconnectCounter.ToString());
+            result.Add("workingSet", Environment.WorkingSet.Bytes().ToString());
+            result.Add("GC Memmory", GC.GetTotalAllocatedBytes().Bytes().ToString());
         }
         return await Task.FromResult(result);
     }
@@ -212,7 +251,8 @@ public class Device : BackgroundService
             //AppendLineWithPadRight(sb, $"Twin send: {RidCounter.Current}");
             AppendLineWithPadRight(sb, $"Command messages: {commandCounter}");
             AppendLineWithPadRight(sb, " ");
-            AppendLineWithPadRight(sb, $"WorkingSet: {telemetryWorkingSet.Bytes()}");
+            AppendLineWithPadRight(sb, $"WorkingSet: {telemetryWorkingSet} MB");
+            AppendLineWithPadRight(sb, $"ManagedMemory: {managedMemory} MB");
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
             AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");

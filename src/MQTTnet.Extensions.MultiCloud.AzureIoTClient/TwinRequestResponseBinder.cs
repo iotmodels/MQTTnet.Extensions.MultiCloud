@@ -11,8 +11,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 public class TwinRequestResponseBinder
 {
     internal int lastRid = -1;
-    private readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingGetTwinRequests = new ConcurrentDictionary<int, TaskCompletionSource<string>>();
-    private readonly ConcurrentDictionary<int, TaskCompletionSource<int>> pendingUpdateTwinRequests = new ConcurrentDictionary<int, TaskCompletionSource<int>>();
+    private readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingGetTwinRequests = new();
+    private readonly ConcurrentDictionary<int, TaskCompletionSource<int>> pendingUpdateTwinRequests = new();
     public Func<string, Task<string>>? OnMessage { get; set; }
 
     private readonly IMqttClient connection;
@@ -26,7 +26,7 @@ public class TwinRequestResponseBinder
             var topic = m.ApplicationMessage.Topic;
             if (topic.StartsWith("$iothub/twin/res/200"))
             {
-                string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload ?? new byte[0]);
+                string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload ?? Array.Empty<byte>());
                 (int rid, _) = TopicParser.ParseTopic(topic);
                 if (pendingGetTwinRequests.TryGetValue(rid, out var tcs))
                 {
@@ -40,7 +40,7 @@ public class TwinRequestResponseBinder
             } 
             else if (topic.StartsWith("$iothub/twin/res/204"))
             {
-                string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload ?? new byte[0]);
+                string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload ?? Array.Empty<byte>());
                 (int rid, int version) = TopicParser.ParseTopic(topic);
                 if (pendingUpdateTwinRequests.TryGetValue(rid, out var tcs)!)
                 {
@@ -62,13 +62,15 @@ public class TwinRequestResponseBinder
 
     public async Task<string> GetTwinAsync(CancellationToken cancellationToken = default)
     {
-        await connection.SubscribeAsync("$iothub/twin/res/#");
+
+        await connection.SubscribeWithReplyAsync("$iothub/twin/res/#", cancellationToken);
+
         var rid = RidCounter.NextValue();
         lastRid = rid; // for testing
         var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         var puback = await connection.PublishBinaryAsync(
             $"$iothub/twin/GET/?$rid={rid}",
-            new byte[0],
+            Array.Empty<byte>(),
             MqttQualityOfServiceLevel.AtMostOnce,
             false,
             cancellationToken);
@@ -93,11 +95,11 @@ public class TwinRequestResponseBinder
 
     public async Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default)
     {
-        await connection.SubscribeWithReplyAsync("$iothub/twin/res/#");
+        await connection.SubscribeWithReplyAsync("$iothub/twin/res/#", cancellationToken);
         byte[] patchBytes;
-        if (payload is string)
+        if (payload is string @string)
         {
-            patchBytes = Encoding.UTF8.GetBytes((string)payload);
+            patchBytes = Encoding.UTF8.GetBytes(@string);
         }
         else
         {
@@ -148,11 +150,13 @@ public class TwinRequestResponseBinder
             var segments = topic.Split('/');
             int twinVersion = -1;
             int rid = -1;
-            if (topic.Contains("?"))
+            if (topic.Contains('?'))
             {
-                var qs = HttpUtility.ParseQueryString(segments[segments.Length - 1]);
-                int.TryParse(qs["$rid"], out rid);
-                twinVersion = Convert.ToInt32(qs["$version"]);
+                var qs = HttpUtility.ParseQueryString(segments[^1]);
+                if (int.TryParse(qs["$rid"], out rid))
+                {
+                    twinVersion = Convert.ToInt32(qs["$version"]);
+                }
             }
             return (rid, twinVersion);
         }

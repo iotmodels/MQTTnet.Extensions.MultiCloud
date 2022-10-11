@@ -5,32 +5,33 @@ using MQTTnet.Extensions.MultiCloud.Connections;
 
 namespace pi_sense_device
 {
-    internal class SenseHatFactory
+    public class SenseHatFactory
     {
         private static string nugetPackageVersion = string.Empty;
         public static string NuGetPackageVersion => nugetPackageVersion;
 
         private readonly IConfiguration _configuration;
-        public SenseHatFactory(IConfiguration configuration)
+        private readonly ILogger<SenseHatFactory> _logger;
+        public SenseHatFactory(IConfiguration configuration, ILogger<SenseHatFactory> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         internal static string ComputeDeviceKey(string masterKey, string deviceId) =>
             Convert.ToBase64String(new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(masterKey)).ComputeHash(System.Text.Encoding.UTF8.GetBytes(deviceId)));
 
-        internal static ConnectionSettings computedSettings = new ConnectionSettings();
+        internal static ConnectionSettings computedSettings = new ();
 
-        public async Task<Isensehat> CreateSenseHatClientAsync(string connectionString, CancellationToken cancellationToken = default)
+        public async Task<Isensehat> CreateSenseHatClientAsync(string connectionStringName, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new ArgumentNullException(nameof(connectionString));
-            }
+            Isensehat client;
+            string connectionString = _configuration.GetConnectionString(connectionStringName);
+            var cs = new ConnectionSettings(connectionString);
+            _logger.LogWarning("Connecting to .. {cs}", cs);
 
             if (connectionString.Contains("IdScope") || connectionString.Contains("SharedAccessKey"))
             {
-                var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
 
                 if (cs.IdScope != null && _configuration["masterKey"] != null)
                 {
@@ -38,17 +39,19 @@ namespace pi_sense_device
                     var masterKey = _configuration.GetValue<string>("masterKey");
                     var deviceKey = ComputeDeviceKey(masterKey, deviceId);
                     var newCs = $"IdScope={cs.IdScope};DeviceId={deviceId};SharedAccessKey={deviceKey};SasMinutes={cs.SasMinutes}";
-                    return await CreateHubClientAsync(newCs, cancellationToken);
+                    client =  await CreateHubClientAsync(newCs, cancellationToken);
                 }
                 else
                 {
-                    return await CreateHubClientAsync(connectionString, cancellationToken);
+                    client = await CreateHubClientAsync(connectionString, cancellationToken);
                 }
             }
             else
             {
-                return await CreateBrokerClientAsync(connectionString, cancellationToken);
+                client =  await CreateBrokerClientAsync(connectionString, cancellationToken);
             }
+            _logger.LogWarning("Connected to {cs}", SenseHatFactory.computedSettings);
+            return client;
         }
 
         private static async Task<dtmi_rido_pnp_sensehat.mqtt.sensehat> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)
@@ -63,7 +66,7 @@ namespace pi_sense_device
         private static async Task<dtmi_rido_pnp_sensehat.hub.sensehat> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
             var cs = connectionString + ";ModelId=" + Isensehat.ModelId;
-            var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
+            var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, cancellationToken);
             var client = new dtmi_rido_pnp_sensehat.hub.sensehat(hub);
             computedSettings = HubDpsFactory.ComputedSettings!;
             nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;

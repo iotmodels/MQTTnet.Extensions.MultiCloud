@@ -16,7 +16,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(ConnectionSettings cs, CancellationToken cancellationToken = default)
         {
             MqttClient? mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
-            var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs).Build());
+            var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs).Build(), cancellationToken);
             if (connAck.ResultCode != MqttClientConnectResultCode.Success)
             {
                 throw new ApplicationException($"Cannot connect to {cs}");

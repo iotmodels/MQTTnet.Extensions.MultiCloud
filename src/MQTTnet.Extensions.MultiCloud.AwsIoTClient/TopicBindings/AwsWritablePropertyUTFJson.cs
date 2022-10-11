@@ -28,5 +28,10 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings
         {
             throw new System.NotImplementedException();
         }
+
+        public Task InitPropertyAsync(string intialState, T defaultValue, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

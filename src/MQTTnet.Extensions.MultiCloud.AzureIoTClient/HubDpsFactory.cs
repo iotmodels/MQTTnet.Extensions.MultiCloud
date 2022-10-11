@@ -7,7 +7,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 {
     public class HubDpsFactory
     {
-        private static Timer? reconnectTimer;
         public static string NuGetPackageVersion => $"{ThisAssembly.AssemblyName} {ThisAssembly.NuGetPackageVersion}";
 
         public static ConnectionSettings? ComputedSettings { get; private set; }
@@ -34,7 +33,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             }
             else
             {
-                connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithAzureIoTHubCredentials(cs).Build(), cancellationToken);
+                connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs).Build(), cancellationToken);
             }
             if (connAck.ResultCode != MqttClientConnectResultCode.Success)
             {
@@ -54,14 +53,13 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             Trace.TraceInformation("Reconnecting before SasToken expires");
             var connAck = mqtt.ConnectAsync(
                 new MqttClientOptionsBuilder()
-                    .WithAzureIoTHubCredentials(connectionSettings)
+                    .WithConnectionSettings(connectionSettings)
                     .WithKeepAlivePeriod(TimeSpan.FromSeconds(connectionSettings.KeepAliveInSeconds))
                     .Build(),
                 cancellationToken).Result;
 
             mqtt.ReSuscribe();
-
-            reconnectTimer = new Timer(o =>
+            ConnectionTimer.reconnectTimer = new Timer(o =>
             {
                 ConnectWithTimer(mqtt, connectionSettings, cancellationToken);
             }, null, (connectionSettings.SasMinutes * 60 * 1000) - 10, 0);

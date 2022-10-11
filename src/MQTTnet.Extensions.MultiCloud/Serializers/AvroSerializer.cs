@@ -11,24 +11,25 @@ public class AvroSerializer : IMessageSerializer
         schema = s;
     }
 
-    public T? FromBytes<T>(byte[] payload, string name = "")
-    {
-        using MemoryStream mem = new(payload);
-        BinaryDecoder decoder = new(mem);
-        SpecificDefaultReader reader = new(schema, schema);
-        T result = default!;
-        reader.Read(result, decoder);
-        return result;
-    }
-
     public byte[] ToBytes<T>(T payload, string name = "")
     {
-        using MemoryStream ms = new MemoryStream();
-        BinaryEncoder encoder = new BinaryEncoder(ms);
-        SpecificDefaultWriter writer = new SpecificDefaultWriter(schema);
+        using MemoryStream ms = new();
+        BinaryEncoder encoder = new(ms);
+        SpecificDefaultWriter writer = new(schema);
         writer.Write(payload, encoder);
         ms.Position = 0;
         byte[] bytes = ms.ToArray();
         return bytes;
+    }
+
+    public bool TryReadFromBytes<T>(byte[] payload, string name, out T result)
+    {
+        using MemoryStream mem = new(payload);
+        BinaryDecoder decoder = new(mem);
+        SpecificDefaultReader reader = new(schema, schema);
+        T val = default!;
+        reader.Read(val, decoder);
+        result = val;
+        return true;
     }
 }

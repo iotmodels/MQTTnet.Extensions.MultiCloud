@@ -32,19 +32,9 @@ public class Device : BackgroundService
         client.Property_interval.OnMessage = Property_interval_UpdateHandler;
         client.Command_echo.OnMessage = Cmd_echo_Handler;
 
+        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
 
-        await client.Property_sdkInfo.SendMessageAsync(ClientFactory.NuGetPackageVersion);
-
-        if (client is HubMqttClient)
-        {
-            HubMqttClient hubClient = (HubMqttClient)client;
-            client.InitialState = await hubClient.GetTwinAsync();
-            await TwinInitializer.InitPropertyAsync(client.Connection, client.InitialState, client.Property_interval, "interval", default_interval);
-        }
-        else
-        {
-            await PropertyInitializer.InitPropertyAsync(client.Property_interval, default_interval);
-        }
+        await client.Property_sdkInfo.SendMessageAsync(ClientFactory.NuGetPackageVersion, stoppingToken);
 
         double lastTemp = 21;
         while (!stoppingToken.IsCancellationRequested)

@@ -15,8 +15,23 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         private const int defaultInterval = 23;
         private readonly RegistryManager rm = RegistryManager.CreateFromConnectionString(hubConnectionString);
 
+
+        [Fact(Skip = "hangs test")]
+        public async Task GetTwinReturnsJson()
+        {
+            //var deviceId = "integ-test" + new Random().Next(100);
+            //var device = await GetOrCreateDeviceAsync(deviceId);
+            //var hubConnection = await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}");
+            var cs = "HostName=rido-freetier.azure-devices.net;DeviceId=testdevice;SharedAccessKey=MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=";
+            var hubConnection = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
+            Assert.True(hubConnection.IsConnected);
+            var hubClient = new HubMqttClient(hubConnection);
+            var twin = await hubClient.GetTwinAsync();
+            Assert.True(twin.Length > 0);
+        }
+
         //[Fact, Trait("e2e", "hub")]
-        public async Task NewDeviceSendDefaults()
+        internal async Task NewDeviceSendDefaults()
         {
             var deviceId = "memmon-test" + new Random().Next(100);
             var device = await GetOrCreateDeviceAsync(deviceId);
@@ -33,7 +48,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
 
 
             var twin = await td.GetTwinAsync();
-            await TwinInitializer.InitPropertyAsync(td.Connection, twin, td.Property_interval, "interval", defaultInterval);
+            //await TwinInitializer.InitPropertyAsync(td.Connection, twin, td.Property_interval, "interval", defaultInterval);
             await Task.Delay(500);
             var serviceTwin = await rm.GetTwinAsync(deviceId);
             var intervalTwin = serviceTwin.Properties.Reported["interval"];
@@ -48,7 +63,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         }
 
         //[Fact(Skip = "investigate timeout")]
-        public async Task DeviceReadsSettingsAtStartup()
+        internal async Task DeviceReadsSettingsAtStartup()
         {
 
             var deviceId = "memmon-test" + new Random().Next(100);
@@ -110,7 +125,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         }
 
         //[Fact(Skip = "Threading issues"), Trait("e2e", "hub")]
-        public async Task UpdatesDesiredPropertyWhenOnline()
+        private async Task UpdatesDesiredPropertyWhenOnline()
         {
 
             var deviceId = "memmon-test" + new Random().Next(100);
@@ -162,7 +177,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
         }
 
         //[Fact, Trait("e2e", "hub")]
-        public async Task CommandsGetCalled()
+        internal async Task CommandsGetCalled()
         {
             var deviceId = "memmon-test" + new Random().Next(100);
             var device = await GetOrCreateDeviceAsync(deviceId);

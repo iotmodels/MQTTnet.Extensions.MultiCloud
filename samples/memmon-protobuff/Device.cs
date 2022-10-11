@@ -26,9 +26,7 @@ public class Device : BackgroundService
     private double telemetryWorkingSet = 0;
     private const bool default_enabled = true;
     private const int default_interval = 45;
-
-    private string lastDiscconectReason = string.Empty;
-
+   
     private MemmonClient client;
     private ConnectionSettings connectionSettings;
 
@@ -44,7 +42,7 @@ public class Device : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var cs = new ConnectionSettings(_configuration.GetConnectionString("cs")) { ModelId = MemmonClient.ModelId };
-        _logger.LogWarning($"Connecting to..{cs}");
+        _logger.LogWarning("Connecting to..{cs}", cs);
         var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
         connectionSettings = cs;
         mqtt.DisconnectedAsync += Connection_DisconnectedAsync;
@@ -63,7 +61,7 @@ public class Device : BackgroundService
         client.Props.Interval = default_interval;
 
 
-        await client.AllProperties.SendMessageAsync(client.Props);
+        await client.AllProperties.SendMessageAsync(client.Props, stoppingToken);
 
         RefreshScreen(this);
 
@@ -88,7 +86,7 @@ public class Device : BackgroundService
             _telemetryClient.TrackException(arg.Exception);
         }
 
-        lastDiscconectReason = arg.ReasonString;
+        //lastDiscconectReason = arg.ReasonString;
         reconnectCounter++;
         await Task.Yield();
     }

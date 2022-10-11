@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections;
 
-public class X509ClientCertificateLocator
+internal class X509ClientCertificateLocator
 {
     public static X509Certificate2 Load(string certSettings)
     {
@@ -17,20 +17,18 @@ public class X509ClientCertificateLocator
         }
         else if (certSettings.Length == 40) //thumbprint
         {
-            using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+            using X509Store store = new(StoreName.My, StoreLocation.CurrentUser);
+            store.Open(OpenFlags.ReadOnly);
+            var certs = store.Certificates.Find(X509FindType.FindByThumbprint, certSettings, false);
+            if (certs != null && certs.Count > 0)
             {
-                store.Open(OpenFlags.ReadOnly);
-                var certs = store.Certificates.Find(X509FindType.FindByThumbprint, certSettings, false);
-                if (certs != null && certs.Count > 0)
-                {
-                    cert = certs[0];
-                }
-                store.Close();
+                cert = certs[0];
             }
+            store.Close();
         }
         else if (certSettings.Contains(".pem|")) //mycert.pem|mycert.key
         {
-#if NET6_0_OR_GREATER
+
             var segments = certSettings.Split('|');
             var pemPath = segments[0];
             var keyPath = segments[1];
@@ -47,9 +45,6 @@ public class X509ClientCertificateLocator
                 var thisCert = X509Certificate2.CreateFromEncryptedPemFile(pemPath, keyPasswd, keyPath);
                 cert = new X509Certificate2(thisCert.Export(X509ContentType.Pkcs12));
             }
-#else
-            throw new NotSupportedException("PEM files not supported before net6");
-#endif
         }
         else
         {

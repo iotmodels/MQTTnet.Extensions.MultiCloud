@@ -13,8 +13,9 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 
     protected bool UnwrapRequest = false;
     protected bool WrapResponse = false;
-
     protected bool RetainResponse = false;
+    protected bool CleanRetained = false;
+    
 
     public Func<T, Task<TResp>>? OnMessage { get; set; }
 
@@ -33,21 +34,17 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
             var topic = m.ApplicationMessage.Topic;
             if (topic.StartsWith(requestTopicPattern!.Replace("/#", string.Empty)))
             {
-                if (OnMessage != null)
+                if (serializer.TryReadFromBytes<T>(m.ApplicationMessage.Payload, UnwrapRequest ? _name : string.Empty, out T req))
                 {
                     var tp = TopicParser.ParseTopic(topic);
                     PreProcessMessage?.Invoke(tp);
 
-                    T req = serializer.FromBytes<T>(m.ApplicationMessage.Payload, UnwrapRequest ? _name : string.Empty)!;
-                    if (req != null)
+                    TResp resp = await OnMessage?.Invoke(req)!;
+
+                    if (resp != null)
                     {
-                        TResp resp = await OnMessage.Invoke(req);
                         byte[] responseBytes = serializer.ToBytes(resp, WrapResponse ? _name : string.Empty);
-
-                        string? resTopic = responseTopicPattern?
-                            .Replace("{rid}", tp.Rid.ToString())
-                            .Replace("{version}", tp.Version.ToString());
-
+                        string? resTopic = responseTopicPattern?.Replace("{rid}", tp.Rid.ToString()).Replace("{version}", tp.Version.ToString());
                         _ = connection.PublishAsync(
                             new MqttApplicationMessageBuilder()
                                 .WithTopic(resTopic)
@@ -55,10 +52,11 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                                 .WithRetainFlag(RetainResponse)
                                 .Build());
-                    }
-                    else
-                    {
-                        Trace.TraceWarning($"Cannot parse incoming message name: {_name} payload: {Encoding.UTF8.GetString(m.ApplicationMessage.Payload)}");
+
+                        if (CleanRetained && m.ApplicationMessage.Retain) // clean retain once received
+                        {
+                            _ = connection.PublishBinaryAsync(topic, null, MqttQualityOfServiceLevel.AtLeastOnce, true);
+                        }
                     }
                 }
             }
@@ -72,7 +70,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
         set
         {
             requestTopicPattern = value?.Replace("{clientId}", _connection.Options.ClientId).Replace("{name}", _name)!;
-            _ = _connection.SubscribeWithReplyAsync(requestTopicPattern);
+            
         }
     }
 
@@ -83,6 +81,17 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
         set
         {
             responseTopicPattern = value?.Replace("{clientId}", _connection.Options.ClientId).Replace("{name}", _name)!;
+        }
+    }
+
+    private string? subscribeTopicPattern;
+    protected string? SubscribeTopicPattern 
+    { 
+        get => subscribeTopicPattern;
+        set
+        {
+            subscribeTopicPattern = value?.Replace("{clientId}", _connection.Options.ClientId).Replace("{name}", _name)!;
+            _ = _connection.SubscribeWithReplyAsync(subscribeTopicPattern);
         }
     }
 }

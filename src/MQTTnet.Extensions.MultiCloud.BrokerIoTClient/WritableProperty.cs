@@ -16,9 +16,11 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
         _name = name;
         _connection = c;
 
-        RequestTopicPattern = "device/{clientId}/props/{name}/set/#";
+        SubscribeTopicPattern = "device/{clientId}/props/{name}/set/#";
+        RequestTopicPattern = "device/{clientId}/props/{name}/set";
         ResponseTopicPattern = "device/{clientId}/props/{name}/ack";
         RetainResponse = true;
+        CleanRetained = true;
         PreProcessMessage = tp =>
         {
             Version = tp.Version;
@@ -33,5 +35,20 @@ public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProp
             WrapMessage = false
         };
         await prop.SendMessageAsync(payload, cancellationToken);
+    }
+
+    public async Task InitPropertyAsync(string intialState, T defaultValue, CancellationToken cancellationToken = default)
+    {
+        Ack<T> ack = new()
+        {
+            Value = defaultValue,
+            Version = 0,
+            Status = 203,
+            Description = "init from default value"
+        };
+        Value = ack.Value;
+        Version = ack.Version;
+        await SendMessageAsync(ack, cancellationToken);
+
     }
 }

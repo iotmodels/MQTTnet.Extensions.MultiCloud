@@ -6,7 +6,7 @@ using MQTTnet.Extensions.MultiCloud.AwsIoTClient;
 using MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
-namespace dtmi_rido_pnp_memmon.aws;
+namespace dtmi_rido_memmon.aws;
 
 public class memmon : AwsMqttClient, Imemmon
 {
@@ -14,9 +14,14 @@ public class memmon : AwsMqttClient, Imemmon
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_workingSet { get; set; }
+    public ITelemetry<double> Telemetry_managedMemory { get; set; }
     public ICommand<DiagnosticsMode, Dictionary<string, string>> Command_getRuntimeStats { get; set; }
 
     public string InitialState => String.Empty;
+
+    public ICommand<int, bool> Command_isPrime { get; set; }
+    public ICommand<int> Command_malloc { get; set; }
+    public ICommand Command_free { get; set; }
 
     internal memmon(IMqttClient c) : base(c, Imemmon.ModelId)
     {

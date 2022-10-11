@@ -1,8 +1,5 @@
 ﻿using MQTTnet.Extensions.MultiCloud.Connections;
-using System;
-using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests

@@ -39,6 +39,7 @@ public class sensehat : HubMqttClient, Isensehat
         {
             WrapMessage = false
         };
+        InitialState = GetTwinAsync().Result;
     }
     public async Task SendTelemetryAsync(AllTelemetries payload, CancellationToken t = default)
     {

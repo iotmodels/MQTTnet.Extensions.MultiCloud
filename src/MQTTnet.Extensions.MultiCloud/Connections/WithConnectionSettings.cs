@@ -6,21 +6,28 @@ public static partial class MqttNetExtensions
 {
     public static MqttClientOptionsBuilder WithConnectionSettings(this MqttClientOptionsBuilder builder, ConnectionSettings cs, bool withLWT = false)
     {
-        builder
-            .WithTimeout(TimeSpan.FromSeconds(30))
-            .WithTcpServer(cs.HostName, cs.TcpPort)
-            .WithKeepAlivePeriod(TimeSpan.FromSeconds(cs.KeepAliveInSeconds))
-            .WithCleanSession(cs.CleanSession)
-            .WithTlsSettings(cs);
-
-        if (!string.IsNullOrEmpty(cs.Password))
+        if (cs.HostName != null && cs.HostName.Contains("azure-devices.net"))
         {
-            builder.WithCredentials(cs.UserName, cs.Password);
+            builder.WithAzureIoTHubCredentials(cs);
         }
-
-        if (cs.ClientId == "{machineName}")
+        else
         {
-            cs.ClientId = Environment.MachineName;
+            builder
+                .WithTimeout(TimeSpan.FromSeconds(30))
+                .WithTcpServer(cs.HostName, cs.TcpPort)
+                .WithKeepAlivePeriod(TimeSpan.FromSeconds(cs.KeepAliveInSeconds))
+                .WithCleanSession(cs.CleanSession)
+                .WithTlsSettings(cs);
+
+            if (!string.IsNullOrEmpty(cs.Password))
+            {
+                builder.WithCredentials(cs.UserName, cs.Password);
+            }
+
+            if (cs.ClientId == "{machineName}")
+            {
+                cs.ClientId = Environment.MachineName;
+            }
         }
 
         builder.WithClientId(cs.ClientId);
