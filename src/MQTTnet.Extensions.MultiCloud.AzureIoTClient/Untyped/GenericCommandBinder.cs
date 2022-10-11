@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud.Binders;
 using System.Text;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
@@ -27,9 +28,9 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
                     };
                     if (OnCmdDelegate != null && req != null)
                     {
-                        (int rid, _) = TopicParser.ParseTopic(topic);
+                        var tp = TopicParser.ParseTopic(topic);
                         GenericCommandResponse response = OnCmdDelegate.Invoke(req);
-                        _ = connection.PublishStringAsync($"$iothub/methods/res/{response.Status}/?$rid={rid}", response.ReponsePayload);
+                        _ = connection.PublishStringAsync($"$iothub/methods/res/{response.Status}/?$rid={tp.Rid}", response.ReponsePayload);
                     }
                 }
                 await Task.Yield();

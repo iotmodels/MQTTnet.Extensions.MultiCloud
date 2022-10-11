@@ -2,9 +2,9 @@
 
 namespace MQTTnet.Extensions.MultiCloud.Binders
 {
-    internal class TopicParser
+    public class TopicParser
     {
-        internal static TopicParameters ParseTopic(string topic)
+        public static TopicParameters ParseTopic(string topic)
         {
             var segments = topic.Split('/');
             int twinVersion = -1;
