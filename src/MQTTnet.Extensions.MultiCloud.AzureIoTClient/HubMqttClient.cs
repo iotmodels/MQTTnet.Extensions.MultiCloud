@@ -24,15 +24,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c, twinOperationsBinder!);
         }
 
-
-
-        //public async Task InitState()
-        //{
-        //    //await command.InitSubscriptionsAsync();
-        //    //await genericDesiredUpdateProperty.InitiSubscriptionsAsync();
-        //    InitialState = await GetTwinAsync();
-        //}
-
         public Func<GenericCommandRequest, GenericCommandResponse> OnCommandReceived
         {
             get => command.OnCmdDelegate!;
@@ -45,10 +36,8 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             set => genericDesiredUpdateProperty.OnProperty_Updated = value;
         }
 
-        public Task<string> GetTwinAsync(CancellationToken cancellationToken = default) =>
-            twinOperationsBinder.GetTwinAsync(cancellationToken);
-        public Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default) =>
-            twinOperationsBinder.UpdateTwinAsync(payload, cancellationToken);
+        public Task<string> GetTwinAsync(CancellationToken cancellationToken = default) => twinOperationsBinder.GetTwinAsync(cancellationToken);
+        public Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default) => twinOperationsBinder.UpdateTwinAsync(payload, cancellationToken);
         public Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default) =>
             Connection.PublishBinaryAsync($"devices/{Connection.Options.ClientId}/messages/events/",
                 new UTF8JsonSerializer().ToBytes(payload),

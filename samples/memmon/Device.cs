@@ -11,8 +11,6 @@ namespace memmon;
 
 public class Device : BackgroundService
 {
-    private readonly ILogger<Device> _logger;
-    private readonly IConfiguration _configuration;
     private readonly TelemetryClient _telemetryClient;
 
     private readonly Stopwatch clock = Stopwatch.StartNew();
@@ -30,14 +28,12 @@ public class Device : BackgroundService
 
     private Imemmon client;
     private ConnectionSettings connectionSettings;
-    private MemMonFactory memmonFactory;
+    private readonly MemMonFactory memmonFactory;
 
     private string infoVersion = string.Empty;
 
-    public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc, MemMonFactory clientFactory)
+    public Device(TelemetryClient tc, MemMonFactory clientFactory)
     {
-        _logger = logger;
-        _configuration = configuration;
         _telemetryClient = tc;
         memmonFactory = clientFactory;
     }
@@ -162,7 +158,7 @@ public class Device : BackgroundService
 
     }
 
-    List<string> memory = new List<string>();
+    List<string> memory = new();
     IntPtr memoryPtr = IntPtr.Zero;
     private async Task<string> Command_malloc_Hanlder(int number)
     {
