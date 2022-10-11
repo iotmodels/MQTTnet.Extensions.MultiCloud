@@ -59,30 +59,6 @@
     },
     {
       "@type": "Command",
-      "name": "isPrime",
-      "request": {
-        "name": "isPrimeReq",
-        "schema": "integer"
-      },
-      "response": {
-        "name": "isPrimeRes",
-        "schema": "boolean"
-      }
-    },
-    {
-      "@type": "Command",
-      "name": "malloc",
-      "request": {
-        "name": "allocations",
-        "schema": "integer"
-      }
-    },
-    {
-      "@type": "Command",
-      "name": "free"
-    },
-    {
-      "@type": "Command",
       "name": "getRuntimeStats",
       "request": {
         "@type": "CommandPayload",
