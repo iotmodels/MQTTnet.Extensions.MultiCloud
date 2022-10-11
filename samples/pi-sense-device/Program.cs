@@ -7,6 +7,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddHostedService<Device>();
+        services.AddSingleton<SenseHatFactory>();
         services.AddApplicationInsightsTelemetryWorkerService();
     })
     .Build();

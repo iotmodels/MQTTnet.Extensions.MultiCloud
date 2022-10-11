@@ -1,18 +1,11 @@
+using dtmi_rido_pnp_sensehat;
 using Iot.Device.SenseHat;
-
 using Microsoft.ApplicationInsights;
-
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
-
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using Color = System.Drawing.Color;
-
-using pi_sense_device_protos;
-using dtmi_rido_pnp_sensehat;
-using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 namespace pi_sense_device;
 
@@ -20,26 +13,21 @@ public class Device : BackgroundService
 {
     private Isensehat? client;
 
-    private readonly ILogger<Device> _logger;
-    private readonly IConfiguration _configuration;
     private readonly TelemetryClient _telemetryClient;
-
+    private readonly SenseHatFactory _senseHatFactory;
+    private readonly ILogger<Device> _logger;
     private const int default_interval = 5;
-    public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
+
+    public Device(SenseHatFactory factory, TelemetryClient tc, ILogger<Device> logger)
     {
-        _logger = logger;
-        _configuration = configuration;
+        _senseHatFactory = factory;
         _telemetryClient = tc;
-        //connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+        _logger = logger;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
-        _logger.LogWarning("Connecting to .. {cs}", cs);
-        var factory = new SenseHatFactory(_configuration);
-        client = await factory.CreateSenseHatClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
-        _logger.LogWarning("Connected to {cs}", SenseHatFactory.computedSettings);
+        client = await _senseHatFactory.CreateSenseHatClientAsync("cs", stoppingToken);
 
         client.Property_interval.OnMessage = Property_interval_UpdateHandler;
         client.Property_combineTelemetry.OnMessage = Property_combineTelemetry_UpdateHandler;
