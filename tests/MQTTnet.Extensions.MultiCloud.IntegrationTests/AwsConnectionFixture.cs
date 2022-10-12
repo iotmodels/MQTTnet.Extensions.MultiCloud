@@ -22,8 +22,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             var cs = new ConnectionSettings()
             {
                 HostName = "a38jrw6jte2l2x-ats.iot.us-west-1.amazonaws.com",
-                ClientId = "testdevice22",
-                X509Key = "testdevice22.pem|testdevice22.key"
+                ClientId = "ca-device",
+                X509Key = "ca-device.pem|ca-device.key"
             };
             var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)

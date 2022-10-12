@@ -1,4 +1,5 @@
-﻿using MQTTnet.Client;
+﻿using MQTTnet.Adapter;
+using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Threading;
@@ -16,13 +17,30 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(ConnectionSettings cs, CancellationToken cancellationToken = default)
         {
             MqttClient? mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
-            var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs).Build(), cancellationToken);
-            if (connAck.ResultCode != MqttClientConnectResultCode.Success)
+            try
             {
-                throw new ApplicationException($"Cannot connect to {cs}");
+                var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs).Build(), cancellationToken);
+                if (connAck.ResultCode != MqttClientConnectResultCode.Success)
+                {
+                    throw new ApplicationException($"Cannot connect to {cs}");
+                }
+                ComputedSettings = cs;
             }
-            ComputedSettings = cs;
-            return mqtt;
+            catch (MqttConnectingFailedException ex)
+            {
+                if (ex.ResultCode == MqttClientConnectResultCode.UnspecifiedError 
+                    && ex.InnerException!.Message == "The operation has timed out.")
+                {
+                    var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs).Build(), cancellationToken);
+                    if (connAck.ResultCode != MqttClientConnectResultCode.Success)
+                    {
+                        throw new ApplicationException($"Cannot connect to {cs}");
+                    }
+                    ComputedSettings = cs;
+                }
+            }
+           
+            return mqtt!;
         }
     }
 }
