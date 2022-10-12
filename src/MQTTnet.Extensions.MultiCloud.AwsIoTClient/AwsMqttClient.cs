@@ -13,20 +13,9 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient
         private readonly ShadowRequestResponseBinder getShadowBinder;
 
 
-        public AwsMqttClient(IMqttClient c, string modelId = "") //: base(c)
+        public AwsMqttClient(IMqttClient c) //: base(c)
         {
             Connection = c;
-            var birthMsg =
-                new UTF8JsonSerializer().ToBytes(
-                        new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
-                        {
-                            ModelId = modelId
-                        });
-            _ = Connection.PublishBinaryAsync(
-                BirthConvention.BirthTopic(Connection.Options.ClientId),
-                birthMsg,
-                Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true);
-
             getShadowBinder = new ShadowRequestResponseBinder(c);
         }
 
