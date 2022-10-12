@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
+namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient;
 
 public class ShadowRequestResponseBinder
 {
@@ -21,7 +21,7 @@ public class ShadowRequestResponseBinder
     public Func<string, Task<string>>? OnMessage { get; set; }
 
     private readonly IMqttClient connection;
-    private readonly string topicBase = String.Empty;
+    private readonly string topicBase = string.Empty;
     public ShadowRequestResponseBinder(IMqttClient connection)
     {
         this.connection = connection;
@@ -45,7 +45,7 @@ public class ShadowRequestResponseBinder
                     Trace.TraceWarning($"GetshadowBinder: RID {RidCounter.Current} not found pending requests");
                 }
             }
-            if (topic.StartsWith(topicBase + "/update"))
+            if (topic.StartsWith(topicBase + "/update/accepted"))
             {
                 if (pendingUpdateShadowRequests.TryGetValue(RidCounter.Current, out var tcs))
                 {
@@ -102,13 +102,13 @@ public class ShadowRequestResponseBinder
         {
             state = new
             {
-                desired = payload
+                reported = payload
             }
         };
 
         var puback = await connection.PublishBinaryAsync(
             topicBase + "/update",
-            new UTF8JsonSerializer().ToBytes(shadowUpdate),
+            new ShadowSerializer().ToBytes(shadowUpdate),
             MqttQualityOfServiceLevel.AtMostOnce,
             false,
             cancellationToken);

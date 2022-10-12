@@ -44,7 +44,7 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient
 
             if (withBirth)
             {
-                var birthPayload = new UTF8JsonSerializer().ToBytes(
+                var birthPayload = new ShadowSerializer().ToBytes(
                        new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
                        {
                            ModelId = cs.ModelId
