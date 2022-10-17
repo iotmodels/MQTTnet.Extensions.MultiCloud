@@ -59,6 +59,7 @@ namespace pi_sense_device
             var cs = new ConnectionSettings(connectionString) { ModelId = Isensehat.ModelId };
             var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
             var client = new dtmi_rido_pnp_sensehat.mqtt.sensehat(mqtt);
+            computedSettings = BrokerClientFactory.ComputedSettings!;
             nugetPackageVersion = BrokerClientFactory.NuGetPackageVersion;
             return client;
         }
