@@ -22,19 +22,21 @@ namespace aws_sample
             Console.WriteLine(mqtt.IsConnected);
             Console.WriteLine(AwsClientFactory.ComputedSettings);
             var client = new AwsMqttClient(mqtt);
-            var shadow = await client.GetShadowAsync();
+            var shadow = await client.GetShadowAsync(stoppingToken);
             Console.WriteLine(shadow);
 
             var res = await client.UpdateShadowAsync(new { myProp = "hello 123" }, stoppingToken);
             Console.WriteLine(res);
-            shadow = await client.GetShadowAsync();
+            shadow = await client.GetShadowAsync(stoppingToken);
             Console.WriteLine(shadow.Contains("myProp"));
 
-            WritableProperty<string> wp = new WritableProperty<string>(mqtt, "myWProp");
-            wp.OnMessage = async m =>
+            WritableProperty<string> wp = new(mqtt, "myWProp")
             {
-                Console.WriteLine(m);
-                return await Task.FromResult(new Ack<string> { Value = m });
+                OnMessage = async m =>
+                {
+                    Console.WriteLine(m);
+                    return await Task.FromResult(new Ack<string> { Value = m });
+                }
             };
 
 

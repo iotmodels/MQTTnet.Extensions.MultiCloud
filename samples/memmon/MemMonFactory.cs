@@ -90,7 +90,9 @@ public class MemMonFactory
     {
         var mqtt = await AwsClientFactory.CreateFromConnectionSettingsAsync(connectionString, true, cancellationToken);
         var client = new dtmi_rido_memmon.aws.memmon(mqtt);
+        connectionSettings = AwsClientFactory.ComputedSettings;
         nugetPackageVersion = AwsClientFactory.NuGetPackageVersion;
+        client.InitialState = await client.GetShadowAsync(cancellationToken);
         return client;
     }
 }

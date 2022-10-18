@@ -1,7 +1,7 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Serializers;
 using MQTTnet.Protocol;
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -54,25 +54,38 @@ namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient
         public async Task SendMessageAsync(Ack<T> payload, CancellationToken cancellationToken = default)
         {
             var resTopic = responseTopic.Replace("{clientId}", _connection.Options.ClientId);
-            await _connection.PublishAsync(
-                            new MqttApplicationMessageBuilder()
+            await _connection.PublishAsync(new MqttApplicationMessageBuilder()
                                 .WithTopic(resTopic)
                                 .WithPayload(serializer.ToBytes(payload.Value, _name, payload.Version!.Value))
                                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
-                                .Build());
+                                .Build(), cancellationToken);
         }
 
-        public async Task InitPropertyAsync(string intialState, T defaultValue, CancellationToken cancellationToken = default)
+        public async Task InitPropertyAsync(string initialState, T defaultValue, CancellationToken cancellationToken = default)
         {
-            // TODO
+            JsonDocument shadowDoc = JsonDocument.Parse(initialState);
+            JsonElement versionEl = shadowDoc.RootElement.GetProperty("version");
+            if (versionEl.TryGetInt32(out int version))
+            {
+                Version = version;
+            }
+
+            JsonElement desiredNode = shadowDoc.RootElement.GetProperty("state").GetProperty("desired");
+            if (desiredNode.TryGetProperty(_name, out JsonElement desiredVal))
+            {
+                Value = desiredVal.Deserialize<T>()!;
+            }
+            else
+            {
+                Value = defaultValue;
+            }
+
             var resTopic = responseTopic.Replace("{clientId}", _connection.Options.ClientId);
-            Value = defaultValue;
-            await _connection.PublishAsync(
-                            new MqttApplicationMessageBuilder()
+            await _connection.PublishAsync(new MqttApplicationMessageBuilder()
                                 .WithTopic(resTopic)
-                                .WithPayload(serializer.ToBytes(defaultValue, _name, 0))
+                                .WithPayload(serializer.ToBytes(defaultValue, _name, Version!.Value))
                                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
-                                .Build());
+                                .Build(), cancellationToken);
         }
     }
 }

@@ -15,7 +15,7 @@ public class memmon : AwsMqttClient, Imemmon
     public ITelemetry<double> Telemetry_managedMemory { get; set; }
     public ICommand<DiagnosticsMode, Dictionary<string, string>> Command_getRuntimeStats { get; set; }
 
-    public string InitialState => String.Empty;
+    public string InitialState { get; set; }
 
     public ICommand<int, bool> Command_isPrime { get; set; }
     public ICommand<int> Command_malloc { get; set; }
