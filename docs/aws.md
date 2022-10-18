@@ -14,8 +14,10 @@ https://aws.amazon.com/blogs/iot/just-in-time-registration-of-device-certificate
 
 As with any other MQTT broker, you can use WithConnectionSettings including the X509Key
 
-To support JIT, the first connection always fails and a reconnection is needed, in that case you can use the AwsClientFactory
+To support JIT, the first connection always fails and a retry is needed, in that case you can use the AwsClientFactory
 
 
 ## Shadows
+
+To use shadows, you must configure a "thing", associate to a ceritifcate, and enable a classic shadow.
 
