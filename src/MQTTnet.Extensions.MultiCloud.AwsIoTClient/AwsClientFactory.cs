@@ -50,7 +50,7 @@ public static class AwsClientFactory
                    });
 
             var pubAck = await mqtt.PublishBinaryAsync(
-               BirthConvention.BirthTopic(mqtt.Options.ClientId),
+               BirthConvention.BirthTopic(mqtt!.Options.ClientId),
                birthPayload,
                Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true, cancellationToken);
             if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
