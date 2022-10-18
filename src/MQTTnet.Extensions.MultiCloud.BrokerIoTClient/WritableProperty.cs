@@ -3,7 +3,7 @@ using MQTTnet.Extensions.MultiCloud.Binders;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
-public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProperty<T>
+public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProperty<T>, IDeviceToCloud<Ack<T>>
 {
     readonly IMqttClient _connection;
     readonly string _name;

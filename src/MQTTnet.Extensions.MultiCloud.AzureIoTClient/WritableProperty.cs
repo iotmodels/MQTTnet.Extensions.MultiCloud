@@ -3,8 +3,8 @@ using MQTTnet.Extensions.MultiCloud.Binders;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 
-public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProperty<T>
-{
+public class WritableProperty<T> : CloudToDeviceBinder<T, Ack<T>>, IWritableProperty<T>, IDeviceToCloud<Ack<T>>
+{   
     readonly IMqttClient _connection;
     readonly string _name;
     public T? Value { get; set; }

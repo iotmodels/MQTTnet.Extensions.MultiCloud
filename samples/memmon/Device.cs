@@ -54,10 +54,11 @@ public class Device : BackgroundService
         client.Command_malloc.OnMessage = Command_malloc_Hanlder;
         client.Command_free.OnMessage = Command_free_Hanlder;
 
-        await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
-        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-         
         await client.Property_started.SendMessageAsync(DateTime.Now, stoppingToken);
+
+        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
+        await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
+         
 
         RefreshScreen(this);
 

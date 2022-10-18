@@ -88,9 +88,11 @@ public class MemMonFactory
 
     static async Task<dtmi_rido_memmon.aws.memmon> CreateAwsClientAsync(string connectionString, CancellationToken cancellationToken = default)
     {
-        var mqtt = await AwsClientFactory.CreateFromConnectionSettingsAsync(connectionString, cancellationToken);
+        var mqtt = await AwsClientFactory.CreateFromConnectionSettingsAsync(connectionString, true, cancellationToken);
         var client = new dtmi_rido_memmon.aws.memmon(mqtt);
+        connectionSettings = AwsClientFactory.ComputedSettings;
         nugetPackageVersion = AwsClientFactory.NuGetPackageVersion;
+        client.InitialState = await client.GetShadowAsync(cancellationToken);
         return client;
     }
 }
