@@ -28,7 +28,7 @@ public class ShadowSerializer //: IMessageSerializer
             })!;
     }
 
-    public byte[] ToBytes<T>(T payload, string name = "", int version = -1)
+    public byte[] ToBytes<T>(T payload, string name = "", int? version = null)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -44,8 +44,7 @@ public class ShadowSerializer //: IMessageSerializer
                     {
                         {name, payload }
                     }
-                },
-                version
+                }
             };
             return Encoding.UTF8.GetBytes(Json.Stringify(patch));
         }

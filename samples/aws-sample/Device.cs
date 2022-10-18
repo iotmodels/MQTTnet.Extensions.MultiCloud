@@ -40,6 +40,9 @@ namespace aws_sample
             };
 
 
+            await wp.InitPropertyAsync(shadow, "my default val", stoppingToken);
+
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
