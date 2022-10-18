@@ -2,23 +2,26 @@
 using MQTTnet.Extensions.MultiCloud.Serializers;
 using MQTTnet.Protocol;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
+namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient;
 
 public class ShadowRequestResponseBinder
 {
     internal int lastRid = -1;
     private readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingGetshadowRequests = new();
+    private readonly ConcurrentDictionary<int, TaskCompletionSource<string>> pendingUpdateShadowRequests = new();
     public Func<string, Task<string>>? OnMessage { get; set; }
 
     private readonly IMqttClient connection;
-    private readonly string topicBase = String.Empty;
+    private readonly string topicBase = string.Empty;
     public ShadowRequestResponseBinder(IMqttClient connection)
     {
         this.connection = connection;
@@ -27,23 +30,35 @@ public class ShadowRequestResponseBinder
 
         connection.ApplicationMessageReceivedAsync += async m =>
         {
-            await Task.Yield();
-
             var topic = m.ApplicationMessage.Topic;
-            if (topic.StartsWith(topicBase + "/+/accepted"))
+            string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload ?? Array.Empty<byte>());
+            if (topic.StartsWith(topicBase + "/get/accepted"))
             {
-                string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload ?? Array.Empty<byte>());
-                (int rid, _) = TopicParser.ParseTopic(topic);
-                if (pendingGetshadowRequests.TryGetValue(rid, out var tcs))
+                //(int rid, _) = TopicParser.ParseTopic(topic);
+                if (pendingGetshadowRequests.TryGetValue(RidCounter.Current, out var tcs))
                 {
                     tcs.SetResult(msg);
-                    Trace.TraceWarning($"GetshadowBinder: RID {rid} found in pending requests");
+                    Trace.TraceWarning($"GetshadowBinder: RID {RidCounter.Current} found in pending requests");
                 }
                 else
                 {
-                    Trace.TraceWarning($"GetshadowBinder: RID {rid} not found pending requests");
+                    Trace.TraceWarning($"GetshadowBinder: RID {RidCounter.Current} not found pending requests");
                 }
             }
+            if (topic.StartsWith(topicBase + "/update/accepted"))
+            {
+                if (pendingUpdateShadowRequests.TryGetValue(RidCounter.Current, out var tcs))
+                {
+                    tcs.SetResult(msg);
+                    Trace.TraceWarning($"UpdateshadowBinder: RID {RidCounter.Current} found in pending requests");
+                }
+                else
+                {
+                    Trace.TraceWarning($"UpdateshadowBinder: RID {RidCounter.Current} not found pending requests");
+                }
+
+            }
+            await Task.Yield();
         };
     }
 
@@ -80,12 +95,20 @@ public class ShadowRequestResponseBinder
 
     public async Task<string> UpdateShadowAsync(object payload, CancellationToken cancellationToken = default)
     {
-        await connection.SubscribeWithReplyAsync("$iothub/shadow/res/#", cancellationToken: cancellationToken);
+        await connection.SubscribeWithReplyAsync(topicBase + "/update/+", cancellationToken: cancellationToken);
         var rid = RidCounter.NextValue();
 
+        var shadowUpdate = new
+        {
+            state = new
+            {
+                reported = payload
+            }
+        };
+
         var puback = await connection.PublishBinaryAsync(
-            topicBase + "/shadow/update",
-            new UTF8JsonSerializer().ToBytes(payload),
+            topicBase + "/update",
+            new ShadowSerializer().ToBytes(shadowUpdate),
             MqttQualityOfServiceLevel.AtMostOnce,
             false,
             cancellationToken);
@@ -93,7 +116,7 @@ public class ShadowRequestResponseBinder
         var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         if (puback.ReasonCode == 0)
         {
-            if (pendingGetshadowRequests.TryAdd(rid, tcs))
+            if (pendingUpdateShadowRequests.TryAdd(rid, tcs))
             {
                 Trace.TraceWarning($"UpdshadowBinder: RID {rid} added to pending requests");
             }

@@ -44,7 +44,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             var cs = new ConnectionSettings()
             {
                 IdScope = "0ne001F8884",
-                X509Key = "testdevice22.pem|testdevice22.key"
+                X509Key = "ca-device.pem|ca-device.key"
             };
             var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithAzureDpsCredentials(cs)

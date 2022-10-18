@@ -3,8 +3,6 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.AwsIoTClient;
-using MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 namespace dtmi_rido_memmon.aws;
 
@@ -23,12 +21,16 @@ public class memmon : AwsMqttClient, Imemmon
     public ICommand<int> Command_malloc { get; set; }
     public ICommand Command_free { get; set; }
 
-    internal memmon(IMqttClient c) : base(c, Imemmon.ModelId)
+    internal memmon(IMqttClient c) : base(c)
     {
         Property_started = new ReadOnlyProperty<DateTime>(c, "started");
         Property_interval = new WritableProperty<int>(c, "interval");
-        Property_enabled = new AwsWritablePropertyUTFJson<bool>(c, "enabled");
-        Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
-        Command_getRuntimeStats = new Command<DiagnosticsMode, Dictionary<string, string>>(c, "getRuntimeStats");
+        Property_enabled = new WritableProperty<bool>(c, "enabled");
+        Telemetry_workingSet = new MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry<double>(c, "workingSet");
+        Telemetry_managedMemory = new MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Telemetry<double>(c, "managedMemory");
+        Command_getRuntimeStats = new MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command<DiagnosticsMode, Dictionary<string, string>>(c, "getRuntimeStats");
+        Command_isPrime = new MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command<int, bool>(c, "isPrime");
+        Command_malloc = new MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command<int>(c, "malloc");
+        Command_free = new MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Command(c, "free");
     }
 }
