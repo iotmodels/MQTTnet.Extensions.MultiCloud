@@ -17,8 +17,8 @@ public class devicetemplate : Idevicetemplate
     public devicetemplate(IMqttClient c) 
     {
         Connection = c;
-        Property_sdkInfo = new ReadOnlyProperty<string>(c, "sdkInfo");
-        Property_interval = new WritableProperty<int>(c, "interval");
+        Property_sdkInfo = new ReadOnlyProperty<string>(c, "sdkInfo") { Retain = false };
+        Property_interval = new WritableProperty<int>(c, "interval") { RetainResponse = false };
         Telemetry_temp = new Telemetry<double>(c, "temp");
         Command_echo = new Command<string, string>(c, "echo");
         InitialState = String.Empty;

@@ -13,7 +13,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 
     protected bool UnwrapRequest = false;
     protected bool WrapResponse = false;
-    protected bool RetainResponse = false;
+    public bool RetainResponse = false;
     protected bool CleanRetained = false;
     
 

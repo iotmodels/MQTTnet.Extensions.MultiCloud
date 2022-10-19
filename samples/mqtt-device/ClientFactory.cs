@@ -49,7 +49,7 @@ namespace mqtt_device
         static async Task<dtmi_com_example_devicetemplate.mqtt.devicetemplate> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)
         {
             var cs = new ConnectionSettings(connectionString) { ModelId = Idevicetemplate.ModelId };
-            var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
+            var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, false, cancellationToken);
             var client = new dtmi_com_example_devicetemplate.mqtt.devicetemplate(mqtt);
             computedSettings = cs;
             nugetPackageVersion = BrokerClientFactory.NuGetPackageVersion;

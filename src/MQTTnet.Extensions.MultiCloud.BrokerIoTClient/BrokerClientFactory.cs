@@ -9,10 +9,10 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         public static string NuGetPackageVersion => $"{ThisAssembly.NuGetPackageVersion}";
 
         public static ConnectionSettings? ComputedSettings { get; private set; }
-        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, bool withBirth = true, CancellationToken cancellationToken = default) =>
+        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, bool withBirth = false, CancellationToken cancellationToken = default) =>
             await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectinString), withBirth, cancellationToken);
 
-        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(ConnectionSettings cs, bool withBirth = true, CancellationToken cancellationToken = default)
+        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(ConnectionSettings cs, bool withBirth = false, CancellationToken cancellationToken = default)
         {
             MqttClient? mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
             var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder()

@@ -10,7 +10,7 @@ public class Device : BackgroundService
 {
     private Idevicetemplate? client;
 
-    private const int default_interval = 30;
+    private const int default_interval = 5;
 
     private readonly ILogger<Device> _logger;
     private readonly IConfiguration _configuration;
@@ -40,7 +40,7 @@ public class Device : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             lastTemp = GenerateSensorReading(lastTemp, 12, 45);
-            //await client!.Telemetry_temp.SendTelemetryAsync(lastTemp, stoppingToken);
+            await client!.Telemetry_temp.SendMessageAsync(lastTemp, stoppingToken);
             var interval = client!.Property_interval.Value;
             _logger.LogInformation("Waiting {interval} s to send telemetry", interval);
             await Task.Delay(client.Property_interval.Value * 1000 , stoppingToken);

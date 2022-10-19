@@ -13,7 +13,7 @@ public abstract class DeviceToCloudBinder<T> : IDeviceToCloud<T>
 
     public string TopicPattern = "device/{clientId}/telemetry";
     public bool WrapMessage = false;
-    protected bool Retain = false;
+    public bool Retain = false;
 
     public DeviceToCloudBinder(IMqttClient mqttClient, string name) : this(mqttClient, name, new UTF8JsonSerializer()) { }
 
