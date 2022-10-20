@@ -65,7 +65,7 @@ public class MemMonFactory
     static async Task<dtmi_rido_memmon.mqtt.memmon> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)
     {
         var cs = new ConnectionSettings(connectionString) { ModelId = Imemmon.ModelId };
-        var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
+        var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, false, cancellationToken);
         connectionSettings = BrokerClientFactory.ComputedSettings;
         var client = new dtmi_rido_memmon.mqtt.memmon(mqtt)
         {

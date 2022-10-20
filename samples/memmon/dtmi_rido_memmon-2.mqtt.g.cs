@@ -24,9 +24,9 @@ public class memmon : Imemmon
     internal memmon(IMqttClient c) 
     {
         Connection = c;
-        Property_started = new ReadOnlyProperty<DateTime>(c, "started");
-        Property_interval = new WritableProperty<int>(c, "interval");
-        Property_enabled = new WritableProperty<bool>(c, "enabled");
+        Property_started = new ReadOnlyProperty<DateTime>(c, "started") { Retain = false };
+        Property_interval = new WritableProperty<int>(c, "interval") { RetainResponse = false };
+        Property_enabled = new WritableProperty<bool>(c, "enabled") { RetainResponse = false };
         Telemetry_workingSet = new Telemetry<double>(c, "workingSet");
         Telemetry_managedMemory = new Telemetry<double>(c, "managedMemory");
         Command_getRuntimeStats = new Command<DiagnosticsMode, Dictionary<string, string>>(c, "getRuntimeStats");
