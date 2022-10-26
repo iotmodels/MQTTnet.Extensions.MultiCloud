@@ -56,6 +56,7 @@ public class Device : BackgroundService
 
         if (p > 0)
         {
+            client.Property_interval.Value = p;
             ack.Description = "desired notification accepted";
             ack.Status = 200;
             ack.Version = client.Property_interval.Version;

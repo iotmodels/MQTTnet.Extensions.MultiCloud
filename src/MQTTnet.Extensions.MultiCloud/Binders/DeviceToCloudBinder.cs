@@ -11,9 +11,9 @@ public abstract class DeviceToCloudBinder<T> : IDeviceToCloud<T>
     private readonly IMqttClient _connection;
     private readonly IMessageSerializer _messageSerializer;
 
-    public string TopicPattern = "device/{clientId}/telemetry";
+    public string TopicPattern = String.Empty;
     public bool WrapMessage = false;
-    protected bool Retain = false;
+    public bool Retain = false;
 
     public DeviceToCloudBinder(IMqttClient mqttClient, string name) : this(mqttClient, name, new UTF8JsonSerializer()) { }
 
