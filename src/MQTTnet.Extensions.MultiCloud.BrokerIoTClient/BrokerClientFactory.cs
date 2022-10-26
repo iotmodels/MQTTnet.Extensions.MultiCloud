@@ -34,7 +34,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
                 var pubAck = await mqtt.PublishBinaryAsync(
                    BirthConvention.BirthTopic(mqtt.Options.ClientId),
                    birthPayload,
-                   Protocol.MqttQualityOfServiceLevel.AtLeastOnce, false, cancellationToken);
+                   Protocol.MqttQualityOfServiceLevel.AtLeastOnce, withBirth, cancellationToken); //hack to disable retained in registry
                 if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
                 {
                     throw new ApplicationException($"Error publishing Birth {cs}");

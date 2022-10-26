@@ -1,8 +1,6 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 using MQTTnet.Protocol;
-using System.Diagnostics;
-using System.Text;
 
 namespace MQTTnet.Extensions.MultiCloud.Binders;
 
@@ -11,10 +9,10 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
     private readonly string _name;
     private readonly IMqttClient _connection;
 
-    protected bool UnwrapRequest = false;
-    protected bool WrapResponse = false;
+    public bool UnwrapRequest = false;
+    public bool WrapResponse = false;
     public bool RetainResponse = false;
-    protected bool CleanRetained = false;
+    public bool CleanRetained = false;
     
 
     public Func<T, Task<TResp>>? OnMessage { get; set; }
