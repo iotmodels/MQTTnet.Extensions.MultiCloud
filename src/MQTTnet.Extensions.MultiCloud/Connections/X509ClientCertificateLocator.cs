@@ -26,7 +26,7 @@ internal class X509ClientCertificateLocator
             }
             store.Close();
         }
-        else if (certSettings.Contains(".pem|")) //mycert.pem|mycert.key
+        else if (certSettings.Contains(".pem|") || certSettings.Contains(".crt|")) //mycert.pem|mycert.key
         {
 
             var segments = certSettings.Split('|');
