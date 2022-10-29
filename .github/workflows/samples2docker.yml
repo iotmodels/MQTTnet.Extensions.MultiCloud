@@ -23,16 +23,16 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: memmon docker
-      run: docker build . --file samples/memmon/Dockerfile --tag ghcr.io/iotmodels/memmon:x64
+      run: docker build . --file samples/memmon/Dockerfile --tag ghcr.io/iotmodels/memmon:e4k
 
     - name: memmon docker push 
-      run: docker push ghcr.io/iotmodels/memmon:x64
+      run: docker push ghcr.io/iotmodels/memmon:e4k
 
     - name: pi-sense docker
-      run: docker build . --file samples/pi-sense-device/Dockerfile --tag ghcr.io/iotmodels/pi-sense-device:x64
+      run: docker build . --file samples/pi-sense-device/Dockerfile --tag ghcr.io/iotmodels/pi-sense-device:e4k
 
     - name: pi-sense docker push 
-      run: docker push ghcr.io/iotmodels/pi-sense-device:x64
+      run: docker push ghcr.io/iotmodels/pi-sense-device:e4k
 
 
     #- name: Build the Docker image ARM
