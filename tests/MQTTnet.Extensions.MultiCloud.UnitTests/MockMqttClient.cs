@@ -8,19 +8,28 @@ using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests
 {
+    
     internal class MockMqttClient : IMqttClient
     {
+        string _clientId = "";
+        
+        
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public MockMqttClient()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
-
+            _clientId = "mock";
         }
+
+        public MockMqttClient(string clientId)
+        {
+            _clientId = clientId;
+        }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public bool IsConnected => throw new NotImplementedException();
 
 
-        public MqttClientOptions Options => new() { ClientId = "mock" };
+        public MqttClientOptions Options => new() { ClientId = _clientId };
 
         public string payloadReceived;
         public string topicRecceived;

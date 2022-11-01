@@ -8,7 +8,6 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
     public class HubMqttClient : IHubMqttClient
     {
         public IMqttClient Connection { get; set; }
-
         public string InitialState { get; set; } = String.Empty;
 
         private readonly TwinRequestResponseBinder twinOperationsBinder;
@@ -50,7 +49,5 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
                 Protocol.MqttQualityOfServiceLevel.AtLeastOnce,
                 false, t);
         }
-
-
     }
 }
