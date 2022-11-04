@@ -8,7 +8,7 @@ namespace MQTTnet.Extensions.MultiCloud.Binders
         {
             var segments = topic.Split('/');
             int twinVersion = -1;
-            int rid = -1;
+            string rid = string.Empty;
             if (topic.Contains('?'))
             {
                 var qs = HttpUtility.ParseQueryString(segments[^1]);
@@ -16,11 +16,7 @@ namespace MQTTnet.Extensions.MultiCloud.Binders
                 {
                     twinVersion = v;
                 }
-
-                if (int.TryParse(qs["$rid"], out int r))
-                {
-                    rid = r;
-                }
+                rid = Convert.ToString(qs["$rid"])!;
             }
             return new TopicParameters() { Rid = rid, Version = twinVersion };
         }
