@@ -7,7 +7,7 @@ public static partial class MqttNetExtensions
 {
     internal static MqttClientOptionsBuilder WithAzureIoTHubCredentials(this MqttClientOptionsBuilder builder, ConnectionSettings? cs)
     {
-        string hostName = cs.HostName!;
+        string? hostName = cs!.HostName!;
         if (!string.IsNullOrEmpty(cs.GatewayHostName))
         {
             hostName = cs.GatewayHostName;
