@@ -7,6 +7,11 @@ public static partial class MqttNetExtensions
 {
     internal static MqttClientOptionsBuilder WithAzureIoTHubCredentials(this MqttClientOptionsBuilder builder, ConnectionSettings? cs)
     {
+        string hostName = cs.HostName!;
+        if (!string.IsNullOrEmpty(cs.GatewayHostName))
+        {
+            hostName = cs.GatewayHostName;
+        }
         if (cs?.Auth == AuthType.Sas)
         {
             if (string.IsNullOrEmpty(cs.ModuleId))
@@ -16,11 +21,6 @@ public static partial class MqttNetExtensions
             else
             {
                 cs.ClientId = $"{cs.DeviceId}/{cs.ModuleId}";
-            }
-            string hostName = cs.HostName!;
-            if (!string.IsNullOrEmpty(cs.GatewayHostName))
-            {
-                hostName = cs.GatewayHostName;
             }
             builder.WithTlsSettings(cs);
             return builder.WithAzureIoTHubCredentialsSas(hostName, cs.DeviceId!, cs.ModuleId!, cs.HostName!, cs.SharedAccessKey!, cs.ModelId!, cs.SasMinutes, cs.TcpPort);
@@ -41,7 +41,7 @@ public static partial class MqttNetExtensions
                 cs.DeviceId = clientId;
             }
             builder.WithTlsSettings(cs);
-            return builder.WithAzureIoTHubCredentialsX509(cs.HostName!, cert, cs.ModelId!, cs.TcpPort);
+            return builder.WithAzureIoTHubCredentialsX509(hostName, cert, cs.ModelId!, cs.TcpPort);
         }
         else
         {
@@ -74,13 +74,7 @@ public static partial class MqttNetExtensions
 
         builder
             .WithTcpServer(hostName, tcpPort)
-            .WithCredentials(new MqttClientCredentials(SasAuth.GetUserName(hostName, clientId, modelId)))
-            .WithTls(new MqttClientOptionsBuilderTlsParameters
-            {
-                UseTls = true,
-                SslProtocol = System.Security.Authentication.SslProtocols.Tls12,
-                Certificates = new List<X509Certificate> { cert }
-            });
+            .WithCredentials(new MqttClientCredentials(SasAuth.GetUserName(hostName, clientId, modelId)));
         return builder;
     }
 
