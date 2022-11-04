@@ -52,6 +52,7 @@ public class ConnectionSettings
         UseTls = Default_UseTls == "true";
         DisableCrl = Default_DisableCrl == "true";
         CleanSession = Default_CleanSession == "true";
+        GatewayHostName = string.Empty;
     }
 
     public static ConnectionSettings FromConnectionString(string cs) => new(cs);
