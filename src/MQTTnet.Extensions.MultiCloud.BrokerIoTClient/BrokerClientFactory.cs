@@ -9,10 +9,10 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         public static string NuGetPackageVersion => $"{ThisAssembly.NuGetPackageVersion}";
 
         public static ConnectionSettings? ComputedSettings { get; private set; }
-        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, bool withBirth = true, CancellationToken cancellationToken = default) =>
+        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, bool withBirth = false, CancellationToken cancellationToken = default) =>
             await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectinString), withBirth, cancellationToken);
 
-        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(ConnectionSettings cs, bool withBirth = true, CancellationToken cancellationToken = default)
+        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(ConnectionSettings cs, bool withBirth = false, CancellationToken cancellationToken = default)
         {
             MqttClient? mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
             var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder()
@@ -23,8 +23,8 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             {
                 throw new ApplicationException($"Cannot connect to {cs}");
             }
-            if (withBirth)
-            {
+            //if (withBirth)
+            //{
                 var birthPayload = new UTF8JsonSerializer().ToBytes(
                        new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
                        {
@@ -34,12 +34,12 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
                 var pubAck = await mqtt.PublishBinaryAsync(
                    BirthConvention.BirthTopic(mqtt.Options.ClientId),
                    birthPayload,
-                   Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true, cancellationToken);
+                   Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true, cancellationToken); //hack to disable retained in registry
                 if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
                 {
                     throw new ApplicationException($"Error publishing Birth {cs}");
                 }
-            }
+            //}
             return mqtt;
         }
     }

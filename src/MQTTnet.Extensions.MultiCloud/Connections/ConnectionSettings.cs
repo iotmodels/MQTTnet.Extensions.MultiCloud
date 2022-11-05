@@ -42,6 +42,8 @@ public class ConnectionSettings
     public string? CaFile { get; set; }
     public bool DisableCrl { get; set; }
 
+    public string? GatewayHostName { get; set; }
+
     public ConnectionSettings()
     {
         SasMinutes = Default_SasMinutes;
@@ -50,6 +52,7 @@ public class ConnectionSettings
         UseTls = Default_UseTls == "true";
         DisableCrl = Default_DisableCrl == "true";
         CleanSession = Default_CleanSession == "true";
+        GatewayHostName = string.Empty;
     }
 
     public static ConnectionSettings FromConnectionString(string cs) => new(cs);
@@ -98,6 +101,7 @@ public class ConnectionSettings
         UseTls = GetStringValue(map, nameof(UseTls), Default_UseTls) == "true";
         CaFile = GetStringValue(map, nameof(CaFile));
         DisableCrl = GetStringValue(map, nameof(DisableCrl), Default_DisableCrl) == "true";
+        GatewayHostName = GetStringValue(map, nameof(GatewayHostName));
     }
 
     private static void AppendIfNotEmpty(StringBuilder sb, string name, string val)
@@ -129,6 +133,7 @@ public class ConnectionSettings
         AppendIfNotEmpty(result, nameof(ModelId), ModelId!);
         AppendIfNotEmpty(result, nameof(ClientId), ClientId!);
         AppendIfNotEmpty(result, nameof(Auth), Auth!.ToString());
+        AppendIfNotEmpty(result, nameof(GatewayHostName), GatewayHostName!.ToString());
         result.Remove(result.Length - 1, 1);
         return result.ToString();
     }
