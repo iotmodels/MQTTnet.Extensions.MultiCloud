@@ -1,0 +1,34 @@
+name: e2e
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: Test_IoT_Hub
+    timeout-minutes: 5
+    steps:
+
+    - name: Test
+      env:
+        E2EHubConnectionString: ${{secrets.E2EHubConnectionString}}
+        TestHubName: ${{secrets.TestHubName}} 
+
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        inlineScript: -|
+          echo ${TestHubName}
+          az iot hub device-twin list --login ${E2EHubConnectionString}
+          
+
+    - name: start edgeHub-local
+      run: docker run -it --rm -e IotHubConnectionString="$connStr" -p 8883:8883 ghcr.io/ridomin/edgehub:local
+
+    - name: start memmon
+      run: docker run -it --rm -e ConnectionStrings__cs="" - ghcr.io/iotmodels/memmon:x64
+
+
+      
+
