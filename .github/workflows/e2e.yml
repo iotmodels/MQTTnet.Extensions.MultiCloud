@@ -14,13 +14,12 @@ jobs:
       env:
         E2EHubConnectionString: ${{secrets.E2EHubConnectionString}}
         TestHubName: ${{secrets.TestHubName}} 
+      run: echo ${TestHubName} 
 
     - name: Azure CLI script
       uses: azure/CLI@v1
       with:
-        inlineScript: -|
-          echo ${TestHubName}
-          az iot hub device-twin list --login ${E2EHubConnectionString}
+        inlineScript: az iot hub device-twin list --login ${E2EHubConnectionString}
           
 
     - name: start edgeHub-local
