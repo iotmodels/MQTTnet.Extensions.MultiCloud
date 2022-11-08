@@ -40,7 +40,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
         public async Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default)
         {
             string clientSegment = Connection.Options.ClientId;
-            if (clientSegment.Contains("/")) //should be a module
+            if (clientSegment.Contains('/')) //should be a module
             {
                 clientSegment = clientSegment.Replace("/", "/modules/");
             }
