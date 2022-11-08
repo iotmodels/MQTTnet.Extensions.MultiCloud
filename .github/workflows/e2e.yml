@@ -1,5 +1,4 @@
 name: e2e
-
 on:
   workflow_dispatch:
 
@@ -9,25 +8,30 @@ jobs:
     environment: Test_IoT_Hub
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v3
 
-    - name: Test
-      env:
-        E2EHubConnectionString: ${{secrets.E2EHubConnectionString}}
-        TestHubName: ${{secrets.TestHubName}} 
-      run: echo ${TestHubName} 
+      - name: Test
+        shell: bash
+        env:
+          E2EHubConnectionString: ${{secrets.E2EHubConnectionString}}
+          TestHubName: ${{secrets.TestHubName}} 
+        run: echo "$TestHubName"
 
-    - name: Azure CLI script
-      uses: azure/CLI@v1
-      with:
-        inlineScript: az iot hub device-twin list --login ${E2EHubConnectionString}
-          
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az config set extension.use_dynamic_install=yes_without_prompt
+            az iot hub device-identity create -d e2edevice --login "${{ secrets.E2EHubConnectionString }}"
+            echo e2eDevConnString=$(az iot hub device-identity connection-string show -d e2edevice --login "${{ secrets.E2EHubConnectionString }}" --query connectionString | tr -d '"') >> $GITHUB_ENV
 
-    - name: start edgeHub-local
-      run: docker run -it --rm -e IotHubConnectionString="$connStr" -p 8883:8883 ghcr.io/ridomin/edgehub:local
+      - name: Run Device
+        run: docker run -d --rm -e ConnectionStrings__cs="${{ env.e2eDevConnString }}" ghcr.io/iotmodels/memmon:x64
 
-    - name: start memmon
-      run: docker run -it --rm -e ConnectionStrings__cs="" - ghcr.io/iotmodels/memmon:x64
-
-
-      
-
+      - name: InvokeCommand
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az iot hub invoke-device-method -d e2edevice --method-name getRuntimeStats --method-payload '2' --timeout 10 --login "${{ secrets.E2EHubConnectionString }}"
+            az iot hub invoke-device-method -d e2edevice --method-name getRuntimeStats --method-payload '2' --timeout 10 --login "${{ secrets.E2EHubConnectionString }}"
+            az iot hub device-identity delete -d e2edevice --login "${{ secrets.E2EHubConnectionString }}"
