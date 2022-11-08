@@ -28,9 +28,7 @@ public class ShadowSerializer //: IMessageSerializer
             })!;
     }
 
-#pragma warning disable CA1822 // Mark members as static
     public byte[] ToBytes<T>(T payload, string name = "", int? version = null)
-#pragma warning restore CA1822 // Mark members as static
     {
         Version = (int)version!;
         if (string.IsNullOrEmpty(name))
