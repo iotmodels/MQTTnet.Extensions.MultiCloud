@@ -7,7 +7,7 @@ using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 namespace dtmi_rido_memmon.mqtt;
 
-public class memmon : Imemmon
+public class _memmon : Imemmon
 {
     public IMqttClient Connection { get; set; }
     public string InitialState { get; set; }
@@ -21,7 +21,7 @@ public class memmon : Imemmon
     public ICommand<int> Command_malloc { get; set; }
     public ICommand Command_free { get; set; }
 
-    internal memmon(IMqttClient c) 
+    internal _memmon(IMqttClient c) 
     {
         Connection = c;
         Property_started = new ReadOnlyProperty<DateTime>(c, "started");
