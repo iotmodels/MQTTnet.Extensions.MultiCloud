@@ -17,11 +17,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task FailsWithouCA()
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
+          
             var cs = new ConnectionSettings()
             {
                 HostName = "localhost",
@@ -30,7 +26,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             };
             try
             {
-                var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
+                var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
                     .WithConnectionSettings(cs)
                     .Build());
             }
@@ -44,20 +40,15 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ConfiguredCA()
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
             var cs = new ConnectionSettings()
             {
                 HostName = "localhost",
                 TcpPort = 8883,
-                CaFile = "RidoFY23CA.crt",
+                CaFile = "ca.pem",
                 UserName = "user",
                 Password = "password"
             };
-            var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
@@ -68,20 +59,34 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ClientCert()
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
             var cs = new ConnectionSettings()
             {
                 HostName = "localhost",
                 TcpPort = 8884,
                 ClientId = "test-client",
-                CaFile = "RidoFY23CA.crt",
+                CaFile = "ca.pem",
                 X509Key = "ca-device.pem|ca-device.key"
             };
-            var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
+                .WithConnectionSettings(cs)
+                .Build());
+            Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
+            Assert.True(client.IsConnected);
+            await client.DisconnectAsync();
+        }
+
+        [Fact]
+        public async Task ClientCertIntermediate()
+        {
+            var cs = new ConnectionSettings()
+            {
+                HostName = "localhost",
+                TcpPort = 8884,
+                ClientId = "test-client",
+                CaFile = "caWithChain.pem",
+                X509Key = "dev03.pfx|"
+            };
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
