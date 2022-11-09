@@ -42,7 +42,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                     if (resp != null)
                     {
                         byte[] responseBytes = serializer.ToBytes(resp, WrapResponse ? _name : string.Empty);
-                        string? resTopic = responseTopicPattern?.Replace("{rid}", tp.Rid.ToString()).Replace("{version}", tp.Version.ToString());
+                        string? resTopic = responseTopicPattern?.Replace("{rid}", tp.Rid!).Replace("{version}", tp.Version.ToString());
                         _ = connection.PublishAsync(
                             new MqttApplicationMessageBuilder()
                                 .WithTopic(resTopic)

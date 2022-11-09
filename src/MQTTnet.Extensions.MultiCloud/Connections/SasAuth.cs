@@ -16,12 +16,16 @@ internal class SasAuth
 
     internal static string CreateSasToken(string resource, string sasKey, int minutes)
     {
-
         var expiry = DateTimeOffset.UtcNow.AddMinutes(minutes).ToUnixTimeSeconds().ToString();
         var sig = System.Net.WebUtility.UrlEncode(Sign($"{resource}\n{expiry}", sasKey));
         return $"SharedAccessSignature sr={resource}&sig={sig}&se={expiry}";
     }
 
-    internal static (string username, string password) GenerateHubSasCredentials(string hostName, string deviceId, string sasKey, string modelId, int minutes = 60) =>
-        (GetUserName(hostName, deviceId, modelId), CreateSasToken($"{hostName}/devices/{deviceId}", sasKey, minutes));
+    internal static (string username, string password) GenerateHubSasCredentials(string hostName, string deviceId, string sasKey, string audience, string modelId, int minutes = 60)
+    {
+        string user = GetUserName(hostName, deviceId, modelId);
+        string pwd = CreateSasToken($"{audience}/devices/{deviceId}", sasKey, minutes);
+        return (user, pwd);
+    }
+        
 }

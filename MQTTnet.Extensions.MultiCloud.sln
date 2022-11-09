@@ -34,6 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_actions", "_actions", "{68
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\cd.yml = .github\workflows\cd.yml
 		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.github\workflows\e2e.yml = .github\workflows\e2e.yml
 		.github\workflows\push2nuget.yml = .github\workflows\push2nuget.yml
 		.github\workflows\samples2docker.yml = .github\workflows\samples2docker.yml
 	EndProjectSection
@@ -64,7 +65,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "payload-size", "samples\pay
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "memmon-protobuff", "samples\memmon-protobuff\memmon-protobuff.csproj", "{20B75646-CBD2-4E72-8C56-22887A519FA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aws-sample", "samples\aws-sample\aws-sample.csproj", "{713F4937-160C-4CA3-9F9B-91DD91E7F5AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aws-sample", "samples\aws-sample\aws-sample.csproj", "{713F4937-160C-4CA3-9F9B-91DD91E7F5AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
