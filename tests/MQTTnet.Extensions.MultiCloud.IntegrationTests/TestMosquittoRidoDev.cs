@@ -63,11 +63,6 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ClientCert()
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
             var cs = new ConnectionSettings()
             {
                 HostName = "mosquitto.rido.dev",
@@ -76,7 +71,27 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 CaFile = "RidoFY23CA.crt",
                 X509Key = "ca-device.pem|ca-device.key"
             };
-            var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
+                .WithConnectionSettings(cs)
+                .Build());
+            Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
+            Assert.True(client.IsConnected);
+            await client.DisconnectAsync();
+        }
+
+
+        [Fact]
+        public async Task ClientCertIntermediate()
+        {
+            var cs = new ConnectionSettings()
+            {
+                HostName = "mosquitto.rido.dev",
+                TcpPort = 8884,
+                ClientId = "test-client",
+                CaFile = "RidoFY23CA.crt",
+                X509Key = "dev03.pem|dev03.key|1234"
+            };
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);

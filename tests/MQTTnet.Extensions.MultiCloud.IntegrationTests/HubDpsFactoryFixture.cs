@@ -16,26 +16,45 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         {
             var cs = new ConnectionSettings
             {
-                IdScope = "0ne001F8884",
+                IdScope = "0ne006CCDE4",
                 DeviceId = "testDpsDevice",
-                SharedAccessKey = "DFOYheu+mab5uynYpRBiIut/MqHA61EkirLJ9BBaJdE="
+                SharedAccessKey = "nnCC1W/tfXYjmnVWhJqp6KNk8zROrObl+I9tW/wzKTM="
             };
             var client = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             Assert.True(client.IsConnected);
-            Assert.Equal(Environment.GetEnvironmentVariable("TestHubName"), HubDpsFactory.ComputedSettings!.HostName);
+            Assert.Equal("rido.azure-devices.net", HubDpsFactory.ComputedSettings!.HostName);
             await client.DisconnectAsync(
                 new MqttClientDisconnectOptionsBuilder()
                         .WithReason(MqttClientDisconnectReason.NormalDisconnection)
                         .Build());
         }
+
+
+        [Fact]
+        public async Task DpsCert()
+        {
+            var cs = new ConnectionSettings
+            {
+                IdScope = "0ne006CCDE4",
+                X509Key = "dev03.pem|dev03.key|1234"
+            };
+            var client = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
+            Assert.True(client.IsConnected);
+            Assert.Equal("rido.azure-devices.net", HubDpsFactory.ComputedSettings!.HostName);
+            await client.DisconnectAsync(
+                new MqttClientDisconnectOptionsBuilder()
+                        .WithReason(MqttClientDisconnectReason.NormalDisconnection)
+                        .Build());
+        }
+
         [Fact]
         public async Task CheckComputedConnectionSettingsWhenNotUsingDPS()
         {
             var cs = new ConnectionSettings
             {
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),
-                DeviceId = "testDpsDevice",
-                SharedAccessKey = "DFOYheu+mab5uynYpRBiIut/MqHA61EkirLJ9BBaJdE="
+                DeviceId = "testdevice",
+                SharedAccessKey = "MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA="
             };
             var client = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             Assert.True(client.IsConnected);

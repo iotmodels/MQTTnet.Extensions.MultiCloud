@@ -1,5 +1,6 @@
 ﻿using MQTTnet.Client;
 using System.Diagnostics;
+using System.Security;
 using System.Security.Cryptography.X509Certificates;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections;
@@ -18,6 +19,10 @@ public static partial class MqttNetExtensions
             if (!string.IsNullOrEmpty(cs.X509Key))
             {
                 var cert = X509ClientCertificateLocator.Load(cs.X509Key);
+                if (cert.HasPrivateKey == false)
+                {
+                    throw new SecurityException("Provided Cert Has not Private Key");
+                }
                 if (string.IsNullOrEmpty(cs.ClientId))
                 {
                     cs.ClientId = X509CommonNameParser.GetCNFromCertSubject(cert);

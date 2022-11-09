@@ -20,13 +20,21 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         }
 
         [Fact]
-        public void ValidateChainWithIntermediateOK()
+        public void ValidateChainWithIntermediateOk()
         {
-            X509Certificate cert = X509Certificate.CreateFromCertFile("onething.pem");
+            X509Certificate cert = X509Certificate.CreateFromCertFile("dev03.pem");
             var res = X509ChainValidator.ValidateChain(cert, "caWithChain.pem");
             Assert.True(res);
         }
 
-     
+        [Fact]
+        public void ValidateChainWithIntermediateBad()
+        {
+            X509Certificate cert = X509Certificate.CreateFromCertFile("dev03.pem");
+            var res = X509ChainValidator.ValidateChain(cert, "ca.pem");
+            Assert.False(res);
+        }
+
+
     }
 }

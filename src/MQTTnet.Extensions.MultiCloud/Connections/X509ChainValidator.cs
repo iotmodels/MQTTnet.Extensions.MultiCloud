@@ -14,14 +14,17 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
             chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
             chain.ChainPolicy.VerificationTime = DateTime.Now;
             chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 0, 0);
-            X509Certificate2 caCert = new X509Certificate2(caCertFile);
-            chain.ChainPolicy.CustomTrustStore.Add(caCert);
+            X509Certificate2Collection caCerts = new();
+            caCerts.ImportFromPemFile(caCertFile);
+            chain.ChainPolicy.CustomTrustStore.AddRange(caCerts);
             chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
             var x5092 = new X509Certificate2(cert);
             var res = chain.Build(x5092);
             if (res == false)
             {
-                Trace.TraceError($"Error validating TLS chain for cert: '{cert.Subject}' issued by '{cert.Issuer}', configured CA: '{caCert.Subject}'");
+                Trace.TraceError($"Error validating TLS chain for cert: '{cert.Subject}' issued by '{cert.Issuer}'");
+                Trace.TraceError($"Loaded {caCerts.Count} certs from caFile: {caCertFile} ");
+                caCerts.ToList().ForEach(c => Trace.TraceError(c.Subject));
                 chain.ChainStatus.ToList().ForEach(s => Trace.TraceError(s.StatusInformation));
             }
             return res;
