@@ -32,8 +32,9 @@ public static partial class MqttNetExtensions
 
             if (!string.IsNullOrEmpty(cs.CaFile))
             {
-                var caCert = new X509Certificate2(cs.CaFile);
-                certs.Add(caCert);
+                X509Certificate2Collection caCerts = new();
+                caCerts.ImportFromPemFile(cs.CaFile);
+                certs.AddRange(caCerts);
                 tls.CertificateValidationHandler = ea => X509ChainValidator.ValidateChain(ea.Certificate, cs.CaFile);
             }
             tls.Certificates = certs;

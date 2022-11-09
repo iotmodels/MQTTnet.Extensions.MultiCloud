@@ -68,7 +68,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 HostName = "mosquitto.rido.dev",
                 TcpPort = 8884,
                 ClientId = "test-client",
-                CaFile = "RidoFY23CA.crt",
+                CaFile = "ca.pem",
                 X509Key = "ca-device.pem|ca-device.key"
             };
             var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
