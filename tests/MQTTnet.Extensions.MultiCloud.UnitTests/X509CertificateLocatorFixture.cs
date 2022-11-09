@@ -13,7 +13,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             var cert = X509ClientCertificateLocator.Load(certSettings);
             Assert.NotNull(cert);
             Assert.Equal("CN=onething", cert.SubjectName.Name);
-            Assert.Equal("8E983707D3F802E6717BBCD193129946573F31D4", cert.Thumbprint);
+            Assert.Equal("0B392CC5E58DADEB5A632AB92F29772BF2B2D6BA", cert.Thumbprint);
         }
 
         [Fact]
@@ -24,11 +24,11 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             store.Open(OpenFlags.ReadWrite);
             store.Add(testCert);
 
-            string certSettings = "8E983707D3F802E6717BBCD193129946573F31D4";
+            string certSettings = "0B392CC5E58DADEB5A632AB92F29772BF2B2D6BA";
             var cert = X509ClientCertificateLocator.Load(certSettings);
             Assert.NotNull(cert);
             Assert.Equal("CN=onething", cert.SubjectName.Name);
-            Assert.Equal("8E983707D3F802E6717BBCD193129946573F31D4", cert.Thumbprint);
+            Assert.Equal("0B392CC5E58DADEB5A632AB92F29772BF2B2D6BA", cert.Thumbprint);
 
             store.Remove(testCert);
             store.Close();
@@ -42,7 +42,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             var cert = X509ClientCertificateLocator.Load(certSettings);
             Assert.NotNull(cert);
             Assert.Equal("CN=onething", cert.SubjectName.Name);
-            Assert.Equal("8E983707D3F802E6717BBCD193129946573F31D4", cert.Thumbprint);
+            Assert.Equal("0B392CC5E58DADEB5A632AB92F29772BF2B2D6BA", cert.Thumbprint);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             var cert = X509ClientCertificateLocator.Load(certSettings);
             Assert.NotNull(cert);
             Assert.Equal("CN=onething", cert.SubjectName.Name);
-            Assert.Equal("8E983707D3F802E6717BBCD193129946573F31D4", cert.Thumbprint);
+            Assert.Equal("0B392CC5E58DADEB5A632AB92F29772BF2B2D6BA", cert.Thumbprint);
         }
 #endif
 

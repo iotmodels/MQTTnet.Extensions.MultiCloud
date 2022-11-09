@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections;
@@ -28,20 +29,7 @@ public static partial class MqttNetExtensions
             {
                 var caCert = new X509Certificate2(cs.CaFile);
                 certs.Add(caCert);
-                tls.CertificateValidationHandler = ea =>
-                {
-                    X509Chain chain = new();
-                    chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-                    chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
-                    chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
-                    chain.ChainPolicy.VerificationTime = DateTime.Now;
-                    chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 0, 0);
-                    chain.ChainPolicy.CustomTrustStore.Add(caCert);
-                    chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
-                    var x5092 = new X509Certificate2(ea.Certificate);
-                    var res = chain.Build(x5092);
-                    return res;
-                };
+                tls.CertificateValidationHandler = ea => X509ChainValidator.ValidateChain(ea.Certificate, cs.CaFile);
             }
             tls.Certificates = certs;
             tls.IgnoreCertificateRevocationErrors = cs.DisableCrl;
