@@ -36,7 +36,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             var cs = new ConnectionSettings
             {
                 IdScope = "0ne006CCDE4",
-                X509Key = "dev03.pem|dev03.key|1234"
+                X509Key = "dpsTestDevice.pem|dpsTestDevice.key"
             };
             var client = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             Assert.True(client.IsConnected);
