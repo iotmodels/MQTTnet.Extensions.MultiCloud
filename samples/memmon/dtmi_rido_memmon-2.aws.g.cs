@@ -6,7 +6,7 @@ using MQTTnet.Extensions.MultiCloud.AwsIoTClient;
 
 namespace dtmi_rido_memmon.aws;
 
-public class memmon : AwsMqttClient, Imemmon
+public class _memmon : AwsMqttClient, Imemmon
 {
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
@@ -21,7 +21,7 @@ public class memmon : AwsMqttClient, Imemmon
     public ICommand<int> Command_malloc { get; set; }
     public ICommand Command_free { get; set; }
 
-    internal memmon(IMqttClient c) : base(c)
+    internal _memmon(IMqttClient c) : base(c)
     {
         Property_started = new ReadOnlyProperty<DateTime>(c, "started");
         Property_interval = new WritableProperty<int>(c, "interval");
