@@ -7,7 +7,7 @@ using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 
 namespace dtmi_rido_memmon.hub;
 
-public class memmon : HubMqttClient, Imemmon
+public class _memmon : HubMqttClient, Imemmon
 {
 
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
@@ -20,7 +20,7 @@ public class memmon : HubMqttClient, Imemmon
     public ICommand<int> Command_malloc { get; set; }
     public ICommand Command_free { get; set; }
 
-    public memmon(IMqttClient c) : base(c)
+    public _memmon(IMqttClient c) : base(c)
     {
         Property_started = new ReadOnlyProperty<DateTime>(c, "started");
         Property_interval = new WritableProperty<int>(c, "interval");
