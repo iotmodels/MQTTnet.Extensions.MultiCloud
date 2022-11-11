@@ -62,12 +62,12 @@ public class MemMonFactory
         return client;
     }
 
-    static async Task<dtmi_rido_memmon.mqtt.memmon> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)
+    static async Task<dtmi_rido_memmon.mqtt._memmon> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)
     {
         var cs = new ConnectionSettings(connectionString) { ModelId = Imemmon.ModelId };
         var mqtt = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, cancellationToken);
         connectionSettings = BrokerClientFactory.ComputedSettings;
-        var client = new dtmi_rido_memmon.mqtt.memmon(mqtt)
+        var client = new dtmi_rido_memmon.mqtt._memmon(mqtt)
         {
             InitialState = String.Empty
         };
@@ -75,21 +75,21 @@ public class MemMonFactory
         return client;
     }
 
-    static async Task<dtmi_rido_memmon.hub.memmon> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
+    static async Task<dtmi_rido_memmon.hub._memmon> CreateHubClientAsync(string connectionString, CancellationToken cancellationToken = default)
     {
         var cs = new ConnectionSettings(connectionString) { ModelId = Imemmon.ModelId };
         var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs, cancellationToken);
         connectionSettings = HubDpsFactory.ComputedSettings;
-        var client = new dtmi_rido_memmon.hub.memmon(hub);
+        var client = new dtmi_rido_memmon.hub._memmon(hub);
         nugetPackageVersion = HubDpsFactory.NuGetPackageVersion;
         client.InitialState = await client.GetTwinAsync(cancellationToken);
         return client;
     }
 
-    static async Task<dtmi_rido_memmon.aws.memmon> CreateAwsClientAsync(string connectionString, CancellationToken cancellationToken = default)
+    static async Task<dtmi_rido_memmon.aws._memmon> CreateAwsClientAsync(string connectionString, CancellationToken cancellationToken = default)
     {
         var mqtt = await AwsClientFactory.CreateFromConnectionSettingsAsync(connectionString, true, cancellationToken);
-        var client = new dtmi_rido_memmon.aws.memmon(mqtt);
+        var client = new dtmi_rido_memmon.aws._memmon(mqtt);
         connectionSettings = AwsClientFactory.ComputedSettings;
         nugetPackageVersion = AwsClientFactory.NuGetPackageVersion;
         client.InitialState = await client.GetShadowAsync(cancellationToken);

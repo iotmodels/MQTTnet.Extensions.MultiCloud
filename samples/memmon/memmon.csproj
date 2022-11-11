@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
 	<IsPackable>false</IsPackable>
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<ContainerImageName>memmon_dn7</ContainerImageName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,8 +23,8 @@
 	<ItemGroup>
 		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
 		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+		<PackageReference Include="Microsoft.NET.Build.Containers" Version="0.2.7" />
 	</ItemGroup>
 
 	<ItemGroup>
