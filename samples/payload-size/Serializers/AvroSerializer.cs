@@ -1,7 +1,8 @@
 ﻿using Avro.IO;
 using Avro.Specific;
+using MQTTnet.Extensions.MultiCloud;
 
-namespace MQTTnet.Extensions.MultiCloud.Serializers;
+namespace payload_size.Serializers;
 
 public class AvroSerializer : IMessageSerializer
 {

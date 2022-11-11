@@ -1,6 +1,6 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
+using payload_size.Binders;
 
 namespace payload_size;
 internal class ProtoDeviceClient
@@ -11,7 +11,7 @@ internal class ProtoDeviceClient
 
     public ProtoDeviceClient(IMqttClient mqtt)
     {
-        Telemetry = new TelemetryProtobuff<proto_model.Telemetries>(mqtt);
+        Telemetry = new TelemetryProtobuf<proto_model.Telemetries>(mqtt);
         Props = new ReadOnlyPropertyProtobuff<proto_model.Properties>(mqtt);
         Prop_SdkInfo = new ReadOnlyPropertyProtobuff<proto_model.Properties>(mqtt);
     }

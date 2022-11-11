@@ -16,7 +16,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         {
             var cs = new ConnectionSettings()
             {
-                IdScope = "0ne006CCDE4",
+                IdScope = "0ne0083E236",
                 DeviceId = "sasdpstest",
                 SharedAccessKey = "s7g9fIUf4mNNo1m/Ge3hGQi56ZJG9KzsZ46xL7O/rbI="
             };
@@ -33,7 +33,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         {
             var cs = new ConnectionSettings()
             {
-                IdScope = "0ne006CCDE4",
+                IdScope = "0ne0083E236",
                 X509Key = "ca-device.pem|ca-device.key"
             };
             var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
@@ -49,7 +49,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         {
             var cs = new ConnectionSettings()
             {
-                IdScope = "0ne006CCDE4",
+                IdScope = "0ne0083E236",
                 X509Key = "dev03.pem|dev03.key|1234"
             };
             var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()

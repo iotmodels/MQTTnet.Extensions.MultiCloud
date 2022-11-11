@@ -27,8 +27,8 @@ public class Device : BackgroundService
     private const bool default_enabled = true;
     private const int default_interval = 45;
    
-    private MemmonClient client;
-    private ConnectionSettings connectionSettings;
+    private MemmonClient? client;
+    private ConnectionSettings? connectionSettings;
 
     private string infoVersion = string.Empty;
 
@@ -102,7 +102,7 @@ public class Device : BackgroundService
         var ack = new ack
         {
             Value = Google.Protobuf.WellKnownTypes.Any.Pack(desired),
-            Version = client.Property_enabled.Version.Value,
+            Version = client!.Property_enabled.Version!.Value,
             Description = "desired notification accepted",
             Status = 200
         };
@@ -126,7 +126,7 @@ public class Device : BackgroundService
             ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(desired);
             ack.Description = "desired notification accepted";
             ack.Status = 200;
-            ack.Version = client.Property_interval.Version.Value;
+            ack.Version = client.Property_interval.Version!.Value;
             client.Props.Interval = desired.Interval;
         }
         else
@@ -134,7 +134,7 @@ public class Device : BackgroundService
             ack.Description = "negative values not accepted";
             ack.Status = 405;
             ack.Value = Google.Protobuf.WellKnownTypes.Any.Pack(client.Props);
-            ack.Version = client.Property_interval.Version.Value;
+            ack.Version = client.Property_interval.Version!.Value;
         };
         return await Task.FromResult(ack);
     }
@@ -161,8 +161,8 @@ public class Device : BackgroundService
         if (req.Mode == getRuntimeStatsMode.Full)
         {
             result.DiagResults.Add("sdk info:", infoVersion);
-            result.DiagResults.Add("interval: ", client.Props.Interval.ToString());
-            result.DiagResults.Add("enabled: ", client.Props.Enabled.ToString());
+            result.DiagResults.Add("interval: ", client!.Props.Interval.ToString());
+            result.DiagResults.Add("enabled: ", client!.Props.Enabled.ToString());
             result.DiagResults.Add("twin receive: ", twinRecCounter.ToString());
             //result.diagnosticResults.Add($"twin sends: ", RidCounter.Current.ToString());
             result.DiagResults.Add("telemetry: ", telemetryCounter.ToString());
@@ -173,7 +173,7 @@ public class Device : BackgroundService
     }
 
 #pragma warning disable IDE0052 // Remove unread private members
-    private Timer screenRefresher;
+    private Timer? screenRefresher;
 #pragma warning restore IDE0052 // Remove unread private members
     private void RefreshScreen(object state)
     {
@@ -181,17 +181,17 @@ public class Device : BackgroundService
         {
             void AppendLineWithPadRight(StringBuilder sb, string s) => sb.AppendLine(s?.PadRight(Console.BufferWidth > 1 ? Console.BufferWidth - 1 : 300));
 
-            string enabled_value = client?.Props.Enabled.ToString();
-            string interval_value = client?.Props.Interval.ToString();
+            string enabled_value = client!.Props.Enabled!.ToString();
+            string interval_value = client!.Props.Interval!.ToString();
             StringBuilder sb = new();
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"{connectionSettings?.HostName}:{connectionSettings?.TcpPort}");
-            AppendLineWithPadRight(sb, $"{connectionSettings.ClientId} (Auth:{connectionSettings.Auth}/ TLS:{connectionSettings.UseTls})");
+            AppendLineWithPadRight(sb, $"{connectionSettings?.ClientId} (Auth:{connectionSettings!.Auth}/ TLS:{connectionSettings.UseTls})");
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "Property", "Value".PadRight(15), "Version"));
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "--------", "-----".PadLeft(15, '-'), "------"));
-            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "enabled".PadRight(8), enabled_value?.PadLeft(15), client.Property_enabled.Version.Value));
-            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "interval".PadRight(8), interval_value?.PadLeft(15), client.Property_interval .Version.Value));
+            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "enabled".PadRight(8), enabled_value?.PadLeft(15), client.Property_enabled.Version!.Value));
+            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "interval".PadRight(8), interval_value?.PadLeft(15), client.Property_interval.Version!.Value));
             //AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "started".PadRight(8), client.Props.Started.Seconds.ToString().PadLeft(15), ""));
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Reconnects: {reconnectCounter}");
@@ -210,6 +210,6 @@ public class Device : BackgroundService
 
         Console.SetCursorPosition(0, 0);
         Console.WriteLine(RenderData());
-        screenRefresher = new Timer(RefreshScreen, this, 1000, 0);
+        screenRefresher = new Timer(RefreshScreen!, this, 1000, 0);
     }
 }

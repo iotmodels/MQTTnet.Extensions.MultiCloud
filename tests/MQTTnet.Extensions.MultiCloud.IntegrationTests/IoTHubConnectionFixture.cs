@@ -38,7 +38,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),
                 DeviceId = "testdevice",
                 ModuleId = "testmodule",
-                SharedAccessKey = "ScXK1VNWksAd+LuYScMyj8c/mkWtXNTQXJHDUUkHgLI="
+                SharedAccessKey = "py0vifQWT7QGK4AiDO3IlreGsvXrLet+sKZnErKMkAk="
             };
             var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)
@@ -70,7 +70,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             var cs = new ConnectionSettings()
             {
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),
-                X509Key = "dev03.pem|dev03.key|1234"
+                X509Key = "dev03.pfx|"
             };
             var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)

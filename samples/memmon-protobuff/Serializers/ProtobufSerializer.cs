@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf;
+using MQTTnet.Extensions.MultiCloud;
 
-namespace MQTTnet.Extensions.MultiCloud.Serializers;
+namespace Serializers;
 
 public class ProtobufSerializer : IMessageSerializer
 {
