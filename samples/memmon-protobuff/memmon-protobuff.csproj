@@ -4,11 +4,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
 	<IsPackable>false</IsPackable>
+	  <Nullable>enable</Nullable>
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
 
 	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.21.9" />
 		<PackageReference Include="Grpc.Tools" Version="2.50.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
