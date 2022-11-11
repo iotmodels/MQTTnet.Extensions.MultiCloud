@@ -21,7 +21,7 @@ public class Device : BackgroundService
 
     private double telemetryWorkingSet = 0;
     private double managedMemory = 0;
-    private const bool default_enabled = true;
+    private const bool default_enabled = false;
     private const int default_interval = 500;
 
     private string lastDiscconectReason = string.Empty;
@@ -207,10 +207,12 @@ public class Device : BackgroundService
         if (req == DiagnosticsMode.complete)
         {
             result.Add("sdk info:", infoVersion);
+            result.Add("dotnet version:", Environment.Version.ToString());
         }
         if (req == DiagnosticsMode.full)
         {
             result.Add("sdk info:", infoVersion);
+            result.Add("dotnet version:", Environment.Version.ToString());
             result.Add("interval: ", client.Property_interval.Value.ToString());
             result.Add("enabled: ", client.Property_enabled.Value.ToString());
             result.Add("twin receive: ", twinRecCounter.ToString());

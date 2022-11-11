@@ -15,11 +15,6 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task DeviceSas()
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
             var cs = new ConnectionSettings()
             {
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),
@@ -27,7 +22,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 SharedAccessKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.Empty.ToString("N")))
 
             };
-            var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
@@ -38,19 +33,14 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ModuleSas()
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
             var cs = new ConnectionSettings()
             {
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),
                 DeviceId = "testdevice",
                 ModuleId = "testmodule",
-                SharedAccessKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.Empty.ToString("N")))
+                SharedAccessKey = "py0vifQWT7QGK4AiDO3IlreGsvXrLet+sKZnErKMkAk="
             };
-            var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
@@ -61,17 +51,28 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task DeviceCert()
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
             var cs = new ConnectionSettings()
             {
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),
                 X509Key = "ca-device.pem|ca-device.key"
             };
-            var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
+                .WithConnectionSettings(cs)
+                .Build());
+            Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
+            Assert.True(client.IsConnected);
+            await client.DisconnectAsync();
+        }
+
+        [Fact]
+        public async Task DeviceCertFromIntermediate()
+        {
+            var cs = new ConnectionSettings()
+            {
+                HostName = Environment.GetEnvironmentVariable("TestHubName"),
+                X509Key = "dev03.pfx|"
+            };
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
@@ -82,17 +83,12 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         [Fact]
         public async Task ModuleCert()
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
             var cs = new ConnectionSettings()
             {
                 HostName = Environment.GetEnvironmentVariable("TestHubName"),
                 X509Key = "ca-module.pem|ca-module.key"
             };
-            var connAck = await client.ConnectAsync(new MqttClientOptionsBuilder()
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);

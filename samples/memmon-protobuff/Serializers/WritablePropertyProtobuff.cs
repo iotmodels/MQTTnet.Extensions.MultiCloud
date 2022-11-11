@@ -1,9 +1,11 @@
 ﻿using Google.Protobuf;
 using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Binders;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
+namespace Serializers
 {
     public class WritablePropertyProtobuff<T, TResp> : CloudToDeviceBinder<T, TResp>, IWritableProperty<T, TResp>, IDeviceToCloud<TResp>
     {
@@ -16,7 +18,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         {
             _connection = connection;
             _name = name;
-            SubscribeTopicPattern = "device/{clientId}/props/{name}/set";
+            SubscribeTopicPattern = "device/{clientId}/props/{name}/set/#";
             RequestTopicPattern = "device/{clientId}/props/{name}/set";
             ResponseTopicPattern = "device/{clientId}/props/{name}/ack";
             RetainResponse = true;
@@ -40,9 +42,9 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         {
             TResp payload = default!; //TODO use generic ACK for protos
             await SendMessageAsync(payload, cancellationToken);
-            
+
         }
 
-        
+
     }
 }
