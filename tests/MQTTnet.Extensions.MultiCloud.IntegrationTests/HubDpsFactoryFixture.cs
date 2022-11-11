@@ -16,13 +16,13 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         {
             var cs = new ConnectionSettings
             {
-                IdScope = "0ne006CCDE4",
+                IdScope = "0ne0083E236",
                 DeviceId = "testDpsDevice",
-                SharedAccessKey = "nnCC1W/tfXYjmnVWhJqp6KNk8zROrObl+I9tW/wzKTM="
+                SharedAccessKey = "FFV/v28IPJYa6F9reMfmfq2lhK5XnQNBftSGzqWAqJ0="
             };
             var client = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             Assert.True(client.IsConnected);
-            Assert.Equal("rido.azure-devices.net", HubDpsFactory.ComputedSettings!.HostName);
+            Assert.Equal("tests.azure-devices.net", HubDpsFactory.ComputedSettings!.HostName);
             await client.DisconnectAsync(
                 new MqttClientDisconnectOptionsBuilder()
                         .WithReason(MqttClientDisconnectReason.NormalDisconnection)
@@ -35,12 +35,12 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         {
             var cs = new ConnectionSettings
             {
-                IdScope = "0ne006CCDE4",
+                IdScope = "0ne0083E236",
                 X509Key = "dpsTestDevice.pem|dpsTestDevice.key"
             };
             var client = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             Assert.True(client.IsConnected);
-            Assert.Equal("rido.azure-devices.net", HubDpsFactory.ComputedSettings!.HostName);
+            Assert.Equal("tests.azure-devices.net", HubDpsFactory.ComputedSettings!.HostName);
             await client.DisconnectAsync(
                 new MqttClientDisconnectOptionsBuilder()
                         .WithReason(MqttClientDisconnectReason.NormalDisconnection)
