@@ -14,7 +14,7 @@ public class TelemetryProtobuf<T> : DeviceToCloudBinder<T>, ITelemetry<T>
     public TelemetryProtobuf(IMqttClient mqttClient, string name)
         : base(mqttClient, name, new ProtobufSerializer())
     {
-        TopicPattern = "devices/{clientId}/messages/events/";
+        TopicPattern = "device/{clientId}/tel";
         WrapMessage = false;
     }
 }

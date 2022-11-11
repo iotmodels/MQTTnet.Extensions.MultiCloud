@@ -12,6 +12,7 @@ public class CommandProtobuff<T, TResp> : CloudToDeviceBinder<T, TResp>, IComman
     {
         UnwrapRequest = false;
         RequestTopicPattern = "device/{clientId}/cmd/{name}";
+        SubscribeTopicPattern = "device/{clientId}/cmd/{name}";
         ResponseTopicPattern = "device/{clientId}/cmd/{name}/resp";
     }
 }
