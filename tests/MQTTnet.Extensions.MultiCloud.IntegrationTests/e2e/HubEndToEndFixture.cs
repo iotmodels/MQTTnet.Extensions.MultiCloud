@@ -36,7 +36,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             var deviceId = "memmon-test" + new Random().Next(100);
             var device = await GetOrCreateDeviceAsync(deviceId);
 
-            var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
+            var td = new _memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             td.Property_interval.OnMessage = async p =>
             {
                 td.Property_interval.Value = p;
@@ -91,7 +91,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
 
             await Task.Delay(1000);
 
-            var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
+            var td = new _memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
            // await td.InitState();
 
             td.Property_interval.OnMessage = async m =>
@@ -131,7 +131,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             var deviceId = "memmon-test" + new Random().Next(100);
             var device = await GetOrCreateDeviceAsync(deviceId);
 
-            var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
+            var td = new _memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             td.Property_interval.OnMessage = m =>
             {
                 var ack = new Ack<int>()
@@ -183,7 +183,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             var device = await GetOrCreateDeviceAsync(deviceId);
 
             bool commandInvoked = false;
-            var td = new memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
+            var td = new _memmon(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
             td.Command_getRuntimeStats.OnMessage = async m =>
             {
 
