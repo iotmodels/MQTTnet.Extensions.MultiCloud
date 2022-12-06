@@ -11,6 +11,7 @@ public class _memmon : HubMqttClient, Imemmon
 {
 
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
+    public IReadOnlyProperty<int> Property_timesRestarted { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_workingSet { get; set; }
@@ -23,6 +24,7 @@ public class _memmon : HubMqttClient, Imemmon
     public _memmon(IMqttClient c) : base(c)
     {
         Property_started = new ReadOnlyProperty<DateTime>(c, "started");
+        Property_timesRestarted = new ReadOnlyProperty<int>(c, "timesRestarted");
         Property_interval = new WritableProperty<int>(c, "interval");
         Property_enabled = new WritableProperty<bool>(c, "enabled");
         Telemetry_workingSet = new Telemetry<double>(c, "workingSet");

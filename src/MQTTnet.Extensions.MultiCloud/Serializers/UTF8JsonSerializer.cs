@@ -59,14 +59,22 @@ public class UTF8JsonSerializer : IMessageSerializer
         {
             string payloadString = Encoding.UTF8.GetString(payload);
             JsonDocument payloadJson = JsonDocument.Parse(payloadString);
-            if (payloadJson.RootElement.TryGetProperty(name, out JsonElement propValue))
+            if (payloadJson.RootElement.ValueKind == JsonValueKind.Object)
             {
-                found = true;
-                result = propValue.Deserialize<T>()!;
+                if (payloadJson.RootElement.TryGetProperty(name, out JsonElement propValue))
+                {
+                    found = true;
+                    result = propValue.Deserialize<T>()!;
+                }
+                else
+                {
+                    result = default!;
+                }
             }
             else
             {
-                result = default!;
+                result = payloadJson.Deserialize<T>()!;
+                found = true;
             }
         }
         return found;
