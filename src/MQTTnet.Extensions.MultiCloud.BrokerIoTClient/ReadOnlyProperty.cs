@@ -6,6 +6,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
 {
+    private readonly TaskCompletionSource _tcs;
     private readonly IMqttClient _client;
     private readonly string _name;
     private readonly string _topic;
@@ -19,6 +20,7 @@ public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
     {
         _client = mqttClient;
         _name = name;
+        _tcs = new TaskCompletionSource();
         TopicPattern = "device/{clientId}/props/{name}";
         WrapMessage = false;
         Retain = true;
@@ -31,6 +33,7 @@ public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
                 if (ser.TryReadFromBytes(m.ApplicationMessage.Payload, _name, out T propVal))
                 {
                     Value = propVal;
+                    _tcs.TrySetResult();
                 }
             }
             await Task.Yield();
@@ -40,6 +43,7 @@ public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
     public void InitProperty(string initialState)
     {
        _ = _client.SubscribeAsync(_topic);
+        _tcs.Task.Wait(5000);
     }
 
     public  Task SendMessageAsync(CancellationToken cancellationToken = default) => SendMessageAsync(Value!, cancellationToken);
