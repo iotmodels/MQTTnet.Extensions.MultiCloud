@@ -8,7 +8,7 @@ namespace dtmi_rido_memmon;
 
 public interface Imemmon 
 {
-    public const string ModelId = "dtmi:rido:memmon;2";
+    public const string ModelId = "dtmi:rido:memmon;3";
     public IMqttClient Connection { get; }
     public string InitialState { get; }
 
