@@ -34,7 +34,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="*.g.cs">
-		  <DependentUpon>dtmi_rido_memmon-2.json</DependentUpon>
+		  <DependentUpon>dtmi_rido_memmon-3.json</DependentUpon>
 		</Compile>
 	</ItemGroup>
 	

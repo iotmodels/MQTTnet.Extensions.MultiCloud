@@ -13,6 +13,7 @@ public interface Imemmon
     public string InitialState { get; }
 
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
+    public IReadOnlyProperty<int> Property_timesRestarted { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_workingSet { get; set; }

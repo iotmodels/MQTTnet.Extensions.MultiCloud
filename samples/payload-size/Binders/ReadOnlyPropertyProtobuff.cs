@@ -8,6 +8,8 @@ namespace payload_size.Binders;
 
 public class ReadOnlyPropertyProtobuff<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
 {
+    public T? Value { get; set; }
+    public int Version { get; set; }
     public ReadOnlyPropertyProtobuff(IMqttClient mqttClient) : this(mqttClient, string.Empty) { }
 
     public ReadOnlyPropertyProtobuff(IMqttClient mqttClient, string name)
@@ -16,5 +18,15 @@ public class ReadOnlyPropertyProtobuff<T> : DeviceToCloudBinder<T>, IReadOnlyPro
         TopicPattern = "device/{clientId}/props";
         WrapMessage = false;
         Retain = true;
+    }
+
+    public void InitProperty(string initialState)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public Task SendMessageAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }

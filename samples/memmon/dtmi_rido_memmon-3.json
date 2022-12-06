@@ -1,12 +1,17 @@
 {
   "@context": "dtmi:dtdl:context;2",
-  "@id": "dtmi:rido:memmon;2",
+  "@id": "dtmi:rido:memmon;3",
   "@type": "Interface",
   "contents": [
     {
       "@type": "Property",
       "name": "started",
       "schema": "dateTime"
+    },
+    {
+      "@type": "Property",
+      "name": "timesRestarted",
+      "schema": "integer"
     },
     {
       "@type": "Property",
