@@ -8,11 +8,12 @@ namespace dtmi_rido_memmon;
 
 public interface Imemmon 
 {
-    public const string ModelId = "dtmi:rido:memmon;2";
+    public const string ModelId = "dtmi:rido:memmon;3";
     public IMqttClient Connection { get; }
     public string InitialState { get; }
 
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
+    public IReadOnlyProperty<int> Property_timesRestarted { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_workingSet { get; set; }
