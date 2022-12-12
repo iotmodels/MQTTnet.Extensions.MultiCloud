@@ -71,10 +71,10 @@ public class Device : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
+            telemetryWorkingSet = Environment.WorkingSet.Bytes().Megabytes;
+            managedMemory = GC.GetTotalMemory(true).Bytes().Megabytes;
             if (client.Property_enabled.Value == true)
             {
-                telemetryWorkingSet = Environment.WorkingSet.Bytes().Megabytes;
-                managedMemory = GC.GetTotalMemory(true).Bytes().Megabytes;
                 await client.Telemetry_workingSet.SendMessageAsync(telemetryWorkingSet, stoppingToken);
                 await client.Telemetry_managedMemory.SendMessageAsync(managedMemory, stoppingToken);
                 telemetryCounter++;
@@ -268,6 +268,7 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
             AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");
             AppendLineWithPadRight(sb, $"NuGet: {infoVersion}");
+            AppendLineWithPadRight(sb, $".NET: {Environment.Version}");
             AppendLineWithPadRight(sb, " ");
             return sb.ToString();
         }
