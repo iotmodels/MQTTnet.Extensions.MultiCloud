@@ -64,21 +64,21 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             await client.DisconnectAsync();
         }
 
-        [Fact]
-        public async Task DeviceCertFromIntermediate()
-        {
-            var cs = new ConnectionSettings()
-            {
-                HostName = Environment.GetEnvironmentVariable("TestHubName"),
-                X509Key = "dev03.pfx|"
-            };
-            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
-                .WithConnectionSettings(cs)
-                .Build());
-            Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
-            Assert.True(client.IsConnected);
-            await client.DisconnectAsync();
-        }
+        //[Fact]
+        //public async Task DeviceCertFromIntermediate()
+        //{
+        //    var cs = new ConnectionSettings()
+        //    {
+        //        HostName = Environment.GetEnvironmentVariable("TestHubName"),
+        //        X509Key = "dev03.pfx|"
+        //    };
+        //    var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
+        //        .WithConnectionSettings(cs)
+        //        .Build());
+        //    Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
+        //    Assert.True(client.IsConnected);
+        //    await client.DisconnectAsync();
+        //}
 
         [Fact]
         public async Task ModuleCert()
