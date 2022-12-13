@@ -2,7 +2,6 @@
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System.Net.NetworkInformation;
 
 namespace mqtt_connection;
 internal class ClientFactory
