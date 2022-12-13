@@ -2,11 +2,13 @@
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
+using System.Net.NetworkInformation;
 
 namespace mqtt_connection;
 internal class ClientFactory
 {
     internal static ConnectionSettings? ConnectionSettings;
+    internal static string SdkInfo;
     public static async Task<IMqttClient> CreateFromConnectionStringAsync(string connectionString)
     {
         IMqttClient mqttClient;
@@ -14,11 +16,13 @@ internal class ClientFactory
         {
             mqttClient = await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionString);
             ConnectionSettings = HubDpsFactory.ComputedSettings!;
+            SdkInfo = HubDpsFactory.NuGetPackageVersion;
         }
         else
         {
             mqttClient = await BrokerClientFactory.CreateFromConnectionSettingsAsync(connectionString);
             ConnectionSettings = BrokerClientFactory.ComputedSettings!;
+            SdkInfo = BrokerClientFactory.NuGetPackageVersion;
         }
         return mqttClient;
     }

@@ -17,4 +17,10 @@
     <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.AzureIoTClient\MQTTnet.Extensions.MultiCloud.AzureIoTClient.csproj" />
     <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ca.pem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
