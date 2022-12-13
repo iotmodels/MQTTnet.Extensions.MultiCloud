@@ -26,12 +26,12 @@ public class Worker : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            await mqttClient.PublishAsync(new MQTTnet.MqttApplicationMessageBuilder()
+            var pubAck = await mqttClient.PublishAsync(new MQTTnet.MqttApplicationMessageBuilder()
                 .WithTopic($"devices/{mqttClient.Options.ClientId}/messages/events/")
                 .WithPayload(System.Text.Json.JsonSerializer.Serialize(new { Environment.WorkingSet }))
-                .Build());
+                .Build(), stoppingToken);
 
-            _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            _logger.LogInformation("Worker sends telemetry: {time}, with ack: {pubAck}", DateTimeOffset.Now, pubAck.ReasonCode);
             await Task.Delay(5000, stoppingToken);
         }
     }
