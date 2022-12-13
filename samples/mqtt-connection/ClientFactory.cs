@@ -8,7 +8,7 @@ namespace mqtt_connection;
 internal class ClientFactory
 {
     internal static ConnectionSettings? ConnectionSettings;
-    internal static string SdkInfo;
+    internal static string? SdkInfo;
     public static async Task<IMqttClient> CreateFromConnectionStringAsync(string connectionString)
     {
         IMqttClient mqttClient;

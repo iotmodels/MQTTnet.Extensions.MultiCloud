@@ -20,7 +20,7 @@ public class Worker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var mqttClient = await ClientFactory.CreateFromConnectionStringAsync(_configuration.GetConnectionString("cs")!);
-        _logger.LogWarning("Connected: {s} with {c}", ClientFactory.ConnectionSettings!, ClientFactory.SdkInfo);
+        _logger.LogWarning("Connected: {s} with {c}", ClientFactory.ConnectionSettings!, ClientFactory.SdkInfo!);
 
         mqttClient.DisconnectedAsync += async r => await Task.Run(() => _logger.LogError("Device Disconnected. {r}", r.Reason));
 
