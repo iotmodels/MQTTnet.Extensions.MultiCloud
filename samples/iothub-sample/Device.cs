@@ -27,7 +27,7 @@ public class Device : BackgroundService
         _logger.LogWarning("Connecting to: {connectionSettings}", connectionSettings);
 
         var client = new HubMqttClient(await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionSettings, stoppingToken));
-        
+        client.Connection.DisconnectedAsync += async d => await Task.Run(() => _logger.LogError("MQTT client disconnected {reason}", d.Reason));
         var v = await client.UpdateTwinAsync(new { started = DateTime.Now }, stoppingToken);
         _logger.LogInformation("Updated Twin to verison: {v}", v);
         var twin = await client.GetTwinAsync(stoppingToken);

@@ -1,6 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
+using payload_size.Binders;
 
 namespace payload_size;
 

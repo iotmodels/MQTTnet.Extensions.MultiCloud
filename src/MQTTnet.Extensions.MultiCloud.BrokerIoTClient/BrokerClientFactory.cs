@@ -6,7 +6,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
 {
     public static class BrokerClientFactory
     {
-        public static string NuGetPackageVersion => $"{ThisAssembly.NuGetPackageVersion}";
+        public static string NuGetPackageVersion => $"{ThisAssembly.AssemblyName} {ThisAssembly.NuGetPackageVersion}";
 
         public static ConnectionSettings? ComputedSettings { get; private set; }
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, bool withBirth = false, CancellationToken cancellationToken = default) =>
@@ -23,8 +23,8 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             {
                 throw new ApplicationException($"Cannot connect to {cs}");
             }
-            //if (withBirth)
-            //{
+            if (withBirth)
+            {
                 var birthPayload = new UTF8JsonSerializer().ToBytes(
                        new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
                        {
@@ -39,7 +39,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
                 {
                     throw new ApplicationException($"Error publishing Birth {cs}");
                 }
-            //}
+            }
             return mqtt;
         }
     }

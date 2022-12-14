@@ -1,18 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <RootNamespace>mqtt_grpc_device</RootNamespace>
 	<IsPackable>false</IsPackable>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<DockerfileContext>..\..</DockerfileContext>
+	  <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.21.9" />
 		<PackageReference Include="Grpc.Tools" Version="2.50.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<Protobuf Include="protos\*.proto" GrpcServices="None" />

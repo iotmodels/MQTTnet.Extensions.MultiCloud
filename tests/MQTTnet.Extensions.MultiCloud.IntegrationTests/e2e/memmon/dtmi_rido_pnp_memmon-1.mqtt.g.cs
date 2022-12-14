@@ -8,7 +8,7 @@ using pnp_memmon;
 
 namespace dtmi_rido_pnp_memmon.mqtt;
 
-public class memmon : Imemmon
+public class _memmon : Imemmon
 {
     public IMqttClient Connection { get; set; }
     public string InitialState { get; set; }
@@ -18,7 +18,7 @@ public class memmon : Imemmon
     public ITelemetry<double> Telemetry_workingSet { get; set; }
     public ICommand<DiagnosticsMode, Dictionary<string, string>> Command_getRuntimeStats { get; set; }
 
-    internal memmon(IMqttClient c) 
+    internal _memmon(IMqttClient c) 
     {
         Property_started = new ReadOnlyProperty<DateTime>(c, "started");
         Property_interval = new WritableProperty<int>(c, "interval");

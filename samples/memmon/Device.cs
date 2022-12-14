@@ -21,7 +21,7 @@ public class Device : BackgroundService
 
     private double telemetryWorkingSet = 0;
     private double managedMemory = 0;
-    private const bool default_enabled = true;
+    private const bool default_enabled = false;
     private const int default_interval = 500;
 
     private string lastDiscconectReason = string.Empty;
@@ -54,6 +54,13 @@ public class Device : BackgroundService
         client.Command_malloc.OnMessage = Command_malloc_Hanlder;
         client.Command_free.OnMessage = Command_free_Hanlder;
 
+        client.Property_started.InitProperty(client.InitialState);
+
+        client.Property_timesRestarted.InitProperty(client.InitialState);
+        client.Property_timesRestarted.Value++;
+        await client.Property_timesRestarted.SendMessageAsync(stoppingToken);
+        
+
         await client.Property_started.SendMessageAsync(DateTime.Now, stoppingToken);
 
         await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
@@ -64,10 +71,10 @@ public class Device : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
+            telemetryWorkingSet = Environment.WorkingSet.Bytes().Megabytes;
+            managedMemory = GC.GetTotalMemory(true).Bytes().Megabytes;
             if (client.Property_enabled.Value == true)
             {
-                telemetryWorkingSet = Environment.WorkingSet.Bytes().Megabytes;
-                managedMemory = GC.GetTotalMemory(true).Bytes().Megabytes;
                 await client.Telemetry_workingSet.SendMessageAsync(telemetryWorkingSet, stoppingToken);
                 await client.Telemetry_managedMemory.SendMessageAsync(managedMemory, stoppingToken);
                 telemetryCounter++;
@@ -207,10 +214,12 @@ public class Device : BackgroundService
         if (req == DiagnosticsMode.complete)
         {
             result.Add("sdk info:", infoVersion);
+            result.Add("dotnet version:", Environment.Version.ToString());
         }
         if (req == DiagnosticsMode.full)
         {
             result.Add("sdk info:", infoVersion);
+            result.Add("dotnet version:", Environment.Version.ToString());
             result.Add("interval: ", client.Property_interval.Value.ToString());
             result.Add("enabled: ", client.Property_enabled.Value.ToString());
             result.Add("twin receive: ", twinRecCounter.ToString());
@@ -240,11 +249,12 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, $"{connectionSettings?.HostName}:{connectionSettings?.TcpPort}");
             AppendLineWithPadRight(sb, $"{connectionSettings.ClientId} (Auth:{connectionSettings.Auth}/ TLS:{connectionSettings.UseTls}) GW: {connectionSettings.GatewayHostName}");
             AppendLineWithPadRight(sb, " ");
-            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "Property", "Value".PadRight(15), "Version"));
-            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "--------", "-----".PadLeft(15, '-'), "------"));
-            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "enabled".PadRight(8), enabled_value?.PadLeft(15), client?.Property_enabled?.Version));
-            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "interval".PadRight(8), interval_value?.PadLeft(15), client?.Property_interval.Version));
-            //AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "started".PadRight(8), client.Property_started.T().PadLeft(15), client?.Property_started?.Version));
+            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "Property".PadRight(15), "Value".PadRight(15), "Version"));
+            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "-".PadRight(15, '-'), "-----".PadLeft(15, '-'), "------"));
+            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "enabled".PadRight(15), enabled_value?.PadLeft(15), client?.Property_enabled?.Version));
+            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "interval".PadRight(15), interval_value?.PadLeft(15), client?.Property_interval.Version));
+            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "timesRestarted".PadRight(15), client.Property_timesRestarted.Value.ToString().PadLeft(15), client?.Property_timesRestarted.Version));
+            AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "started".PadRight(15), client.Property_started.Value.ToShortTimeString().PadLeft(15), client?.Property_started?.Version));
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Reconnects: {reconnectCounter}");
             AppendLineWithPadRight(sb, $"Telemetry: {telemetryCounter}");
@@ -258,6 +268,7 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
             AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");
             AppendLineWithPadRight(sb, $"NuGet: {infoVersion}");
+            AppendLineWithPadRight(sb, $".NET: {Environment.Version}");
             AppendLineWithPadRight(sb, " ");
             return sb.ToString();
         }

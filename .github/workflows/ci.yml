@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment: Test_IoT_Hub
     timeout-minutes: 5
     steps:
@@ -20,7 +20,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 7.0.x
 
     - name: Restore dependencies
       run: dotnet restore
@@ -35,7 +35,7 @@ jobs:
       env:
         E2EHubConnectionString: ${{secrets.E2EHubConnectionString}}
         TestHubName: ${{secrets.TestHubName}} 
-      run: dotnet test --no-build --verbosity normal --logger trx
+      run: dotnet test --no-build --verbosity normal --logger trx  --filter FullyQualifiedName\!~MQTTnet.Extensions.MultiCloud.IntegrationTests
 
     - name: Process trx reports with default
       if: always()

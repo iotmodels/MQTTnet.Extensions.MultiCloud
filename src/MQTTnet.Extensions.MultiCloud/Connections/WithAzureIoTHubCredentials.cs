@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections;
@@ -12,6 +13,8 @@ public static partial class MqttNetExtensions
         {
             hostName = cs.GatewayHostName;
         }
+
+        builder.WithTcpServer(hostName, cs.TcpPort);
         if (cs?.Auth == AuthType.Sas)
         {
             if (string.IsNullOrEmpty(cs.ModuleId))
@@ -22,8 +25,9 @@ public static partial class MqttNetExtensions
             {
                 cs.ClientId = $"{cs.DeviceId}/{cs.ModuleId}";
             }
+
             builder.WithTlsSettings(cs);
-            return builder.WithAzureIoTHubCredentialsSas(hostName, cs.DeviceId!, cs.ModuleId!, cs.HostName!, cs.SharedAccessKey!, cs.ModelId!, cs.SasMinutes, cs.TcpPort);
+            return builder.WithAzureIoTHubCredentialsSas(hostName, cs.DeviceId!, cs.ModuleId!, cs.HostName!, cs.SharedAccessKey!, cs.ModelId!, cs.SasMinutes);
         }
         else if (cs?.Auth == AuthType.X509)
         {
@@ -40,8 +44,9 @@ public static partial class MqttNetExtensions
             {
                 cs.DeviceId = clientId;
             }
+
             builder.WithTlsSettings(cs);
-            return builder.WithAzureIoTHubCredentialsX509(hostName, cert, cs.ModelId!, cs.TcpPort);
+            return builder.WithAzureIoTHubCredentialsX509(hostName, cs.ClientId!, cs.ModelId!);
         }
         else
         {
@@ -49,34 +54,22 @@ public static partial class MqttNetExtensions
         }
     }
 
-    public static MqttClientOptionsBuilder WithAzureIoTHubCredentialsSas(this MqttClientOptionsBuilder builder, string hostName, string deviceId, string moduleId, string audience, string sasKey, string modelId, int sasMinutes, int tcpPort)
+    public static MqttClientOptionsBuilder WithAzureIoTHubCredentialsSas(this MqttClientOptionsBuilder builder, string hostName, string deviceId, string moduleId, string audience, string sasKey, string modelId, int sasMinutes)
     {
-        if (string.IsNullOrEmpty(moduleId))
+        string target = deviceId;
+        if (!string.IsNullOrEmpty(moduleId))
         {
-            (string username, string password) = SasAuth.GenerateHubSasCredentials(hostName, deviceId, sasKey, audience, modelId,  sasMinutes);
-            builder
-                .WithTcpServer(hostName, tcpPort)
-                .WithCredentials(username, password);
+            target = $"{deviceId}/{moduleId}";
         }
-        else
-        {
-            (string username, string password) = SasAuth.GenerateHubSasCredentials(hostName, $"{deviceId}/{moduleId}", sasKey, modelId, audience, sasMinutes);
-            builder
-                .WithTcpServer(hostName, tcpPort)
-                .WithCredentials(username, password);
-        }
+        (string username, string password) = SasAuth.GenerateHubSasCredentials(hostName, target, sasKey, audience, modelId, sasMinutes);
+        builder.WithCredentials(username, password);
         return builder;
     }
 
-    public static MqttClientOptionsBuilder WithAzureIoTHubCredentialsX509(this MqttClientOptionsBuilder builder, string hostName, X509Certificate2 cert, string modelId, int tcpPort)
+    public static MqttClientOptionsBuilder WithAzureIoTHubCredentialsX509(this MqttClientOptionsBuilder builder, string hostName, string deviceId, string modelId)
     {
-        string clientId = X509CommonNameParser.GetCNFromCertSubject(cert);
-
-        builder
-            .WithTcpServer(hostName, tcpPort)
-            .WithCredentials(new MqttClientCredentials(SasAuth.GetUserName(hostName, clientId, modelId)));
+        string username = SasAuth.GetUserName(hostName, deviceId, modelId);
+        builder.WithCredentials(username);
         return builder;
     }
-
-
 }

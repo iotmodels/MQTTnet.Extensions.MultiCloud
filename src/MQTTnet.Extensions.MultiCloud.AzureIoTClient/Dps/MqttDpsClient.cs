@@ -42,6 +42,11 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps
                         {
                             tcs.SetResult(dpsRes);
                         }
+
+                        if (dpsRes != null && dpsRes.Status == "disabled")
+                        {
+                            tcs.SetException(new ApplicationException("Device ID disabled in DPS"));
+                        }
                     }
                 }
             };

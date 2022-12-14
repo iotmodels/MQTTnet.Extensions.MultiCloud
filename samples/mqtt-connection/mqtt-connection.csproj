@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-mqtt_connection-41863357-4aee-4287-9231-8587c58b1ec2</UserSecretsId>
+    <RootNamespace>mqtt_connection</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+    <PackageReference Include="Microsoft.NET.Build.Containers" Version="0.2.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.AzureIoTClient\MQTTnet.Extensions.MultiCloud.AzureIoTClient.csproj" />
+    <ProjectReference Include="..\..\src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ca.pem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,107 @@
+{
+  "@context": "dtmi:dtdl:context;2",
+  "@id": "dtmi:rido:memmon;3",
+  "@type": "Interface",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "started",
+      "schema": "dateTime"
+    },
+    {
+      "@type": "Property",
+      "name": "timesRestarted",
+      "schema": "integer"
+    },
+    {
+      "@type": "Property",
+      "name": "enabled",
+      "schema": "boolean",
+      "writable": true
+    },
+    {
+      "@type": [ "Property", "TimeSpan" ],
+      "name": "interval",
+      "schema": "integer",
+      "writable": true,
+      "unit": "millisecond"
+    },
+    {
+      "@type": [ "Telemetry", "DataSize" ],
+      "name": "workingSet",
+      "schema": "double",
+      "unit": "mebibyte"
+    },
+    {
+      "@type": [ "Telemetry", "DataSize" ],
+      "name": "managedMemory",
+      "schema": "double",
+      "unit": "mebibyte"
+    },
+    {
+      "@type": "Command",
+      "name": "isPrime",
+      "request": {
+        "name": "isPrimeReq",
+        "schema": "integer"
+      },
+      "response": {
+        "name": "isPrimeRes",
+        "schema": "boolean"
+      }
+    },
+    {
+      "@type": "Command",
+      "name": "malloc",
+      "request": {
+        "name": "allocations",
+        "schema": "integer"
+      }
+    },
+    {
+      "@type": "Command",
+      "name": "free"
+    },
+    {
+      "@type": "Command",
+      "name": "getRuntimeStats",
+      "request": {
+        "@type": "CommandPayload",
+        "name": "diagnosticsMode",
+        "schema": {
+          "@type": "Enum",
+          "enumValues": [
+            {
+              "name": "minimal",
+              "enumValue": 0
+            },
+            {
+              "enumValue": 1,
+              "name": "complete"
+            },
+            {
+              "name": "full",
+              "enumValue": 2
+            }
+          ],
+          "valueSchema": "integer"
+        }
+      },
+      "response": {
+        "@type": "CommandPayload",
+        "name": "diagnosticResults",
+        "schema": {
+          "@type": "Map",
+          "mapKey": {
+            "name": "key",
+            "schema": "string"
+          },
+          "mapValue": {
+            "name": "val",
+            "schema": "string"
+          }
+        }
+      }
+    }
+  ]
+}
