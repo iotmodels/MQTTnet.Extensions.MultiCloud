@@ -75,6 +75,7 @@ namespace mqtt_grpc_device
         {
             _logger.LogInformation("Cmd getRuntimeStats Received: {req}", request.Mode.ToString());
             var response = new getRuntimeStatsResponse();
+            response.DiagResults.Add("dotnet", Environment.Version.ToString());
             if (request.Mode == getRuntimeStatsMode.Basic)
             {
                 response.DiagResults.Add("machineName", Environment.MachineName);
