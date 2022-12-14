@@ -6,7 +6,7 @@ using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 
 namespace dtmi_rido_pnp_sensehat.hub;
 
-public class sensehat : HubMqttClient, Isensehat
+public class _sensehat : HubMqttClient, Isensehat
 {
     public IReadOnlyProperty<string> Property_piri { get; set; }
     public IReadOnlyProperty<string> Property_ipaddr { get; set; }
@@ -23,7 +23,7 @@ public class sensehat : HubMqttClient, Isensehat
 
     public ICommand<string, string> Command_ChangeLCDColor { get; set; }
 
-    internal sensehat(IMqttClient c) : base(c)
+    internal _sensehat(IMqttClient c) : base(c)
     {
         Property_piri = new ReadOnlyProperty<string>(c, "piri");
         Property_ipaddr = new ReadOnlyProperty<string>(c, "ipaddr");
