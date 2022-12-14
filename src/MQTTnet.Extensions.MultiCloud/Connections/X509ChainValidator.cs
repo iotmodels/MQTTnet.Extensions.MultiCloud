@@ -20,8 +20,8 @@ namespace MQTTnet.Extensions.MultiCloud.Connections
                 caCerts.ImportFromPemFile(caCertFile);
                 chain.ChainPolicy.CustomTrustStore.AddRange(caCerts);
                 chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
-                Trace.TraceError($"Loaded {caCerts.Count} certs from caFile: {caCertFile} ");
-                caCerts.ToList().ForEach(c => Trace.TraceError(c.Subject));
+                Trace.TraceWarning($"Loaded {caCerts.Count} certs from caFile: {caCertFile} ");
+                caCerts.ToList().ForEach(c => Trace.TraceWarning(c.Subject));
             }
             var x5092 = new X509Certificate2(cert);
             var res = chain.Build(x5092);

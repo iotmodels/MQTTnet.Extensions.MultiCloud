@@ -9,7 +9,7 @@ RUN dotnet remove reference ../../src/MQTTnet.Extensions.MultiCloud.BrokerIoTCli
 RUN dotnet add package MQTTnet.Extensions.MultiCloud.BrokerIoTClient --prerelease -n
 
 RUN dotnet restore "mqtt-grpc-device.csproj" --use-current-runtime
-RUN dotnet build "mqtt-grpc-device.csproj" -c Release --use-current-runtime
+RUN dotnet build "mqtt-grpc-device.csproj" -c Release --use-current-runtime --no-restore
 RUN dotnet publish "mqtt-grpc-device.csproj" -c Release -o /app  --use-current-runtime --self-contained false --no-restore 
 
 FROM mcr.microsoft.com/dotnet/nightly/runtime:7.0-jammy-chiseled
