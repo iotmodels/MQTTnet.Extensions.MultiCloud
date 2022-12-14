@@ -5,11 +5,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>mqtt_grpc_device</RootNamespace>
 	<IsPackable>false</IsPackable>
-	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	<DockerfileContext>..\..</DockerfileContext>
-	  <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
   </PropertyGroup>
-
 	<ItemGroup>
 		<PackageReference Include="Google.Protobuf" Version="3.21.9" />
 		<PackageReference Include="Grpc.Tools" Version="2.50.0">

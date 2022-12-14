@@ -49,7 +49,11 @@ jobs:
     - name: pi-sense docker push 
       run: docker push ghcr.io/iotmodels/pi-sense-device:x64
 
-    
+    - name: grpc docker
+      run: docker build -f .\samples\mqtt-grpc-device\Dockerfile . -t ghcr.io/iotmodels/mqtt-grpc-device:latest
+
+    - name: grpc push
+      run: docker push ghcr.io/iotmodels/mqtt-grpc-device:latest
 
 
     #- name: Build the Docker image ARM
