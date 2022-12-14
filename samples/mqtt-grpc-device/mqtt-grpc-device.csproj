@@ -5,6 +5,9 @@
     <Nullable>enable</Nullable>
     <RootNamespace>mqtt_grpc_device</RootNamespace>
 	<IsPackable>false</IsPackable>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<DockerfileContext>..\..</DockerfileContext>
+	  <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -14,6 +17,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<Protobuf Include="protos\*.proto" GrpcServices="None" />
