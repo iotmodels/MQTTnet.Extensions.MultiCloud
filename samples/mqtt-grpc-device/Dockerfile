@@ -1,7 +1,7 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 
-FROM  mcr.microsoft.com/dotnet/sdk:7.0-jammy  AS build
+FROM  mcr.microsoft.com/dotnet/sdk:7.0.101-cbl-mariner2.0  AS build
 WORKDIR /samples
 COPY "samples/mqtt-grpc-device/." .
 
@@ -12,7 +12,7 @@ RUN dotnet restore "mqtt-grpc-device.csproj" --use-current-runtime
 RUN dotnet build "mqtt-grpc-device.csproj" -c Release --use-current-runtime --no-restore
 RUN dotnet publish "mqtt-grpc-device.csproj" -c Release -o /app  --use-current-runtime --self-contained false --no-restore 
 
-FROM mcr.microsoft.com/dotnet/nightly/runtime:7.0-jammy-chiseled
+FROM mcr.microsoft.com/dotnet/runtime:7.0.1-cbl-mariner2.0-distroless-amd64
 WORKDIR /app
 COPY --from=build /app .
 ENTRYPOINT ["dotnet", "mqtt-grpc-device.dll"]
