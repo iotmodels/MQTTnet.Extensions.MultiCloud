@@ -1,6 +1,7 @@
 using dtmi_rido_memmon;
 using Humanizer;
 using Microsoft.ApplicationInsights;
+using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Diagnostics;
@@ -31,21 +32,29 @@ public class Device : BackgroundService
     private readonly MemMonFactory memmonFactory;
 
     private string infoVersion = string.Empty;
-
+    private static string safeAIKey = string.Empty;
     public Device(TelemetryClient tc, MemMonFactory clientFactory)
     {
         _telemetryClient = tc;
         memmonFactory = clientFactory;
+
+        safeAIKey = string.IsNullOrEmpty(_telemetryClient.TelemetryConfiguration.InstrumentationKey) ?
+                    string.Empty :
+                    _telemetryClient.TelemetryConfiguration.InstrumentationKey.Substring(0, 6);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        client = await memmonFactory.CreateMemMonClientAsync("cs", stoppingToken);
-
-        client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
-        
-        connectionSettings = MemMonFactory.connectionSettings;
         infoVersion = MemMonFactory.NuGetPackageVersion;
+        client = await memmonFactory.CreateMemMonClientAsync("cs", stoppingToken);
+        connectionSettings = MemMonFactory.connectionSettings;
+        client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
+
+        _telemetryClient.TrackEvent("Connected", new Dictionary<string, string> { 
+            { "ClientId", client.Connection.Options.ClientId},
+            { "HostName", connectionSettings.HostName },
+            { "Auth", connectionSettings.Auth.ToString()}
+        });
         
         client.Property_enabled.OnMessage = Property_enabled_UpdateHandler;
         client.Property_interval.OnMessage= Property_interval_UpdateHandler;
@@ -87,10 +96,17 @@ public class Device : BackgroundService
 
     private async Task Connection_DisconnectedAsync(MQTTnet.Client.MqttClientDisconnectedEventArgs arg)
     {
+        Trace.TraceError("Client Disconnected: " + arg.ReasonString);
+        
+        _telemetryClient.TrackEvent("Disconnected", new Dictionary<string, string> { 
+            { "ClientId", client.Connection.Options.ClientId },
+            { "Reason", arg.ReasonString }
+        });
         _telemetryClient.TrackTrace("Client Disconnected: " + arg.ReasonString);
         if (arg.Exception != null)
         {
             _telemetryClient.TrackException(arg.Exception);
+            throw arg.Exception;
         }
 
         lastDiscconectReason = arg.ReasonString;
@@ -269,12 +285,14 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");
             AppendLineWithPadRight(sb, $"NuGet: {infoVersion}");
             AppendLineWithPadRight(sb, $".NET: {Environment.Version}");
+            AppendLineWithPadRight(sb, $"AppInsights: Enabled [{_telemetryClient.IsEnabled()}] InstrKey [{safeAIKey}]");
             AppendLineWithPadRight(sb, " ");
             return sb.ToString();
         }
-
+        if (!client.Connection.IsConnected) throw new MqttClientDisconnectedException(null);
         Console.SetCursorPosition(0, 0);
         Console.WriteLine(RenderData());
+        _telemetryClient.Flush();
         screenRefresher = new Timer(RefreshScreen, this, 1000, 0);
     }
 }
