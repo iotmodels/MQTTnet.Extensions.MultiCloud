@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -30,7 +31,10 @@ public class ShadowSerializer //: IMessageSerializer
 
     public byte[] ToBytes<T>(T payload, string name = "", int? version = null)
     {
-        Version = (int)version!;
+        if (version.HasValue)
+        {
+            Version = (int)version!;
+        }
         if (string.IsNullOrEmpty(name))
         {
             return Encoding.UTF8.GetBytes(Json.Stringify(payload!));
