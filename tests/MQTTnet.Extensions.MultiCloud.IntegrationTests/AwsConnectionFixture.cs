@@ -11,7 +11,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             client = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
         }
 
-        [Fact]
+        [Fact(Skip ="not aws accounts")]
         public async Task ClientCert()
         {
             if (client == null)
