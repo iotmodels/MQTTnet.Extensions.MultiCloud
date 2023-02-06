@@ -34,7 +34,7 @@ namespace mqtt_grpc_device
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            ConnectionSettings cs = new(_configuration.GetConnectionString("cs")) { ModelId = mqtt_grpc_sample_device.ModelId };
+            ConnectionSettings cs = new(_configuration.GetConnectionString("cs")!) { ModelId = mqtt_grpc_sample_device.ModelId };
             connection = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
             _logger.LogWarning("Connected to {cs} with {sdk}", BrokerClientFactory.ComputedSettings, BrokerClientFactory.NuGetPackageVersion);
 
