@@ -11,10 +11,15 @@ public static partial class MqttNetExtensions
         string? hostName = cs!.HostName!;
         if (!string.IsNullOrEmpty(cs.GatewayHostName))
         {
-            hostName = cs.GatewayHostName;
+            //hostName = cs.GatewayHostName;
+            builder.WithTcpServer(cs.GatewayHostName, cs.TcpPort);
         }
+        else
+        {
+            builder.WithTcpServer(hostName, cs.TcpPort);
+        }    
 
-        builder.WithTcpServer(hostName, cs.TcpPort);
+
         if (cs?.Auth == AuthType.Sas)
         {
             if (string.IsNullOrEmpty(cs.ModuleId))
@@ -27,7 +32,7 @@ public static partial class MqttNetExtensions
             }
 
             builder.WithTlsSettings(cs);
-            return builder.WithAzureIoTHubCredentialsSas(hostName, cs.DeviceId!, cs.ModuleId!, cs.HostName!, cs.SharedAccessKey!, cs.ModelId!, cs.SasMinutes);
+            return builder.WithAzureIoTHubCredentialsSas(hostName, cs.DeviceId!, cs.ModuleId!, cs.HostName!, cs.SharedAccessKey!, cs.ModelId!, cs.SasMinutes, cs.GatewayHostName!);
         }
         else if (cs?.Auth == AuthType.X509)
         {
@@ -54,14 +59,17 @@ public static partial class MqttNetExtensions
         }
     }
 
-    public static MqttClientOptionsBuilder WithAzureIoTHubCredentialsSas(this MqttClientOptionsBuilder builder, string hostName, string deviceId, string moduleId, string audience, string sasKey, string modelId, int sasMinutes)
+    public static MqttClientOptionsBuilder WithAzureIoTHubCredentialsSas(this MqttClientOptionsBuilder builder, string hostName, string deviceId, string moduleId, string audience, string sasKey, string modelId, int sasMinutes, string gatewayHostName)
     {
         string target = deviceId;
         if (!string.IsNullOrEmpty(moduleId))
         {
             target = $"{deviceId}/{moduleId}";
+            audience = $"{hostName}/devices/{deviceId}/modules/{moduleId}";
         }
-        (string username, string password) = SasAuth.GenerateHubSasCredentials(hostName, target, sasKey, audience, modelId, sasMinutes);
+        
+
+        (string username, string password) = SasAuth.GenerateHubSasCredentials(hostName, target, sasKey, audience, modelId, sasMinutes, gatewayHostName);
         builder.WithCredentials(username, password);
         return builder;
     }
