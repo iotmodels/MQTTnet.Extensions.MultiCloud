@@ -5,8 +5,18 @@ namespace MQTTnet.Extensions.MultiCloud.Connections;
 internal class SasAuth
 {
     private const string apiversion_2020_09_30 = "2020-09-30";
-    internal static string GetUserName(string hostName, string deviceId, string modelId = "") =>
-        $"{hostName}/{deviceId}/?api-version={apiversion_2020_09_30}&model-id={modelId}";
+    internal static string GetUserName(string hostName, string deviceId, string modelId = "", string gatewayHostName = "")
+    {
+        if (string.IsNullOrEmpty(gatewayHostName))
+        {
+            return $"{hostName}/{deviceId}/?api-version={apiversion_2020_09_30}&model-id={modelId}";
+        }
+        else
+        {
+            return $"{gatewayHostName}/{deviceId}/?api-version={apiversion_2020_09_30}&model-id={modelId}";
+        }
+
+    }
 
     internal static string Sign(string requestString, string key)
     {
@@ -21,10 +31,10 @@ internal class SasAuth
         return $"SharedAccessSignature sr={resource}&sig={sig}&se={expiry}";
     }
 
-    internal static (string username, string password) GenerateHubSasCredentials(string hostName, string deviceId, string sasKey, string audience, string modelId, int minutes = 60)
+    internal static (string username, string password) GenerateHubSasCredentials(string hostName, string deviceId, string sasKey, string audience, string modelId, int minutes = 60, string gatewayHostName = "")
     {
-        string user = GetUserName(hostName, deviceId, modelId);
-        string pwd = CreateSasToken($"{audience}/devices/{deviceId}", sasKey, minutes);
+        string user = GetUserName(hostName, deviceId, modelId, gatewayHostName);
+        string pwd = CreateSasToken(audience, sasKey, minutes);
         return (user, pwd);
     }
         
