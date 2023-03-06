@@ -9,8 +9,13 @@ public class RequestResponseBinder<T, TResp>
     string commandName;
     TaskCompletionSource<TResp>? echoTcs;
 
-    protected string commandTopicPattern = "device/{clientId}/commands/{commandName}";
-    protected string commandResponseSuffix = "/resp";
+    protected string requestTopicPattern = "device/{clientId}/commands/{commandName}";
+    protected string responseTopicSub = "device/{clientId}/commands/{commandName}/+";
+    protected string responseTopicSuccess = "device/{clientId}/commands/{commandName}/resp";
+    protected string responseTopicFailure = "device/{clientId}/commands/{commandName}/err";
+    protected bool requireNotEmptyPayload = true;
+
+
     string remoteClientId = string.Empty;
     IMessageSerializer _serializer;
 
@@ -28,16 +33,23 @@ public class RequestResponseBinder<T, TResp>
         mqttClient.ApplicationMessageReceivedAsync += async m =>
         {
             var topic = m.ApplicationMessage.Topic;
-            var expectedTopic = commandTopicPattern.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName) + commandResponseSuffix;
-            if (topic.Equals(expectedTopic))
+            var expectedTopic = responseTopicSuccess.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
+            if (topic.StartsWith(expectedTopic))
             {
-                if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, name, out TResp resp))
+                if (requireNotEmptyPayload)
                 {
-                    echoTcs!.SetResult(resp);
+                    if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, name, out TResp resp))
+                    {
+                        echoTcs!.SetResult(resp);
+                    }
+                    else
+                    {
+                        echoTcs!.SetException(new ApplicationException("Cannot deserialize bytes"));
+                    }
                 }
                 else
                 {
-                    echoTcs!.SetException(new ApplicationException("Cannot deserialize bytes"));
+                    echoTcs!.SetResult(default!);
                 }
             }
             await Task.Yield();
@@ -47,13 +59,14 @@ public class RequestResponseBinder<T, TResp>
     {
         echoTcs = new TaskCompletionSource<TResp>();
         remoteClientId = clientId;
-        string commandTopic = commandTopicPattern.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
-        await mqttClient.SubscribeAsync(commandTopic + commandResponseSuffix);
+        string commandTopic = requestTopicPattern.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
+        var responseTopic = responseTopicSub.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
+        await mqttClient.SubscribeAsync(responseTopic);
         MqttApplicationMessage msg = new()
         {
             Topic = commandTopic,
             Payload = _serializer.ToBytes(request),
-            ResponseTopic = commandTopic + commandResponseSuffix,
+            ResponseTopic = responseTopic,
             CorrelationData = new byte[] { 1 }
         };
         var pubAck = await mqttClient.PublishAsync(msg);

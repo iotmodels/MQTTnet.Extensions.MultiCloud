@@ -8,8 +8,8 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         public CommandClient(IMqttClient client, string commandName)
             : base(client, commandName) 
         {
-            commandTopicPattern = "device/{clientId}/commands/{commandName}";
-            commandResponseSuffix = "/resp";
+            requestTopicPattern = "device/{clientId}/commands/{commandName}";
+            responseTopicSuccess = "device/{clientId}/commands/{commandName}/resp";
         }
     }
 }

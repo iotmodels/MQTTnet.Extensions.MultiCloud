@@ -50,10 +50,26 @@ public class UTF8JsonSerializer : IMessageSerializer
         }
 
         bool found = false;
+        //if (typeof(T) == typeof(string))
+        //{
+        //    result = (T) Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T));
+        //    return true;
+        //}
+
+
         if (string.IsNullOrEmpty(name))
         {
             found = true;
-            result = Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
+            if (typeof(T) == typeof(string))
+            {
+                //result = (T)Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T));
+                result = Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
+
+            }
+            else
+            {
+                result = Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
+            }
         }
         else
         {

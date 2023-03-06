@@ -1,6 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
 using MQTTnet.Extensions.MultiCloud.Serializers;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
@@ -10,17 +11,23 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
         public IMqttClient Connection { get; set; }
         public string InitialState { get; set; } = String.Empty;
 
-        private readonly TwinRequestResponseBinder twinOperationsBinder;
+        //private readonly TwinRequestResponseBinder twinOperationsBinder;
+
+        private readonly GetTwinRequestResponseBinder getTwinBinder;
+        private readonly UpdateTwinBinder<object> updateTwinBinder;
+
         private readonly GenericDesiredUpdatePropertyBinder genericDesiredUpdateProperty;
         private readonly GenericCommand command;
 
         public HubMqttClient(IMqttClient c)
         {
             Connection = c;
-            twinOperationsBinder = new TwinRequestResponseBinder(c);
-            //updateTwinBinder = new UpdateTwinBinder(c);
+            //twinOperationsBinder = new TwinRequestResponseBinder(c);
+
+            getTwinBinder = new GetTwinRequestResponseBinder(c);
+            updateTwinBinder = new UpdateTwinBinder<object>(c);
             command = new GenericCommand(c);
-            genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c, twinOperationsBinder!);
+            genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c, updateTwinBinder!);
         }
 
         public Func<GenericCommandRequest, GenericCommandResponse> OnCommandReceived
@@ -35,8 +42,18 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             set => genericDesiredUpdateProperty.OnProperty_Updated = value;
         }
 
-        public Task<string> GetTwinAsync(CancellationToken cancellationToken = default) => twinOperationsBinder.GetTwinAsync(cancellationToken);
-        public Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default) => twinOperationsBinder.UpdateTwinAsync(payload, cancellationToken);
+        public async Task<string> GetTwinAsync(CancellationToken cancellationToken = default)
+        {
+            var twin =  await getTwinBinder.InvokeAsync(Connection.Options.ClientId, string.Empty);
+            return twin!.ToString()!;
+        }
+
+        public async Task<string> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default)
+        {
+            var twin = await updateTwinBinder.InvokeAsync(Connection.Options.ClientId, payload);
+            return twin!.ToString()!;
+        }
+
         public async Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default)
         {
             string clientSegment = Connection.Options.ClientId;
