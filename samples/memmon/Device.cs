@@ -22,7 +22,7 @@ public class Device : BackgroundService
 
     private double telemetryWorkingSet = 0;
     private double managedMemory = 0;
-    private const bool default_enabled = false;
+    private const bool default_enabled = true;
     private const int default_interval = 500;
 
     private string lastDiscconectReason = string.Empty;

@@ -65,7 +65,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "memmon-protobuff", "samples
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aws-sample", "samples\aws-sample\aws-sample.csproj", "{713F4937-160C-4CA3-9F9B-91DD91E7F5AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mqtt-connection", "samples\mqtt-connection\mqtt-connection.csproj", "{E1B90E61-2564-4FCE-8CED-F6D175DFBF4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mqtt-connection", "samples\mqtt-connection\mqtt-connection.csproj", "{E1B90E61-2564-4FCE-8CED-F6D175DFBF4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlApp", "samples\ControlApp\ControlApp.csproj", "{55CBDD98-6C1B-442F-B37C-B13599363FD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,6 +131,10 @@ Global
 		{E1B90E61-2564-4FCE-8CED-F6D175DFBF4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1B90E61-2564-4FCE-8CED-F6D175DFBF4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1B90E61-2564-4FCE-8CED-F6D175DFBF4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55CBDD98-6C1B-442F-B37C-B13599363FD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55CBDD98-6C1B-442F-B37C-B13599363FD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55CBDD98-6C1B-442F-B37C-B13599363FD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55CBDD98-6C1B-442F-B37C-B13599363FD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +150,7 @@ Global
 		{20B75646-CBD2-4E72-8C56-22887A519FA3} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 		{713F4937-160C-4CA3-9F9B-91DD91E7F5AC} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 		{E1B90E61-2564-4FCE-8CED-F6D175DFBF4F} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
+		{55CBDD98-6C1B-442F-B37C-B13599363FD3} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09914DD8-50B2-48E3-B9AB-7764AE36AD6B}
