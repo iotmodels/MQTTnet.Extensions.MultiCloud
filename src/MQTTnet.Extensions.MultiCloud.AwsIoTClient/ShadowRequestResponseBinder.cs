@@ -1,10 +1,7 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Serializers;
 using MQTTnet.Protocol;
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;

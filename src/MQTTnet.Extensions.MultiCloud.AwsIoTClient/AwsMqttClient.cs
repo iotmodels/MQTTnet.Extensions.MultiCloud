@@ -1,6 +1,4 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Connections;
-using MQTTnet.Extensions.MultiCloud.Serializers;
 using System.Threading;
 using System.Threading.Tasks;
 

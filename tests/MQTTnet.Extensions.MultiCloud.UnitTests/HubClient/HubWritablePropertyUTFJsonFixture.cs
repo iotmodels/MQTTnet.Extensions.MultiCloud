@@ -48,6 +48,8 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
             Assert.Equal(expected, mqttClient.payloadReceived);
         }
 
+        
+
         [Fact]
         public void ReceiveWPWithVersion()
         {

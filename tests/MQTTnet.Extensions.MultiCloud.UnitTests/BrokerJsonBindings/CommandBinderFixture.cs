@@ -25,7 +25,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
             mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmdReqResp",new UTF8JsonSerializer().ToBytes(2));
             Assert.True(cmdReceived);
             Assert.Equal("device/mock/commands/aCmdReqResp/resp", mockMqtt.topicRecceived);
-            Assert.Equal("\"2\"", mockMqtt.payloadReceived);
+            Assert.Equal("2", mockMqtt.payloadReceived);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
             mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmdReq", new UTF8JsonSerializer().ToBytes(2));
             Assert.True(cmdReceived);
             Assert.Equal("device/mock/commands/aCmdReq/resp", mockMqtt.topicRecceived);
-            Assert.Equal("\"\"", mockMqtt.payloadReceived);
+            Assert.Empty(mockMqtt.payloadReceived);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
             mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmd", new UTF8JsonSerializer().ToBytes(""));
             Assert.True(cmdReceived);
             Assert.Equal("device/mock/commands/aCmd/resp", mockMqtt.topicRecceived);
-            Assert.Equal("\"\"", mockMqtt.payloadReceived);
+            Assert.Empty(mockMqtt.payloadReceived);
         }
     }
 }
