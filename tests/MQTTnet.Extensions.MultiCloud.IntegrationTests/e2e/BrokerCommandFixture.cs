@@ -5,42 +5,6 @@ using MQTTnet.Extensions.MultiCloud.Connections;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e;
 
-internal class Producer
-{
-    readonly IMqttClient mqttClient;
-
-    public ICommand<string, string> EchoCommand;
-
-    public Producer(IMqttClient client)
-    {
-        mqttClient = client;
-
-        EchoCommand = new Command<string, string>(mqttClient, "echo")
-        {
-            UnwrapRequest = false,
-            OnMessage = async m =>
-            {
-                await Task.Delay(m.Length * 100);
-                await Console.Out.WriteLineAsync("[Producer] Running Echo Command in client: " + client.Options.ClientId);
-                return await Task.FromResult<string>(m + m);
-            }
-        };
-    }
-}
-
-internal class Consumer
-{
-    readonly IMqttClient mqttClient;
-    public RequestResponseBinder<string, string> echoCommand;
-
-    public Consumer(IMqttClient client)
-    {
-        mqttClient = client;
-        echoCommand = new RequestResponseBinder<string, string>(mqttClient, "echo", false);
-    }
-}
-
-
 public class BrokerCommandFixture
 {
     private static ConnectionSettings TestCS(string clientId)
@@ -54,6 +18,41 @@ public class BrokerCommandFixture
             Password = "password",
             ClientId = clientId
         };
+    }
+
+    internal class Producer
+    {
+        readonly IMqttClient mqttClient;
+
+        public ICommand<string, string> EchoCommand;
+
+        public Producer(IMqttClient client)
+        {
+            mqttClient = client;
+
+            EchoCommand = new Command<string, string>(mqttClient, "echo")
+            {
+                UnwrapRequest = false,
+                OnMessage = async m =>
+                {
+                    await Task.Delay(m.Length * 100);
+                    await Console.Out.WriteLineAsync("[Producer] Running Echo Command in client: " + client.Options.ClientId);
+                    return await Task.FromResult<string>(m + m);
+                }
+            };
+        }
+    }
+
+    internal class Consumer
+    {
+        readonly IMqttClient mqttClient;
+        public RequestResponseBinder<string, string> echoCommand;
+
+        public Consumer(IMqttClient client)
+        {
+            mqttClient = client;
+            echoCommand = new RequestResponseBinder<string, string>(mqttClient, "echo", false);
+        }
     }
 
     [Fact]

@@ -10,7 +10,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         readonly IMessageSerializer _serializer;
         readonly bool _unwrap = false;
         readonly string _name = string.Empty;
-        public Action<T>? OnTelemetry { get; set; }
+        public Action<string,T>? OnTelemetry { get; set; }
 
         public TelemetryClient(IMqttClient client, string name) 
             : this(client, name, new UTF8JsonSerializer())
@@ -27,11 +27,12 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             _mqttClient.ApplicationMessageReceivedAsync += async m =>
             {
                 var topic = m.ApplicationMessage.Topic;
+                string deviceId = topic.Split('/')[1];
                 if (topic.Contains("/telemetry/" + _name))
                 {
                     if (_serializer.TryReadFromBytes<T>(m.ApplicationMessage.Payload, _unwrap ? _name : string.Empty, out T msg))
                     {
-                        OnTelemetry?.Invoke(msg);
+                        OnTelemetry?.Invoke(deviceId,msg);
                     }
                 }
                 await Task.Yield();

@@ -16,13 +16,13 @@ namespace ControlApp
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var mqttClient = await BrokerClientFactory.CreateFromConnectionSettingsAsync(_configuration.GetConnectionString("cs")!, false, stoppingToken);
-            TelemetryClient<double> telClient = new TelemetryClient<double>(mqttClient, "workingSet");
+            TelemetryClient<double> telClient = new(mqttClient, "workingSet");
 
             await telClient.StartAsync("+");
 
-            telClient.OnTelemetry = m =>
+            telClient.OnTelemetry = (id,m) =>
             {
-                _logger.LogInformation(m.ToString());
+                _logger.LogInformation("Telemetry from {id} workingSet {m}", id, m);
             };
         }
     }
