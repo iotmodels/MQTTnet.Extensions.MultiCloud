@@ -39,7 +39,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
 
         }
 
-        public async Task<MqttClientSubscribeResult> Start(string deviceFilter)
+        public async Task<MqttClientSubscribeResult> StartAsync(string deviceFilter)
         {
             var subAck =  await _mqttClient.SubscribeAsync(topicPattern.Replace("{clientId}", deviceFilter).Replace("{name}", _name));
             return subAck;

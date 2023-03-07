@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using System.Diagnostics;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 
@@ -36,7 +35,7 @@ public static partial class MqttNetExtensions
                 caCerts.ImportFromPemFile(cs.CaFile);
                 certs.AddRange(caCerts);
                 tls.CertificateValidationHandler = ea => X509ChainValidator.ValidateChain(ea.Certificate, cs.CaFile);
-            } 
+            }
             else
             {
                 tls.CertificateValidationHandler += ea => X509ChainValidator.ValidateChain(ea.Certificate);

@@ -37,5 +37,5 @@ internal class SasAuth
         string pwd = CreateSasToken(audience, sasKey, minutes);
         return (user, pwd);
     }
-        
+
 }

@@ -60,13 +60,13 @@ public class RequestResponseBinder<T, TResp>
             await Task.Yield();
         };
     }
-    public async Task<TResp> InvokeAsync(string clientId, T request)
+    public async Task<TResp> InvokeAsync(string clientId, T request, CancellationToken ct = default)
     {
         tcs = new TaskCompletionSource<TResp>();
         remoteClientId = clientId;
         string commandTopic = requestTopicPattern.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
         var responseTopic = responseTopicSub.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
-        await mqttClient.SubscribeAsync(responseTopic);
+        await mqttClient.SubscribeAsync(responseTopic, Protocol.MqttQualityOfServiceLevel.AtMostOnce, ct);
         MqttApplicationMessage msg = new()
         {
             Topic = commandTopic,

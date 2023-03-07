@@ -1,5 +1,4 @@
-﻿using MQTTnet.Client;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections

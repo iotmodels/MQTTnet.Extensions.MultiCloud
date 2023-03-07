@@ -1,6 +1,5 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Binders;
-using System.Text.Json;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 

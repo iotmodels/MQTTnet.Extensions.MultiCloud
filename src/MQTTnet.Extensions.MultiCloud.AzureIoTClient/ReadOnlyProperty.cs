@@ -1,7 +1,6 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Binders;
 using System.Text.Json;
-using System.Xml.Linq;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 
@@ -31,5 +30,5 @@ public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
     }
 
     public Task SendMessageAsync(CancellationToken cancellationToken = default) => SendMessageAsync(Value!, cancellationToken);
-    
+
 }

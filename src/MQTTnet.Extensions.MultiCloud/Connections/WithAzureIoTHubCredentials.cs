@@ -1,6 +1,4 @@
 ﻿using MQTTnet.Client;
-using System.Net.NetworkInformation;
-using System.Security.Cryptography.X509Certificates;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections;
 
@@ -17,7 +15,7 @@ public static partial class MqttNetExtensions
         else
         {
             builder.WithTcpServer(hostName, cs.TcpPort);
-        }    
+        }
 
 
         if (cs?.Auth == AuthType.Sas)
@@ -67,7 +65,7 @@ public static partial class MqttNetExtensions
             target = $"{deviceId}/{moduleId}";
             audience = $"{hostName}/devices/{deviceId}/modules/{moduleId}";
         }
-        
+
 
         (string username, string password) = SasAuth.GenerateHubSasCredentials(hostName, target, sasKey, audience, modelId, sasMinutes, gatewayHostName);
         builder.WithCredentials(username, password);

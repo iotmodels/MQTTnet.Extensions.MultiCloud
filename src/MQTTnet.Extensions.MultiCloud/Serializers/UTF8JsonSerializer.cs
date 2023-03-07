@@ -4,8 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace MQTTnet.Extensions.MultiCloud.Serializers;
 
-
-
 public class UTF8JsonSerializer : IMessageSerializer
 {
     private static class Json
@@ -50,28 +48,19 @@ public class UTF8JsonSerializer : IMessageSerializer
 
     public bool TryReadFromBytes<T>(byte[] payload, string name, out T result)
     {
-        if (payload == null || payload.Length==0)
+        if (payload == null || payload.Length == 0)
         {
             result = default!;
             return true;
         }
 
         bool found = false;
-        //if (typeof(T) == typeof(string))
-        //{
-        //    result = (T) Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T));
-        //    return true;
-        //}
-
-
         if (string.IsNullOrEmpty(name))
         {
             found = true;
             if (typeof(T) == typeof(string))
             {
-                result = (T) Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T));
-                //result = Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
-
+                result = (T)Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T));
             }
             else
             {
@@ -81,32 +70,25 @@ public class UTF8JsonSerializer : IMessageSerializer
         else
         {
             string payloadString = Encoding.UTF8.GetString(payload);
-            //if (typeof(T) == typeof(string))
-            //{
-            //    found = true;
-            //    result = (T) Convert.ChangeType(payloadString, typeof(T));
-            //}
-            //else
-            //{
-                JsonDocument payloadJson = JsonDocument.Parse(payloadString);
-                if (payloadJson.RootElement.ValueKind == JsonValueKind.Object)
+            JsonDocument payloadJson = JsonDocument.Parse(payloadString);
+            if (payloadJson.RootElement.ValueKind == JsonValueKind.Object)
+            {
+                if (payloadJson.RootElement.TryGetProperty(name, out JsonElement propValue))
                 {
-                    if (payloadJson.RootElement.TryGetProperty(name, out JsonElement propValue))
-                    {
-                        found = true;
-                        result = propValue.Deserialize<T>()!;
-                    }
-                    else
-                    {
-                        result = default!;
-                    }
+                    found = true;
+                    result = propValue.Deserialize<T>()!;
                 }
                 else
                 {
-                    result = payloadJson.Deserialize<T>()!;
-                    found = true;
+                    result = default!;
                 }
-            //}
+            }
+            else
+            {
+                result = payloadJson.Deserialize<T>()!;
+                found = true;
+            }
+
         }
         return found;
     }

@@ -1,6 +1,6 @@
 ﻿using MQTTnet.Client;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MQTTnet.Extensions.MultiCloud.AwsIoTClient;
 

@@ -1,5 +1,4 @@
-﻿using MQTTnet.Client;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
