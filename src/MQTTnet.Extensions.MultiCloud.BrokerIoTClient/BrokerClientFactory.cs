@@ -25,7 +25,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             }
             if (withBirth)
             {
-                var birthPayload = new UTF8JsonSerializer().ToBytes(
+                var birthPayload = new UTF8JsonSerializer<BirthConvention.BirthMessage>().ToBytes(
                        new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
                        {
                            ModelId = cs.ModelId

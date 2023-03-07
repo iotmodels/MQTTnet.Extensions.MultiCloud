@@ -27,7 +27,7 @@ public class BirthConvention
     }
 
     public static byte[] LastWillPayload() =>
-        new UTF8JsonSerializer().ToBytes(new BirthMessage(ConnectionStatus.offline));
+        new UTF8JsonSerializer<BirthMessage>().ToBytes(new BirthMessage(ConnectionStatus.offline));
     public static byte[] LastWillPayload(string modelId) =>
-        new UTF8JsonSerializer().ToBytes(new BirthMessage(ConnectionStatus.offline) { ModelId = modelId });
+        new UTF8JsonSerializer<BirthMessage>().ToBytes(new BirthMessage(ConnectionStatus.offline) { ModelId = modelId });
 }

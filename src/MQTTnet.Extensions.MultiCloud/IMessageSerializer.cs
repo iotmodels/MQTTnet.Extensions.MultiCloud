@@ -1,7 +1,7 @@
 ﻿namespace MQTTnet.Extensions.MultiCloud;
 
-public interface IMessageSerializer
+public interface IMessageSerializer<T>
 {
-    byte[] ToBytes<T>(T payload, string name = "");
-    bool TryReadFromBytes<T>(byte[] payload, string name, out T result);
+    byte[] ToBytes(T payload, string name = "");
+    bool TryReadFromBytes(byte[] payload, string name, out T result);
 }

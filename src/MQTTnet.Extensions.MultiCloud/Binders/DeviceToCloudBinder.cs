@@ -9,15 +9,15 @@ public abstract class DeviceToCloudBinder<T> : IDeviceToCloud<T>
 {
     private readonly string _name;
     private readonly IMqttClient _connection;
-    private readonly IMessageSerializer _messageSerializer;
+    private readonly IMessageSerializer<T> _messageSerializer;
 
     public string TopicPattern = String.Empty;
     public bool WrapMessage = false;
     public bool Retain = false;
 
-    public DeviceToCloudBinder(IMqttClient mqttClient, string name) : this(mqttClient, name, new UTF8JsonSerializer()) { }
+    public DeviceToCloudBinder(IMqttClient mqttClient, string name) : this(mqttClient, name, new UTF8JsonSerializer<T>()) { }
 
-    public DeviceToCloudBinder(IMqttClient mqttClient, string name, IMessageSerializer ser)
+    public DeviceToCloudBinder(IMqttClient mqttClient, string name, IMessageSerializer<T> ser)
     {
         _connection = mqttClient;
         _name = name;
@@ -32,7 +32,9 @@ public abstract class DeviceToCloudBinder<T> : IDeviceToCloud<T>
         byte[] payloadBytes;
         if (WrapMessage)
         {
-            payloadBytes = _messageSerializer.ToBytes(new Dictionary<string, T> { { _name, payload } });
+            // TODO inject dict serializer
+            var dictSer = new UTF8JsonSerializer<Dictionary<string, T>>();
+            payloadBytes = dictSer.ToBytes(new Dictionary<string, T> { { _name, payload } });
         }
         else
         {

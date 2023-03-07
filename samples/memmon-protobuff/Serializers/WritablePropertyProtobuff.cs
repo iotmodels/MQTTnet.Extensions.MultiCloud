@@ -14,7 +14,7 @@ namespace Serializers
         public T? Value { get; set; } = default!;
         public int? Version { get; set; } = -1;
         public WritablePropertyProtobuff(IMqttClient connection, string name, MessageParser parser)
-            : base(connection, name, new ProtobufSerializer(parser))
+            : base(connection, name, new ProtobufSerializer<T>(parser), new ProtobufSerializer<TResp>(parser))
         {
             _connection = connection;
             _name = name;

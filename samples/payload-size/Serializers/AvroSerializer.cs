@@ -4,7 +4,7 @@ using MQTTnet.Extensions.MultiCloud;
 
 namespace payload_size.Serializers;
 
-public class AvroSerializer : IMessageSerializer
+public class AvroSerializer<T> : IMessageSerializer<T>
 {
     private readonly Avro.Schema schema;
     public AvroSerializer(Avro.Schema s)
@@ -12,7 +12,7 @@ public class AvroSerializer : IMessageSerializer
         schema = s;
     }
 
-    public byte[] ToBytes<T>(T payload, string name = "")
+    public byte[] ToBytes(T payload, string name = "")
     {
         using MemoryStream ms = new();
         BinaryEncoder encoder = new(ms);
@@ -23,7 +23,7 @@ public class AvroSerializer : IMessageSerializer
         return bytes;
     }
 
-    public bool TryReadFromBytes<T>(byte[] payload, string name, out T result)
+    public bool TryReadFromBytes(byte[] payload, string name, out T result)
     {
         using MemoryStream mem = new(payload);
         BinaryDecoder decoder = new(mem);

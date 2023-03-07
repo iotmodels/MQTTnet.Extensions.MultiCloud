@@ -29,7 +29,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
             };
 
             mockMqtt.SimulateNewBinaryMessage("device/mock/props/aStringProp/set/?$version=1",
-                new UTF8JsonSerializer().ToBytes("string value"));
+                new UTF8JsonSerializer<string>().ToBytes("string value"));
             Assert.True(propReceived);
             Assert.Equal(1, wp.Version);
             Assert.Equal("string value", wp.Value);
@@ -38,7 +38,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
 
             propReceived = false;
             mockMqtt.SimulateNewBinaryMessage("device/mock/props/aStringProp/set/?$version=2",
-              new UTF8JsonSerializer().ToBytes("second string value"));
+              new UTF8JsonSerializer<string>().ToBytes("second string value"));
             Assert.True(propReceived);
             Assert.Equal(2, wp.Version);
             Assert.Equal("second string value", wp.Value);

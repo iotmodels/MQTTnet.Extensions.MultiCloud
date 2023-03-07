@@ -56,7 +56,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps
         {
             var putTopic = $"$dps/registrations/PUT/iotdps-register/?$rid={rid++}";
             var registrationId = mqttClient.Options.ClientId;
-            var bytes = new UTF8JsonSerializer().ToBytes(new { registrationId, payload = new { modelId } });
+            var bytes = new UTF8JsonSerializer<object>().ToBytes(new { registrationId, payload = new { modelId } });
             var puback = await mqttClient.PublishBinaryAsync(putTopic, bytes);
             if (puback.ReasonCode != MqttClientPublishReasonCode.Success)
             {

@@ -20,9 +20,9 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
     protected Action<TopicParameters>? PreProcessMessage;
 
     public CloudToDeviceBinder(IMqttClient connection, string name)
-        : this(connection, name, new UTF8JsonSerializer()) { }
+        : this(connection, name, new UTF8JsonSerializer<T>(), new UTF8JsonSerializer<TResp>()) { }
 
-    public CloudToDeviceBinder(IMqttClient connection, string name, IMessageSerializer serializer)
+    public CloudToDeviceBinder(IMqttClient connection, string name, IMessageSerializer<T> reqSerializer, IMessageSerializer<TResp> respSerializer)
     {
         _connection = connection;
         _name = name;
@@ -32,7 +32,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
             var topic = m.ApplicationMessage.Topic;
             if (topic.StartsWith(requestTopicPattern!.Replace("/#", string.Empty)))
             {
-                if (serializer.TryReadFromBytes<T>(m.ApplicationMessage.Payload, UnwrapRequest ? _name : string.Empty, out T req))
+                if (reqSerializer.TryReadFromBytes(m.ApplicationMessage.Payload, UnwrapRequest ? _name : string.Empty, out T req))
                 {
                     var tp = TopicParser.ParseTopic(topic);
                     PreProcessMessage?.Invoke(tp);
@@ -41,7 +41,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
 
                     if (resp != null)
                     {
-                        byte[] responseBytes = serializer.ToBytes(resp, WrapResponse ? _name : string.Empty);
+                        byte[] responseBytes = respSerializer.ToBytes(resp, WrapResponse ? _name : string.Empty);
                         string? resTopic = responseTopicPattern?.Replace("{rid}", tp.Rid!).Replace("{version}", tp.Version.ToString());
                         _ = connection.PublishAsync(
                             new MqttApplicationMessageBuilder()

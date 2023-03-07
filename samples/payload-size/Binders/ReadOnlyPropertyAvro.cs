@@ -19,7 +19,7 @@ public class ReadOnlyPropertyAvro<T> : DeviceToCloudBinder<T>, IReadOnlyProperty
         : this(mqttClient, string.Empty, schema) { }
 
     public ReadOnlyPropertyAvro(IMqttClient mqttClient, string name, Schema schema)
-        : base(mqttClient, name, new AvroSerializer(schema))
+        : base(mqttClient, name, new AvroSerializer<T>(schema))
     {
         _name = name;
         TopicPattern = "device/{clientId}/props";

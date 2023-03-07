@@ -19,19 +19,21 @@ public class RequestResponseBinder<T, TResp>
     protected Func<string, TResp>? VersionExtractor { get; set; }
 
     string remoteClientId = string.Empty;
-    readonly IMessageSerializer _serializer;
+    readonly IMessageSerializer<T> _serReq;
+    readonly IMessageSerializer<TResp> _serResp;
 
     public RequestResponseBinder(IMqttClient client, string name, bool unwrap)
-        : this(client, name, unwrap, new UTF8JsonSerializer())
+        : this(client, name, unwrap, new UTF8JsonSerializer<T>(), new UTF8JsonSerializer<TResp>())
     {
 
     }
 
-    public RequestResponseBinder(IMqttClient client, string name, bool unwrap, IMessageSerializer serializer)
+    public RequestResponseBinder(IMqttClient client, string name, bool unwrap, IMessageSerializer<T> serReq, IMessageSerializer<TResp> serResp)
     {
         mqttClient = client;
         commandName = name;
-        _serializer = serializer;
+        _serReq = serReq;
+        _serResp = serResp;
         _unwrap = unwrap;
         mqttClient.ApplicationMessageReceivedAsync += async m =>
         {
@@ -41,7 +43,7 @@ public class RequestResponseBinder<T, TResp>
             {
                 if (requireNotEmptyPayload)
                 {
-                    if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, _unwrap ? name : string.Empty, out TResp resp))
+                    if (_serResp.TryReadFromBytes(m.ApplicationMessage.Payload, _unwrap ? name : string.Empty, out TResp resp))
                     {
                         tcs!.SetResult(resp);
                     }
@@ -70,7 +72,7 @@ public class RequestResponseBinder<T, TResp>
         MqttApplicationMessage msg = new()
         {
             Topic = commandTopic,
-            Payload = _serializer.ToBytes(request),
+            Payload = _serReq.ToBytes(request),
             ResponseTopic = responseTopic,
             CorrelationData = new byte[] { 1 }
         };

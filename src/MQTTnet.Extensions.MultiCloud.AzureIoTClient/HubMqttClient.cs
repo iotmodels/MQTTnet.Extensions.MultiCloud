@@ -62,7 +62,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
                 clientSegment = clientSegment.Replace("/", "/modules/");
             }
             return await Connection.PublishBinaryAsync($"devices/{clientSegment}/messages/events/",
-                new UTF8JsonSerializer().ToBytes(payload),
+                new UTF8JsonSerializer<object>().ToBytes(payload),
                 Protocol.MqttQualityOfServiceLevel.AtLeastOnce,
                 false, t);
         }
