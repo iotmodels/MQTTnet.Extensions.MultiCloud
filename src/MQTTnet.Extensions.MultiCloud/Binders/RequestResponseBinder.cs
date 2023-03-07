@@ -5,31 +5,34 @@ namespace MQTTnet.Extensions.MultiCloud.Binders;
 
 public class RequestResponseBinder<T, TResp>
 {
-    IMqttClient mqttClient;
-    string commandName;
-    TaskCompletionSource<TResp>? echoTcs;
+    readonly IMqttClient mqttClient;
+    readonly string commandName;
+    TaskCompletionSource<TResp>? tcs;
 
     protected string requestTopicPattern = "device/{clientId}/commands/{commandName}";
     protected string responseTopicSub = "device/{clientId}/commands/{commandName}/+";
     protected string responseTopicSuccess = "device/{clientId}/commands/{commandName}/resp";
     protected string responseTopicFailure = "device/{clientId}/commands/{commandName}/err";
     protected bool requireNotEmptyPayload = true;
+    readonly bool _unwrap = true;
 
+    protected Func<string, TResp>? VersionExtractor { get; set; }
 
     string remoteClientId = string.Empty;
-    IMessageSerializer _serializer;
+    readonly IMessageSerializer _serializer;
 
-    public RequestResponseBinder(IMqttClient client, string name)
-        : this(client, name, new UTF8JsonSerializer())
+    public RequestResponseBinder(IMqttClient client, string name, bool unwrap)
+        : this(client, name, unwrap, new UTF8JsonSerializer())
     {
 
     }
 
-    public RequestResponseBinder(IMqttClient client, string name, IMessageSerializer serializer)
+    public RequestResponseBinder(IMqttClient client, string name, bool unwrap, IMessageSerializer serializer)
     {
         mqttClient = client;
         commandName = name;
         _serializer = serializer;
+        _unwrap = unwrap;
         mqttClient.ApplicationMessageReceivedAsync += async m =>
         {
             var topic = m.ApplicationMessage.Topic;
@@ -38,18 +41,20 @@ public class RequestResponseBinder<T, TResp>
             {
                 if (requireNotEmptyPayload)
                 {
-                    if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, name, out TResp resp))
+                    if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, _unwrap ? name : string.Empty, out TResp resp))
                     {
-                        echoTcs!.SetResult(resp);
+                        tcs!.SetResult(resp);
                     }
                     else
                     {
-                        echoTcs!.SetException(new ApplicationException("Cannot deserialize bytes"));
+                        tcs!.SetException(new ApplicationException("Cannot deserialize bytes"));
                     }
                 }
                 else
                 {
-                    echoTcs!.SetResult(default!);
+                    // update twin returns version from topic response
+                    TResp resp = VersionExtractor!.Invoke(topic);
+                    tcs!.SetResult(resp);
                 }
             }
             await Task.Yield();
@@ -57,7 +62,7 @@ public class RequestResponseBinder<T, TResp>
     }
     public async Task<TResp> InvokeAsync(string clientId, T request)
     {
-        echoTcs = new TaskCompletionSource<TResp>();
+        tcs = new TaskCompletionSource<TResp>();
         remoteClientId = clientId;
         string commandTopic = requestTopicPattern.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
         var responseTopic = responseTopicSub.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
@@ -74,6 +79,6 @@ public class RequestResponseBinder<T, TResp>
         {
             throw new ApplicationException("Error publishing Request Message");
         }
-        return await echoTcs.Task.TimeoutAfter(TimeSpan.FromSeconds(5));
+        return await tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(5));
     }
 }

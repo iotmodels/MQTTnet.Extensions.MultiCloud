@@ -7,7 +7,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e;
 
 internal class Producer
 {
-    IMqttClient mqttClient;
+    readonly IMqttClient mqttClient;
 
     public ICommand<string, string> EchoCommand;
 
@@ -15,32 +15,35 @@ internal class Producer
     {
         mqttClient = client;
 
-        EchoCommand = new Command<string, string>(mqttClient, "echo");
-        EchoCommand.OnMessage = async m =>
+        EchoCommand = new Command<string, string>(mqttClient, "echo")
         {
-            await Task.Delay(m.Length * 100);
-            await Console.Out.WriteLineAsync("[Producer] Running Echo Command in client: " + client.Options.ClientId);
-            return await Task.FromResult<string>(m + m);
+            UnwrapRequest = false,
+            OnMessage = async m =>
+            {
+                await Task.Delay(m.Length * 100);
+                await Console.Out.WriteLineAsync("[Producer] Running Echo Command in client: " + client.Options.ClientId);
+                return await Task.FromResult<string>(m + m);
+            }
         };
     }
 }
 
 internal class Consumer
 {
-    IMqttClient mqttClient;
+    readonly IMqttClient mqttClient;
     public RequestResponseBinder<string, string> echoCommand;
 
     public Consumer(IMqttClient client)
     {
         mqttClient = client;
-        echoCommand = new RequestResponseBinder<string, string>(mqttClient, "echo");
+        echoCommand = new RequestResponseBinder<string, string>(mqttClient, "echo", false);
     }
 }
 
 
 public class BrokerCommandFixture
 {
-    private ConnectionSettings TestCS(string clientId)
+    private static ConnectionSettings TestCS(string clientId)
     {
         return new ConnectionSettings
         {
@@ -58,11 +61,11 @@ public class BrokerCommandFixture
     {
         IMqttClient producerClientOne = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("deviceOne"));
         IMqttClient producerClientTwo = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("deviceTwo"));
-        Producer p1 = new Producer(producerClientOne);
-        Producer p2 = new Producer(producerClientTwo);
+        _ = new Producer(producerClientOne);
+        _ = new Producer(producerClientTwo);
 
         IMqttClient consumerClient = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("consumer"));
-        Consumer consumer = new Consumer(consumerClient);
+        Consumer consumer = new(consumerClient);
         var respOne = await consumer.echoCommand.InvokeAsync("deviceOne", "Hello One");
         var respTwo = await consumer.echoCommand.InvokeAsync("deviceTwo", "Hello Two Loooonger ");
 

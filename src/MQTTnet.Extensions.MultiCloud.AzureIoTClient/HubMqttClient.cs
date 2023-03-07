@@ -13,7 +13,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 
         //private readonly TwinRequestResponseBinder twinOperationsBinder;
 
-        private readonly GetTwinRequestResponseBinder getTwinBinder;
+        private readonly GetTwinBinder getTwinBinder;
         private readonly UpdateTwinBinder<object> updateTwinBinder;
 
         private readonly GenericDesiredUpdatePropertyBinder genericDesiredUpdateProperty;
@@ -24,7 +24,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             Connection = c;
             //twinOperationsBinder = new TwinRequestResponseBinder(c);
 
-            getTwinBinder = new GetTwinRequestResponseBinder(c);
+            getTwinBinder = new GetTwinBinder(c);
             updateTwinBinder = new UpdateTwinBinder<object>(c);
             command = new GenericCommand(c);
             genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c, updateTwinBinder!);
@@ -48,10 +48,10 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             return twin!.ToString()!;
         }
 
-        public async Task<string> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default)
+        public async Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default)
         {
             var twin = await updateTwinBinder.InvokeAsync(Connection.Options.ClientId, payload);
-            return twin!.ToString()!;
+            return twin;
         }
 
         public async Task<MqttClientPublishResult> SendTelemetryAsync(object payload, CancellationToken t = default)

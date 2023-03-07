@@ -45,8 +45,8 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             var hubConnection = await HubDpsFactory.CreateFromConnectionSettingsAsync(cs);
             Assert.True(hubConnection.IsConnected);
             var hubClient = new HubMqttClient(hubConnection);
-            var twinResponse = await hubClient.UpdateTwinAsync(new { updTime = DateTime.Now });
-            Assert.True(twinResponse.Length > 0);
+            var version = await hubClient.UpdateTwinAsync(new { updTime = DateTime.Now });
+            Assert.True(version > 0);
         }
 
 

@@ -32,7 +32,14 @@ public class UTF8JsonSerializer : IMessageSerializer
     {
         if (string.IsNullOrEmpty(name))
         {
-            return Encoding.UTF8.GetBytes(Json.Stringify(payload!));
+            if (typeof(T) == typeof(string))
+            {
+                return Encoding.UTF8.GetBytes((payload as string)!);
+            }
+            else
+            {
+                return Encoding.UTF8.GetBytes(Json.Stringify(payload!));
+            }
         }
         else
         {
@@ -46,7 +53,7 @@ public class UTF8JsonSerializer : IMessageSerializer
         if (payload == null || payload.Length==0)
         {
             result = default!;
-            return false;
+            return true;
         }
 
         bool found = false;
@@ -62,8 +69,8 @@ public class UTF8JsonSerializer : IMessageSerializer
             found = true;
             if (typeof(T) == typeof(string))
             {
-                //result = (T)Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T));
-                result = Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
+                result = (T) Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T));
+                //result = Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
 
             }
             else
@@ -74,24 +81,32 @@ public class UTF8JsonSerializer : IMessageSerializer
         else
         {
             string payloadString = Encoding.UTF8.GetString(payload);
-            JsonDocument payloadJson = JsonDocument.Parse(payloadString);
-            if (payloadJson.RootElement.ValueKind == JsonValueKind.Object)
-            {
-                if (payloadJson.RootElement.TryGetProperty(name, out JsonElement propValue))
+            //if (typeof(T) == typeof(string))
+            //{
+            //    found = true;
+            //    result = (T) Convert.ChangeType(payloadString, typeof(T));
+            //}
+            //else
+            //{
+                JsonDocument payloadJson = JsonDocument.Parse(payloadString);
+                if (payloadJson.RootElement.ValueKind == JsonValueKind.Object)
                 {
-                    found = true;
-                    result = propValue.Deserialize<T>()!;
+                    if (payloadJson.RootElement.TryGetProperty(name, out JsonElement propValue))
+                    {
+                        found = true;
+                        result = propValue.Deserialize<T>()!;
+                    }
+                    else
+                    {
+                        result = default!;
+                    }
                 }
                 else
                 {
-                    result = default!;
+                    result = payloadJson.Deserialize<T>()!;
+                    found = true;
                 }
-            }
-            else
-            {
-                result = payloadJson.Deserialize<T>()!;
-                found = true;
-            }
+            //}
         }
         return found;
     }
