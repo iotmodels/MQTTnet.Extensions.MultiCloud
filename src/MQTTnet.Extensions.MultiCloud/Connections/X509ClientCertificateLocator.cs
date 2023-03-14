@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections;
 
-internal class X509ClientCertificateLocator
+public class X509ClientCertificateLocator
 {
     public static X509Certificate2 Load(string certSettings)
     {

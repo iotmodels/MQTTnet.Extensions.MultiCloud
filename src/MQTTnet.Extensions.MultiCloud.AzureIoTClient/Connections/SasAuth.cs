@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace MQTTnet.Extensions.MultiCloud.Connections;
+namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Connections;
 
 internal class SasAuth
 {
