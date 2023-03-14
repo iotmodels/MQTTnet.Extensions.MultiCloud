@@ -23,7 +23,7 @@ public class Device : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+        var connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs1"));
         _logger.LogWarning("Connecting to: {connectionSettings}", connectionSettings);
 
         var client = new HubMqttClient(await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionSettings, stoppingToken));

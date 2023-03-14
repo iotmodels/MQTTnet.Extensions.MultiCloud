@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections;
 
-internal static class X509CommonNameParser
+public static class X509CommonNameParser
 {
     public static string GetCNFromCertSubject(X509Certificate2 cert)
     {

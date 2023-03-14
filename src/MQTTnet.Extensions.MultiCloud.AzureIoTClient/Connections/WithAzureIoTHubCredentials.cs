@@ -1,10 +1,11 @@
 ﻿using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Connections;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections;
 
 public static partial class MqttNetExtensions
 {
-    internal static MqttClientOptionsBuilder WithAzureIoTHubCredentials(this MqttClientOptionsBuilder builder, ConnectionSettings? cs)
+    public static MqttClientOptionsBuilder WithAzureIoTHubCredentials(this MqttClientOptionsBuilder builder, ConnectionSettings? cs)
     {
         string? hostName = cs!.HostName!;
         if (!string.IsNullOrEmpty(cs.GatewayHostName))
@@ -30,7 +31,9 @@ public static partial class MqttNetExtensions
             }
 
             builder.WithTlsSettings(cs);
-            return builder.WithAzureIoTHubCredentialsSas(hostName, cs.DeviceId!, cs.ModuleId!, cs.HostName!, cs.SharedAccessKey!, cs.ModelId!, cs.SasMinutes, cs.GatewayHostName!);
+            builder.WithAzureIoTHubCredentialsSas(hostName, cs.DeviceId!, cs.ModuleId!, cs.HostName!, cs.SharedAccessKey!, cs.ModelId!, cs.SasMinutes, cs.GatewayHostName!);
+            builder.WithClientId(cs.ClientId);
+            return builder;
         }
         else if (cs?.Auth == AuthType.X509)
         {
@@ -49,7 +52,9 @@ public static partial class MqttNetExtensions
             }
 
             builder.WithTlsSettings(cs);
-            return builder.WithAzureIoTHubCredentialsX509(hostName, cs.ClientId!, cs.ModelId!);
+            builder.WithAzureIoTHubCredentialsX509(hostName, cs.ClientId!, cs.ModelId!);
+            builder.WithClientId(cs.ClientId);
+            return builder;
         }
         else
         {
