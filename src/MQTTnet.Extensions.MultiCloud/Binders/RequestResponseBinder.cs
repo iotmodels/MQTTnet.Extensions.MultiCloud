@@ -71,8 +71,6 @@ public class RequestResponseBinder<T, TResp>
         {
             Topic = commandTopic,
             Payload = _serializer.ToBytes(request),
-            ResponseTopic = responseTopic,
-            CorrelationData = new byte[] { 1 }
         };
         var pubAck = await mqttClient.PublishAsync(msg);
         if (!pubAck.IsSuccess)

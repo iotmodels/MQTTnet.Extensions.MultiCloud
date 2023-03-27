@@ -17,6 +17,11 @@ namespace ControlApp
         {
             var mqttClient = await BrokerClientFactory.CreateFromConnectionSettingsAsync(_configuration.GetConnectionString("cs")!, false, stoppingToken);
             TelemetryClient<double> telClient = new(mqttClient, "workingSet");
+            CommandClient<string, string> cmdClient = new(mqttClient, "echo");
+
+            var res = await cmdClient.InvokeAsync("MyMqttDevice", "\"hello1\"", stoppingToken);
+
+            _logger.LogInformation("Command response {r}", res);
 
             await telClient.StartAsync("+");
 
