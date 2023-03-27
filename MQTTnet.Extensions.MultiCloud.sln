@@ -67,6 +67,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mqtt-connection", "samples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControlApp", "samples\ControlApp\ControlApp.csproj", "{55CBDD98-6C1B-442F-B37C-B13599363FD3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mqtt-commands", "samples\mqtt-commands\mqtt-commands.csproj", "{72206AF8-D6A4-4098-9FC3-320402EF9E85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,10 @@ Global
 		{55CBDD98-6C1B-442F-B37C-B13599363FD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55CBDD98-6C1B-442F-B37C-B13599363FD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55CBDD98-6C1B-442F-B37C-B13599363FD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72206AF8-D6A4-4098-9FC3-320402EF9E85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72206AF8-D6A4-4098-9FC3-320402EF9E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72206AF8-D6A4-4098-9FC3-320402EF9E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72206AF8-D6A4-4098-9FC3-320402EF9E85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +150,7 @@ Global
 		{713F4937-160C-4CA3-9F9B-91DD91E7F5AC} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 		{E1B90E61-2564-4FCE-8CED-F6D175DFBF4F} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 		{55CBDD98-6C1B-442F-B37C-B13599363FD3} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
+		{72206AF8-D6A4-4098-9FC3-320402EF9E85} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09914DD8-50B2-48E3-B9AB-7764AE36AD6B}

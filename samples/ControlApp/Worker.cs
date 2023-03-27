@@ -19,7 +19,7 @@ namespace ControlApp
             TelemetryClient<double> telClient = new(mqttClient, "workingSet");
             CommandClient<string, string> cmdClient = new(mqttClient, "echo");
 
-            var res = await cmdClient.InvokeAsync("MyMqttDevice", "\"hello1\"", stoppingToken);
+            var res = await cmdClient.InvokeAsync("mqtt-command-device", "\"hello2\"", stoppingToken);
 
             _logger.LogInformation("Command response {r}", res);
 
