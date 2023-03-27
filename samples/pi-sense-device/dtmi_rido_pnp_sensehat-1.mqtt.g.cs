@@ -6,7 +6,7 @@ using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 
 namespace dtmi_rido_pnp_sensehat.mqtt;
 
-public class sensehat : Isensehat
+public class _sensehat : Isensehat
 {
     public IMqttClient Connection { get; set; }
     public string InitialState { get; set; }
@@ -27,7 +27,7 @@ public class sensehat : Isensehat
 
     
 
-    internal sensehat(IMqttClient c) 
+    internal _sensehat(IMqttClient c) 
     {
         Connection = c;
         Property_piri = new ReadOnlyProperty<string>(c, "piri");

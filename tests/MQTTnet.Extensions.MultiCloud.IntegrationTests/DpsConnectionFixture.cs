@@ -29,6 +29,24 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
         }
 
         [Fact]
+        public async Task SasAuthWithInvalidChar()
+        {
+            var cs = new ConnectionSettings()
+            {
+                IdScope = "0ne0083E236",
+                DeviceId = "sas:dpstest",
+                SharedAccessKey = "hb8dsVIjDVKRjA20LTHGaEcO6e92BXxhYH8F4lN/bw8="
+            };
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
+                .WithAzureDpsCredentials(cs)
+                .Build());
+            Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
+            Assert.True(client.IsConnected);
+            await client.DisconnectAsync();
+        }
+
+
+        [Fact]
         public async Task ClientCert()
         {
             var cs = new ConnectionSettings()

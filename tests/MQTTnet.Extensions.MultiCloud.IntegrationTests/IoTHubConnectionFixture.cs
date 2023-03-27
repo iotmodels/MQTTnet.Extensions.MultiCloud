@@ -1,5 +1,6 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Connections;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Connections;
 using System.Text;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
@@ -23,7 +24,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
 
             };
             var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
-                .WithConnectionSettings(cs)
+                .WithAzureIoTHubCredentials(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
             Assert.True(client.IsConnected);
@@ -41,7 +42,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 SharedAccessKey = "py0vifQWT7QGK4AiDO3IlreGsvXrLet+sKZnErKMkAk="
             };
             var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
-                .WithConnectionSettings(cs)
+                .WithAzureIoTHubCredentials(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
             Assert.True(client.IsConnected);
@@ -57,7 +58,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 X509Key = "ca-device.pem|ca-device.key"
             };
             var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
-                .WithConnectionSettings(cs)
+                .WithAzureIoTHubCredentials(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
             Assert.True(client.IsConnected);
@@ -89,7 +90,26 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
                 X509Key = "ca-module.pem|ca-module.key"
             };
             var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
-                .WithConnectionSettings(cs)
+                .WithAzureIoTHubCredentials(cs)
+                .Build());
+            Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
+            Assert.True(client.IsConnected);
+            await client.DisconnectAsync();
+        }
+
+        [Fact(Skip ="Required edgeHub-local")]
+        public async Task ModuleSasUsingEdgeHub()
+        {
+            var cs = new ConnectionSettings()
+            {
+                HostName = "rido-edges.azure-devices.net",
+                DeviceId = "riduntu22",
+                ModuleId = "MyFilterModule",
+                SharedAccessKey = "xidAoWNigrri7dAV/NynNFvOCTTgyTjlUIGoHI6wxyk=",
+                GatewayHostName = "localhost"
+            };
+            var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()
+                .WithAzureIoTHubCredentials(cs)
                 .Build());
             Assert.Equal(MqttClientConnectResultCode.Success, connAck.ResultCode);
             Assert.True(client.IsConnected);

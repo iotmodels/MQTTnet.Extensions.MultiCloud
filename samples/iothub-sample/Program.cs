@@ -9,10 +9,10 @@ namespace iothub_sample
         public static void Main(string[] args)
         {
 
-            //using (var consoleListener = new ConsoleTraceListener())
-            //{
-            //    Trace.Listeners.Add(consoleListener);
-            //}
+            using (var consoleListener = new ConsoleTraceListener())
+            {
+                Trace.Listeners.Add(consoleListener);
+            }
 
             CreateHostBuilder(args).Build().Run();
         }

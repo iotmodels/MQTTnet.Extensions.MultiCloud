@@ -23,13 +23,14 @@ public class Device : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+        var connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs1"));
         _logger.LogWarning("Connecting to: {connectionSettings}", connectionSettings);
 
         var client = new HubMqttClient(await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionSettings, stoppingToken));
         client.Connection.DisconnectedAsync += async d => await Task.Run(() => _logger.LogError("MQTT client disconnected {reason}", d.Reason));
+        var t0 = await client.GetTwinAsync(stoppingToken);
         var v = await client.UpdateTwinAsync(new { started = DateTime.Now }, stoppingToken);
-        _logger.LogInformation("Updated Twin to verison: {v}", v);
+        _logger.LogInformation("Updated Twin to version: {v}", v);
         var twin = await client.GetTwinAsync(stoppingToken);
         Console.WriteLine(twin);
         

@@ -17,7 +17,7 @@ namespace aws_sample
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            ConnectionSettings cs =  new (_configuration.GetConnectionString("cs"));
+            ConnectionSettings cs =  new (_configuration.GetConnectionString("cs")!);
             var mqtt = await AwsClientFactory.CreateFromConnectionSettingsAsync(cs, false, stoppingToken);
             Console.WriteLine(mqtt.IsConnected);
             Console.WriteLine(AwsClientFactory.ComputedSettings);

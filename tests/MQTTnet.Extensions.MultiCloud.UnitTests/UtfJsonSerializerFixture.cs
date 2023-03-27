@@ -29,4 +29,28 @@ public class UtfJsonSerializerFixture
             Assert.False(propVal2);
         }
     }
+
+    [Fact]
+    public void Serialize_Strings()
+    {
+        UTF8JsonSerializer ser = new();
+        var bytes = ser.ToBytes("hola");
+        Assert.Equal("hola"u8.ToArray(), bytes);
+    }
+
+    [Fact]
+    public void DeSerialize_Strings()
+    {
+
+        UTF8JsonSerializer ser = new();
+        var hola = "hola"u8.ToArray();
+        if (ser.TryReadFromBytes<string>(hola, string.Empty, out string res))
+        {
+            Assert.Equal("hola", res);
+        }
+        else
+        {
+            Assert.Fail("Deserialize failed");
+        }
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Extensions.MultiCloud.Connections;
+using System;
 using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests
@@ -15,7 +16,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             Assert.Equal(8883, dcs.TcpPort);
             Assert.False(dcs.DisableCrl);
             Assert.True(dcs.UseTls);
-            Assert.Equal("TcpPort=8883;Auth=Basic", dcs.ToString());
+            Assert.Equal("TcpPort=8883;Auth=Basic;MqttVersion=5", dcs.ToString());
         }
 
         [Fact]
@@ -84,7 +85,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void ParseConnectionStringWithAllValues()
         {
-            string cs = "HostName=<hubname>.azure-devices.net;DeviceId=<deviceId>;ClientId=<ClientId>;ModuleId=<moduleId>;SharedAccessKey=<SasKey>;SasMinutes=2;TcpPort=1234;UseTls=false;CaFile=<path>;DisableCrl=true;UserName=<usr>;Password=<pwd>";
+            string cs = "HostName=<hubname>.azure-devices.net;DeviceId=<deviceId>;ClientId=<ClientId>;ModuleId=<moduleId>;SharedAccessKey=<SasKey>;SasMinutes=2;TcpPort=1234;UseTls=false;CaFile=<path>;DisableCrl=true;UserName=<usr>;Password=<pwd>;MqttVersion=3";
             ConnectionSettings dcs = ConnectionSettings.FromConnectionString(cs);
             Assert.Equal("<hubname>.azure-devices.net", dcs.HostName);
             Assert.Equal("<deviceId>", dcs.DeviceId);
@@ -98,6 +99,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             Assert.False(dcs.UseTls);
             Assert.Equal("<path>", dcs.CaFile);
             Assert.True(dcs.DisableCrl);
+            Assert.Equal(3, dcs.MqttVersion);
         }
 
         [Fact]
@@ -108,9 +110,10 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
                 HostName = "h",
                 DeviceId = "d",
                 SharedAccessKey = "sas",
-                ModelId = "dtmi"
+                ModelId = "dtmi",
+                MqttVersion = 3
             };
-            string expected = "HostName=h;TcpPort=8883;DeviceId=d;SharedAccessKey=***;ModelId=dtmi;Auth=Sas";
+            string expected = "HostName=h;TcpPort=8883;DeviceId=d;SharedAccessKey=***;ModelId=dtmi;Auth=Sas;MqttVersion=3";
             Assert.Equal(expected, dcs.ToString());
         }
 
@@ -124,8 +127,25 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
                 ModuleId = "m",
                 SharedAccessKey = "sas"
             };
-            string expected = "HostName=h;TcpPort=8883;DeviceId=d;ModuleId=m;SharedAccessKey=***;Auth=Sas";
+            string expected = "HostName=h;TcpPort=8883;DeviceId=d;ModuleId=m;SharedAccessKey=***;Auth=Sas;MqttVersion=5";
             Assert.Equal(expected, dcs.ToString());
+        }
+
+        [Fact]
+        public void InvalidMqttVersionThrowsException()
+        {
+            string cs = "HostName=<hubname>.azure-devices.net;DeviceId=<deviceId>;SharedAccessKey=<SasKey>;MaxRetries=-2;SasMinutes=aa;MqttVersion=4";
+            try
+            {
+                ConnectionSettings dcs = new(cs);
+                Assert.Fail("should throw");
+            }
+            catch (ApplicationException ex)
+            {
+                Assert.Equal("Invalid Mqtt Version 4", ex.Message);
+                
+            }
+            
         }
     }
 }

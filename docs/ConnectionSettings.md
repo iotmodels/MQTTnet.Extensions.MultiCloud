@@ -18,7 +18,8 @@ Connection settings can be established using the API or parsing a connection str
 - `TcpPort` Sets the TCP port for the MQTT connection, defaults to `8883`
 - `UseTls` Enable/Disable Server TLS connection, defaults to `true`
 - `CaFile` Path to the CA certificate required to stablish the TLS session
-- `GatewayHostName` Allos to connect to IoT Hub through a IoTEdge ($edgeHub) gateway (aka Transparent Gateway)
+- `GatewayHostName` Allows to connect to IoT Hub through a IoTEdge ($edgeHub) gateway (aka Transparent Gateway)
+- `MqttVersion` Sets the MqttProtocolVersion, allowed values are 5 and 3 (will use 3.1.1)
 
 ## Sample Connection Strings
 

@@ -8,6 +8,7 @@ using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,13 +25,18 @@ namespace mqtt_grpc_device
         {
             _logger = logger;
             _configuration = config;
+            if (_configuration.GetSection("ConsoleTracing").Get<bool>() == true)
+            {
+                Trace.Listeners.Add(new ConsoleTraceListener());
+            }
         }
 
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            ConnectionSettings cs = new(_configuration.GetConnectionString("cs")) { ModelId = mqtt_grpc_sample_device.ModelId };
+            ConnectionSettings cs = new(_configuration.GetConnectionString("cs")!) { ModelId = mqtt_grpc_sample_device.ModelId };
             connection = await BrokerClientFactory.CreateFromConnectionSettingsAsync(cs, true, stoppingToken);
+            _logger.LogWarning("Connected to {cs} with {sdk}", BrokerClientFactory.ComputedSettings, BrokerClientFactory.NuGetPackageVersion);
 
             client = new mqtt_grpc_sample_device(connection);
 
@@ -75,6 +81,7 @@ namespace mqtt_grpc_device
         {
             _logger.LogInformation("Cmd getRuntimeStats Received: {req}", request.Mode.ToString());
             var response = new getRuntimeStatsResponse();
+            response.DiagResults.Add("dotnet", Environment.Version.ToString());
             if (request.Mode == getRuntimeStatsMode.Basic)
             {
                 response.DiagResults.Add("machineName", Environment.MachineName);

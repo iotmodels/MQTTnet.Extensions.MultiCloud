@@ -29,7 +29,7 @@ public static class AwsClientFactory
         }
         catch (MqttConnectingFailedException ex)
         {
-            if (ex.ResultCode == MqttClientConnectResultCode.UnspecifiedError 
+            if (ex.ResultCode == MqttClientConnectResultCode.UnspecifiedError
                 && ex.InnerException!.Message == "The operation has timed out.")
             {
                 var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs).Build(), cancellationToken);

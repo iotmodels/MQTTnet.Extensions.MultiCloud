@@ -19,7 +19,7 @@ namespace mqtt_grpc_device.Serializers
         {
             _connection = connection;
             _name = name;
-            SubscribeTopicPattern = "device/{clientId}/props/{name}/set";
+            SubscribeTopicPattern = "device/{clientId}/props/{name}/set/#";
             RequestTopicPattern = "device/{clientId}/props/{name}/set";
             ResponseTopicPattern = "device/{clientId}/props/{name}/ack";
             RetainResponse = true;

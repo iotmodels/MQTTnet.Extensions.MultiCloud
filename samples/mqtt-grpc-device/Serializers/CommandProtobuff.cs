@@ -11,6 +11,7 @@ public class CommandProtobuff<T, TResp> : CloudToDeviceBinder<T, TResp>, IComman
         : base(client, name, new ProtobufSerializer(parser))
     {
         UnwrapRequest = false;
+        SubscribeTopicPattern = "device/{clientId}/cmd/{name}";
         RequestTopicPattern = "device/{clientId}/cmd/{name}";
         ResponseTopicPattern = "device/{clientId}/cmd/{name}/resp";
     }

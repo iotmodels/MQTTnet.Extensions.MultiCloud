@@ -17,6 +17,7 @@ public class ConnectionSettings
     private const int Default_TcpPort = 8883;
     private const string Default_UseTls = "true";
     private const string Default_DisableCrl = "false";
+    private const int Default_MqttVersion = 5;
 
     public string? IdScope { get; set; }
     public string? HostName { get; set; }
@@ -44,6 +45,8 @@ public class ConnectionSettings
 
     public string? GatewayHostName { get; set; }
 
+    public int? MqttVersion { get; set; }
+
     public ConnectionSettings()
     {
         SasMinutes = Default_SasMinutes;
@@ -53,6 +56,7 @@ public class ConnectionSettings
         DisableCrl = Default_DisableCrl == "true";
         CleanSession = Default_CleanSession == "true";
         GatewayHostName = string.Empty;
+        MqttVersion = Default_MqttVersion;
     }
 
     public static ConnectionSettings FromConnectionString(string cs) => new(cs);
@@ -102,6 +106,11 @@ public class ConnectionSettings
         CaFile = GetStringValue(map, nameof(CaFile));
         DisableCrl = GetStringValue(map, nameof(DisableCrl), Default_DisableCrl) == "true";
         GatewayHostName = GetStringValue(map, nameof(GatewayHostName));
+        MqttVersion = GetPositiveIntValueOrDefault(map, nameof(MqttVersion), Default_MqttVersion);
+        if (MqttVersion != 3 && MqttVersion != 5)
+        {
+            throw new ApplicationException($"Invalid Mqtt Version {MqttVersion}", null);
+        }
     }
 
     private static void AppendIfNotEmpty(StringBuilder sb, string name, string val)
@@ -133,6 +142,7 @@ public class ConnectionSettings
         AppendIfNotEmpty(result, nameof(ModelId), ModelId!);
         AppendIfNotEmpty(result, nameof(ClientId), ClientId!);
         AppendIfNotEmpty(result, nameof(Auth), Auth!.ToString());
+        AppendIfNotEmpty(result, nameof(MqttVersion), MqttVersion.ToString()!);
         AppendIfNotEmpty(result, nameof(GatewayHostName), GatewayHostName!.ToString());
         result.Remove(result.Length - 1, 1);
         return result.ToString();

@@ -11,7 +11,7 @@ public class WritableProperty<T> : IWritableProperty<T>, IDeviceToCloud<Ack<T>>
 {
     public T? Value { get; set; }
     public int? Version { get; set; }
-    
+
     public Func<T, Task<Ack<T>>>? OnMessage { get; set; }
 
     readonly ShadowSerializer serializer = new();

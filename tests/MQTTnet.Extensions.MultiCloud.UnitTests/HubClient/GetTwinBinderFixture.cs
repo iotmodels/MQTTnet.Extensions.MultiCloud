@@ -7,22 +7,26 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.HubClient
     public class GetTwinBinderFixture
     {
         private readonly MockMqttClient mockClient;
-        private readonly TwinRequestResponseBinder binder;
+        private readonly GetTwinBinder binder;
+        private readonly UpdateTwinBinder<object> updBinder;
 
         public GetTwinBinderFixture()
         {
             mockClient = new MockMqttClient();
-            binder = new TwinRequestResponseBinder(mockClient);
+            //binder = new TwinRequestResponseBinder(mockClient);
+            binder = new GetTwinBinder(mockClient);
+            updBinder = new UpdateTwinBinder<object>(mockClient);
+
         }
 
         [Fact]
         public void GetTwinAsync()
         {
-            var twinTask = binder.GetTwinAsync();
+            var twinTask = binder.InvokeAsync(mockClient.Options.ClientId, string.Empty);
             var rid = binder.lastRid;
             mockClient.SimulateNewMessage($"$iothub/twin/res/200/?$rid={rid}", SampleTwin);
             Assert.StartsWith("$iothub/twin/GET/?$rid=", mockClient.topicRecceived);
-            Assert.Equal(string.Empty, mockClient.payloadReceived);
+            Assert.Empty(mockClient.payloadReceived);
             var twin = twinTask.Result;
             Assert.Equal(twin, SampleTwin);
         }

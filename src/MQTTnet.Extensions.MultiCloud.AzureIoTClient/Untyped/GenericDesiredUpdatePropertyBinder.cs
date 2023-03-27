@@ -8,7 +8,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
     {
         private readonly IMqttClient connection;
         public Func<JsonNode, GenericPropertyAck>? OnProperty_Updated = null;
-        public GenericDesiredUpdatePropertyBinder(IMqttClient c, TwinRequestResponseBinder updTwinBinder)
+        public GenericDesiredUpdatePropertyBinder(IMqttClient c, UpdateTwinBinder<object> updTwinBinder)
         {
             connection = c;
             _ = connection.SubscribeWithReplyAsync("$iothub/twin/PATCH/properties/desired/#");
@@ -27,7 +27,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
                              var ack = OnProperty_Updated(desired);
                              if (ack != null)
                              {
-                                 _ = updTwinBinder.UpdateTwinAsync(ack.BuildAck());
+                                 _ = updTwinBinder.InvokeAsync(connection.Options.ClientId, ack.BuildAck());
                              }
                          }
                      }

@@ -30,7 +30,10 @@ public class ShadowSerializer //: IMessageSerializer
 
     public byte[] ToBytes<T>(T payload, string name = "", int? version = null)
     {
-        Version = (int)version!;
+        if (version.HasValue)
+        {
+            Version = (int)version!;
+        }
         if (string.IsNullOrEmpty(name))
         {
             return Encoding.UTF8.GetBytes(Json.Stringify(payload!));

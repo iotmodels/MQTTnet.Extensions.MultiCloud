@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Client;
-using System.Diagnostics;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 
@@ -7,7 +6,7 @@ namespace MQTTnet.Extensions.MultiCloud.Connections;
 
 public static partial class MqttNetExtensions
 {
-    internal static MqttClientOptionsBuilder WithTlsSettings(this MqttClientOptionsBuilder builder, ConnectionSettings cs)
+    public static MqttClientOptionsBuilder WithTlsSettings(this MqttClientOptionsBuilder builder, ConnectionSettings cs)
     {
         var tls = new MqttClientOptionsBuilderTlsParameters
         {
@@ -36,6 +35,10 @@ public static partial class MqttNetExtensions
                 caCerts.ImportFromPemFile(cs.CaFile);
                 certs.AddRange(caCerts);
                 tls.CertificateValidationHandler = ea => X509ChainValidator.ValidateChain(ea.Certificate, cs.CaFile);
+            }
+            else
+            {
+                tls.CertificateValidationHandler += ea => X509ChainValidator.ValidateChain(ea.Certificate);
             }
             tls.Certificates = certs;
             tls.IgnoreCertificateRevocationErrors = cs.DisableCrl;

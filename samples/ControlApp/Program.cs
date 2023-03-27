@@ -1,10 +1,10 @@
-using mqtt_device;
+using ControlApp;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
-        services.AddHostedService<Device>();
+        services.AddHostedService<Worker>();
     })
     .Build();
 
-await host.RunAsync();
+host.Run();

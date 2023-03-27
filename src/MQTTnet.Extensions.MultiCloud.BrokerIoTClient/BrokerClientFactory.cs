@@ -6,17 +6,18 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
 {
     public static class BrokerClientFactory
     {
-        public static string NuGetPackageVersion => $"{ThisAssembly.NuGetPackageVersion}";
+        public static string NuGetPackageVersion => $"{ThisAssembly.AssemblyName} {ThisAssembly.NuGetPackageVersion}";
 
         public static ConnectionSettings? ComputedSettings { get; private set; }
-        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectinString, bool withBirth = false, CancellationToken cancellationToken = default) =>
-            await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectinString), withBirth, cancellationToken);
+        public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectionString, bool withBirth = false, CancellationToken cancellationToken = default) =>
+            await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectionString), withBirth, cancellationToken);
 
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(ConnectionSettings cs, bool withBirth = false, CancellationToken cancellationToken = default)
         {
             MqttClient? mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
             var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs, withBirth)
+                //.WithProtocolVersion(Formatter.MqttProtocolVersion.V500)
                 .Build(), cancellationToken);
             ComputedSettings = cs;
             if (connAck.ResultCode != MqttClientConnectResultCode.Success)

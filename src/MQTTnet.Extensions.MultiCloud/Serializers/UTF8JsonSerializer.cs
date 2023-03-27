@@ -4,8 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace MQTTnet.Extensions.MultiCloud.Serializers;
 
-
-
 public class UTF8JsonSerializer : IMessageSerializer
 {
     private static class Json
@@ -32,7 +30,14 @@ public class UTF8JsonSerializer : IMessageSerializer
     {
         if (string.IsNullOrEmpty(name))
         {
-            return Encoding.UTF8.GetBytes(Json.Stringify(payload!));
+            if (typeof(T) == typeof(string))
+            {
+                return Encoding.UTF8.GetBytes((payload as string)!);
+            }
+            else
+            {
+                return Encoding.UTF8.GetBytes(Json.Stringify(payload!));
+            }
         }
         else
         {
@@ -43,17 +48,24 @@ public class UTF8JsonSerializer : IMessageSerializer
 
     public bool TryReadFromBytes<T>(byte[] payload, string name, out T result)
     {
-        if (payload == null || payload.Length==0)
+        if (payload == null || payload.Length == 0)
         {
             result = default!;
-            return false;
+            return true;
         }
 
         bool found = false;
         if (string.IsNullOrEmpty(name))
         {
             found = true;
-            result = Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
+            if (typeof(T) == typeof(string))
+            {
+                result = (T)Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T));
+            }
+            else
+            {
+                result = Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
+            }
         }
         else
         {
@@ -76,6 +88,7 @@ public class UTF8JsonSerializer : IMessageSerializer
                 result = payloadJson.Deserialize<T>()!;
                 found = true;
             }
+
         }
         return found;
     }
