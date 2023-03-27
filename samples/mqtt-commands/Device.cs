@@ -22,7 +22,7 @@ namespace mqtt_commands
             cmd.OnCmdDelegate += req =>
             {
                 _logger.LogInformation($"Received command {req.CommandName} with payload {req.CommandPayload}");
-                return new GenericCommandResponse() { Status = 200, ReponsePayload = $"Command {req.CommandName} executed" };
+                return new GenericCommandResponse() { Status = 200, ReponsePayload = $"{req.CommandPayload} {req.CommandPayload}" };
             };
 
             //while (!stoppingToken.IsCancellationRequested)

@@ -21,6 +21,9 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Untyped
                     var segments = topic.Split('/');
                     var cmdName = segments[3];
                     string msg = Encoding.UTF8.GetString(m.ApplicationMessage.Payload);
+
+                    var responseTopic = m.ApplicationMessage.ResponseTopic ?? $"{topic}/resp";
+
                     GenericCommandRequest req = new()
                     {
                         CommandName = cmdName,
@@ -30,7 +33,11 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Untyped
                     {
                         var tp = TopicParser.ParseTopic(topic);
                         GenericCommandResponse response = OnCmdDelegate.Invoke(req);
-                        await connection.PublishStringAsync($"device/{c.Options.ClientId}/commands/{cmdName}/resp?$rid={tp.Rid}", response.ReponsePayload);
+                        await connection.PublishAsync(new MqttApplicationMessageBuilder()
+                            .WithTopic(responseTopic)
+                            .WithPayload(Encoding.UTF8.GetBytes(response.ReponsePayload!))
+                            .WithCorrelationData(m.ApplicationMessage.CorrelationData ?? Guid.Empty.ToByteArray())
+                            .Build());
                     }
                 }
                 

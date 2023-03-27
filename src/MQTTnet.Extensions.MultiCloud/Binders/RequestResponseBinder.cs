@@ -15,6 +15,7 @@ public class RequestResponseBinder<T, TResp>
     protected string responseTopicFailure = "device/{clientId}/commands/{commandName}/err";
     protected bool requireNotEmptyPayload = true;
     readonly bool _unwrap = true;
+    Guid corr = Guid.NewGuid();
 
     protected Func<string, TResp>? VersionExtractor { get; set; }
 
@@ -39,6 +40,11 @@ public class RequestResponseBinder<T, TResp>
             var expectedTopic = responseTopicSuccess.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
             if (topic.StartsWith(expectedTopic))
             {
+                if (m.ApplicationMessage.CorrelationData != null && corr != new Guid(m.ApplicationMessage.CorrelationData))
+                {
+                    tcs!.SetException(new ApplicationException("Invalid correlation data"));
+                }
+
                 if (requireNotEmptyPayload)
                 {
                     if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, _unwrap ? name : string.Empty, out TResp resp))
@@ -67,10 +73,13 @@ public class RequestResponseBinder<T, TResp>
         string commandTopic = requestTopicPattern.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
         var responseTopic = responseTopicSub.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName);
         await mqttClient.SubscribeAsync(responseTopic, Protocol.MqttQualityOfServiceLevel.AtMostOnce, ct);
+       
         MqttApplicationMessage msg = new()
         {
             Topic = commandTopic,
             Payload = _serializer.ToBytes(request),
+            ResponseTopic = responseTopicSuccess.Replace("{clientId}", remoteClientId).Replace("{commandName}", commandName),
+            CorrelationData = corr.ToByteArray()
         };
         var pubAck = await mqttClient.PublishAsync(msg);
         if (!pubAck.IsSuccess)

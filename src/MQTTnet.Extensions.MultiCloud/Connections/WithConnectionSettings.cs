@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+using MQTTnet.Formatter;
 
 namespace MQTTnet.Extensions.MultiCloud.Connections;
 
@@ -12,6 +13,15 @@ public static partial class MqttNetExtensions
             .WithKeepAlivePeriod(TimeSpan.FromSeconds(cs.KeepAliveInSeconds))
             .WithCleanSession(cs.CleanSession)
             .WithTlsSettings(cs);
+
+        MqttProtocolVersion v = cs.MqttVersion switch
+        {
+            5 => MqttProtocolVersion.V500,
+            3 => MqttProtocolVersion.V311,
+            _ => MqttProtocolVersion.Unknown
+        };
+
+        builder.WithProtocolVersion(v);
 
         if (!string.IsNullOrEmpty(cs.Password))
         {
