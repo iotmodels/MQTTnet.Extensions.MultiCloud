@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControlApp", "samples\ControlApp\ControlApp.csproj", "{DA9074C9-219F-464D-8A1D-622EC206CFFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControlApp", "ControlApp\ControlApp.csproj", "{DA9074C9-219F-464D-8A1D-622EC206CFFA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.BrokerIoTClient", "src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj", "{9A7F4B31-58B1-4D16-9C62-37136F716F6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud.BrokerIoTClient", "..\src\MQTTnet.Extensions.MultiCloud.BrokerIoTClient\MQTTnet.Extensions.MultiCloud.BrokerIoTClient.csproj", "{9A7F4B31-58B1-4D16-9C62-37136F716F6A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud", "src\MQTTnet.Extensions.MultiCloud\MQTTnet.Extensions.MultiCloud.csproj", "{E0725F33-BA7C-4407-AF96-4EACF9AAB9CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.Extensions.MultiCloud", "..\src\MQTTnet.Extensions.MultiCloud\MQTTnet.Extensions.MultiCloud.csproj", "{E0725F33-BA7C-4407-AF96-4EACF9AAB9CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
