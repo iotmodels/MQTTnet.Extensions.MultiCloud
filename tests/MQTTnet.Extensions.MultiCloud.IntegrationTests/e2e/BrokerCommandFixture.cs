@@ -58,15 +58,15 @@ public class BrokerCommandFixture
     [Fact]
     public async Task InvokeCommandWithDefaultTopics()
     {
-        IMqttClient producerClientOne = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("deviceOne"));
-        IMqttClient producerClientTwo = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("deviceTwo"));
+        IMqttClient producerClientOne = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("device1"));
+        IMqttClient producerClientTwo = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("device2"));
         _ = new Producer(producerClientOne);
         _ = new Producer(producerClientTwo);
 
         IMqttClient consumerClient = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("consumer"));
         Consumer consumer = new(consumerClient);
-        var respOne = await consumer.echoCommand.InvokeAsync("deviceOne", "Hello One");
-        var respTwo = await consumer.echoCommand.InvokeAsync("deviceTwo", "Hello Two Loooonger ");
+        var respOne = await consumer.echoCommand.InvokeAsync("device1", "Hello One");
+        var respTwo = await consumer.echoCommand.InvokeAsync("device2", "Hello Two Loooonger ");
 
         Assert.Equal("Hello OneHello One", respOne);
         Assert.Equal("Hello Two Loooonger Hello Two Loooonger ", respTwo);

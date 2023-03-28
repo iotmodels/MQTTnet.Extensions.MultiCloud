@@ -52,8 +52,8 @@ public class BrokerPropertyFixture
     [Fact]
     public async Task ReadProperties()
     {
-        IMqttClient producerClientOne = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("deviceOne"));
-        IMqttClient producerClientTwo = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("deviceTwo"));
+        IMqttClient producerClientOne = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("device4"));
+        IMqttClient producerClientTwo = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("device5"));
         var p1 = new Producer(producerClientOne);
         var p2 = new Producer(producerClientTwo);
 
@@ -86,7 +86,7 @@ public class BrokerPropertyFixture
 
         DateTime now = DateTime.Now;
         await p1.Started.SendMessageAsync(now);
-        await consumer.Interval.UpdatePropertyAsync("deviceOne", 23);
+        await consumer.Interval.UpdatePropertyAsync("device4", 23);
         await Task.Delay(500);
         Assert.Equal(23, intervalNewValue);
         Assert.Equal(now, startedRead);
