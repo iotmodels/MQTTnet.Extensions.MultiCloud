@@ -28,6 +28,8 @@ public class UTF8JsonSerializer : IMessageSerializer
 
     public byte[] ToBytes<T>(T payload, string name = "")
     {
+        if (payload is null)  return new byte[0];
+
         if (string.IsNullOrEmpty(name))
         {
             if (typeof(T) == typeof(string))

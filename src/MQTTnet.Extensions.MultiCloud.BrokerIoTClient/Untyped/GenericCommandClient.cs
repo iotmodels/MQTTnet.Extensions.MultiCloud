@@ -1,8 +1,6 @@
 ﻿using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Binders;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 using MQTTnet.Server;
-using System.Xml.Linq;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Untyped;
 
@@ -41,7 +39,9 @@ public class GenericCommandClient //: RequestResponseBinder<GenericCommandReques
                     _tcs!.SetException(new ApplicationException("Invalid correlation data"));
                 }
 
-                int status =  m.ApplicationMessage.UserProperties.Contains(new Packets.MqttUserProperty("status", "200")) ? 200 : 500;
+                //int status =  m.ApplicationMessage.UserProperties.Contains(new Packets.MqttUserProperty("status", "200")) ? 200 : 500;
+                var up = m.ApplicationMessage.UserProperties.FirstOrDefault(p => p.Name.Equals("status"));
+                int status = up != null ? int.Parse(up.Value) : 500;
 
                 if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, string.Empty, out string respPayload))
                 {
@@ -71,14 +71,13 @@ public class GenericCommandClient //: RequestResponseBinder<GenericCommandReques
         var responseTopic = responseTopicSub.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName);
         await _mqttClient.SubscribeAsync(responseTopic, Protocol.MqttQualityOfServiceLevel.AtMostOnce, ct);
 
-        MqttApplicationMessage msg = new()
-        {
-            Topic = commandTopic,
-            Payload = _serializer.ToBytes(request.CommandPayload),
-            ResponseTopic = responseTopicSuccess.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName),
-            CorrelationData = corr.ToByteArray()
-        };
-        var pubAck = await _mqttClient.PublishAsync(msg);
+        var pubAck = await _mqttClient.PublishAsync(
+            new MqttApplicationMessageBuilder()
+                .WithTopic(commandTopic)
+                .WithPayload(_serializer.ToBytes(request.CommandPayload))
+                .WithResponseTopic(responseTopicSuccess.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName))
+                .WithCorrelationData(corr.ToByteArray())
+                .Build());
         if (!pubAck.IsSuccess)
         {
             throw new ApplicationException("Error publishing Request Message");

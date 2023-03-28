@@ -24,24 +24,35 @@ public  class GenericCommandE2EFixture
     {
         readonly IMqttClient mqttClient;
 
-        public GenericCommand EchoCommand;
+        public GenericCommand genCommand;
 
         public Producer(IMqttClient client)
         {
             mqttClient = client;
 
-            EchoCommand = new GenericCommand(mqttClient)
+            genCommand = new GenericCommand(mqttClient)
             {
                 OnCmdDelegate = async req =>
                 {
-                    await Task.Delay(req.CommandPayload!.ToString()!.Length * 100);
                     await Console.Out.WriteLineAsync("[Producer] Running Generic Command in client: " + client.Options.ClientId);
-                    return await Task.FromResult(
-                        new GenericCommandResponse() 
-                        {
-                            Status = 200,
-                            ReponsePayload = req.CommandPayload.ToString() + req.CommandPayload.ToString()
-                        });
+                    if (req.CommandName == "echo")
+                    {
+                        await Task.Delay(req.CommandPayload!.ToString()!.Length * 100);
+                        return await Task.FromResult(
+                            new GenericCommandResponse() 
+                            {
+                                Status = 200,
+                                ReponsePayload = req.CommandPayload.ToString() + req.CommandPayload.ToString()
+                            });
+                    }
+                    else
+                    {
+                        return await Task.FromResult(
+                            new GenericCommandResponse()
+                            {
+                                Status = 400
+                            });
+                    }
                 }
             };
         }
@@ -69,11 +80,34 @@ public  class GenericCommandE2EFixture
 
         IMqttClient consumerClient = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("consumer"));
         Consumer consumer = new(consumerClient);
-        var respOne = await consumer.mqttCommand.InvokeAsync("deviceOne", new GenericCommandRequest() { CommandName = "echo", CommandPayload = "Hello One" });
-        var respTwo = await consumer.mqttCommand.InvokeAsync("deviceTwo", new GenericCommandRequest() { CommandName = "echo", CommandPayload = "Hello Two Loooonger " });
 
+        var respOne = await consumer.mqttCommand.InvokeAsync("deviceOne", 
+            new GenericCommandRequest() { CommandName = "echo", CommandPayload = "Hello One" });
         Assert.Equal("Hello OneHello One", respOne.ReponsePayload);
+        
+        var respTwo = await consumer.mqttCommand.InvokeAsync("deviceTwo", 
+            new GenericCommandRequest() { CommandName = "echo", CommandPayload = "Hello Two Loooonger " });
         Assert.Equal("Hello Two Loooonger Hello Two Loooonger ", respTwo.ReponsePayload);
 
+        await producerClientOne.DisconnectAsync();
+        await producerClientTwo.DisconnectAsync();
+        await consumerClient.DisconnectAsync();
+    }
+
+    [Fact]
+    public async Task NotImplementedReturns400()
+    {
+        IMqttClient producerClientOne = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("deviceThree"));
+        _ = new Producer(producerClientOne);
+
+        IMqttClient consumerClient = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("consumer2"));
+        Consumer consumer = new(consumerClient);
+
+        var respOne = await consumer.mqttCommand.InvokeAsync("deviceThree",
+            new GenericCommandRequest() { CommandName = "notimpl", CommandPayload = "Hello One" });
+        Assert.Equal(400, respOne.Status);
+
+        await producerClientOne.DisconnectAsync();
+        await consumerClient.DisconnectAsync();
     }
 }
