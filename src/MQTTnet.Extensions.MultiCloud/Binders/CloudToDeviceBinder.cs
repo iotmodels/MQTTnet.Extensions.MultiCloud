@@ -49,6 +49,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
                                 .WithPayload(responseBytes)
                                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                                 .WithRetainFlag(RetainResponse)
+                                .WithUserProperty("status", "200")
                                 .Build());
 
                         if (CleanRetained && m.ApplicationMessage.Retain) // clean retain once received

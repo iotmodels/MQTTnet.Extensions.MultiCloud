@@ -196,7 +196,7 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             rm.RemoveDeviceAsync(deviceId).Wait();
         }
 
-        //[Fact, Trait("e2e", "hub")]
+        [Fact, Trait("e2e", "hub")]
         internal async Task CommandsGetCalled()
         {
             var deviceId = "memmon-test" + new Random().Next(100);
