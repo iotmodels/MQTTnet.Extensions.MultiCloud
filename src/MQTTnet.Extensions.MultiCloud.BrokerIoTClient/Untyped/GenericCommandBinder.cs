@@ -26,18 +26,24 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Untyped
                     var segments = topic.Split('/');
                     var cmdName = segments[3];
 
-                    if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, string.Empty, out GenericCommandRequest req))
+                    if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, string.Empty, out object reqPayload))
                     {
                         var responseTopic = m.ApplicationMessage.ResponseTopic ?? $"{topic}/resp";
 
-                        if (OnCmdDelegate != null && req != null)
+                        if (OnCmdDelegate != null && reqPayload != null)
                         {
-                            var tp = TopicParser.ParseTopic(topic);
+                            //var tp = TopicParser.ParseTopic(topic);
+                            GenericCommandRequest req = new()
+                            {
+                                CommandName = cmdName,
+                                CommandPayload = reqPayload
+                            };
 
                             GenericCommandResponse response = await OnCmdDelegate.Invoke(req);
                             await connection.PublishAsync(new MqttApplicationMessageBuilder()
                                 .WithTopic(responseTopic)
-                                .WithPayload(_serializer.ToBytes(response))
+                                .WithPayload(_serializer.ToBytes(response.ReponsePayload))
+                                .WithUserProperty("status", response.Status.ToString())
                                 .WithCorrelationData(m.ApplicationMessage.CorrelationData ?? Guid.Empty.ToByteArray())
                                 .Build());
                         }

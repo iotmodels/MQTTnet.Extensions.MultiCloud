@@ -32,15 +32,15 @@ public  class GenericCommandE2EFixture
 
             EchoCommand = new GenericCommand(mqttClient)
             {
-                OnCmdDelegate = async m =>
+                OnCmdDelegate = async req =>
                 {
-                    await Task.Delay(m.CommandPayload!.Length * 100);
+                    await Task.Delay(req.CommandPayload!.ToString()!.Length * 100);
                     await Console.Out.WriteLineAsync("[Producer] Running Generic Command in client: " + client.Options.ClientId);
                     return await Task.FromResult(
                         new GenericCommandResponse() 
                         {
                             Status = 200,
-                            ReponsePayload = m.CommandPayload + m.CommandPayload
+                            ReponsePayload = req.CommandPayload.ToString() + req.CommandPayload.ToString()
                         });
                 }
             };

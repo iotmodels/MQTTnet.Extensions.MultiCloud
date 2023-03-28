@@ -3,6 +3,6 @@
     public class GenericCommandRequest
     {
         public string? CommandName { get; set; }
-        public string? CommandPayload { get; set; }
+        public object? CommandPayload { get; set; }
     }
 }
