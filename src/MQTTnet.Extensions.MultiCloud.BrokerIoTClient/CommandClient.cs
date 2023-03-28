@@ -1,15 +1,14 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Binders;
 
-namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
+namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
+
+public class CommandClient<T, TResp> : RequestResponseBinder<T, TResp>
 {
-    public class CommandClient<T, TResp> : RequestResponseBinder<T, TResp>
+    public CommandClient(IMqttClient client, string commandName)
+        : base(client, commandName, false) 
     {
-        public CommandClient(IMqttClient client, string commandName)
-            : base(client, commandName, false) 
-        {
-            requestTopicPattern = "device/{clientId}/commands/{commandName}";
-            responseTopicSuccess = "device/{clientId}/commands/{commandName}/resp";
-        }
+        requestTopicPattern = "device/{clientId}/commands/{commandName}";
+        responseTopicSuccess = "device/{clientId}/commands/{commandName}/resp";
     }
 }
