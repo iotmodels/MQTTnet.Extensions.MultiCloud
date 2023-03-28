@@ -39,11 +39,14 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Untyped
                                 CommandPayload = reqPayload
                             };
 
+
                             GenericCommandResponse response = await OnCmdDelegate.Invoke(req);
                             await connection.PublishAsync(new MqttApplicationMessageBuilder()
                                 .WithTopic(responseTopic)
+
                                 .WithPayload(_serializer.ToBytes(response.ReponsePayload))
                                 .WithUserProperty("status", response.Status.ToString())
+
                                 .WithCorrelationData(m.ApplicationMessage.CorrelationData ?? Guid.Empty.ToByteArray())
                                 .Build());
                         }

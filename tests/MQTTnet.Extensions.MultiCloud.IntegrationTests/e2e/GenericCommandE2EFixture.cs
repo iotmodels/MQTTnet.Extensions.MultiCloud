@@ -24,11 +24,14 @@ public  class GenericCommandE2EFixture
     {
         readonly IMqttClient mqttClient;
 
+
         public GenericCommand genCommand;
+
 
         public Producer(IMqttClient client)
         {
             mqttClient = client;
+
 
             genCommand = new GenericCommand(mqttClient)
             {
@@ -80,6 +83,7 @@ public  class GenericCommandE2EFixture
 
         IMqttClient consumerClient = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("consumer"));
         Consumer consumer = new(consumerClient);
+
 
         var respOne = await consumer.mqttCommand.InvokeAsync("deviceOne", 
             new GenericCommandRequest() { CommandName = "echo", CommandPayload = "Hello One" });

@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+
 using MQTTnet.Extensions.MultiCloud.Serializers;
 using MQTTnet.Server;
 
@@ -83,5 +84,6 @@ public class GenericCommandClient //: RequestResponseBinder<GenericCommandReques
             throw new ApplicationException("Error publishing Request Message");
         }
         return await _tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(5));
+
     }
 }
