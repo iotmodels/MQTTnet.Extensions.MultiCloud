@@ -35,6 +35,10 @@ public class UTF8JsonSerializer : IMessageSerializer
             if (typeof(T) == typeof(string))
             {
                 return Encoding.UTF8.GetBytes((payload as string)!);
+            } 
+            else if (typeof(T) == typeof(object))
+            {
+                return Encoding.UTF8.GetBytes(payload.ToString()!);
             }
             else
             {
@@ -63,6 +67,10 @@ public class UTF8JsonSerializer : IMessageSerializer
             if (typeof(T) == typeof(string))
             {
                 result = (T)Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T));
+            } 
+            else if (typeof(T) == typeof(object))
+            {
+                result = (T)Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T))!;
             }
             else
             {
