@@ -35,7 +35,7 @@ public class UTF8JsonSerializer : IMessageSerializer
             if (typeof(T) == typeof(string))
             {
                 return Encoding.UTF8.GetBytes((payload as string)!);
-            } 
+            }
             else if (typeof(T) == typeof(object))
             {
                 return Encoding.UTF8.GetBytes(payload.ToString()!);
