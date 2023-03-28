@@ -24,28 +24,35 @@ public  class GenericCommandE2EFixture
     {
         readonly IMqttClient mqttClient;
 
-
         public GenericCommand genCommand;
-
 
         public Producer(IMqttClient client)
         {
             mqttClient = client;
-
 
             genCommand = new GenericCommand(mqttClient)
             {
                 OnCmdDelegate = async req =>
                 {
                     await Console.Out.WriteLineAsync("[Producer] Running Generic Command in client: " + client.Options.ClientId);
-                    if (req.CommandName == "echo")
+                    if (req.CommandName == "echo") // req: string, resp: string
                     {
-                        await Task.Delay(req.CommandPayload!.ToString()!.Length * 100);
+                        await Task.Delay(req.RequestPayload!.ToString()!.Length * 100);
                         return await Task.FromResult(
                             new GenericCommandResponse() 
                             {
                                 Status = 200,
-                                ReponsePayload = req.CommandPayload.ToString() + req.CommandPayload.ToString()
+                                ReponsePayload = req.RequestPayload.ToString() + req.RequestPayload.ToString()
+                            });
+                    }
+                    if (req.CommandName == "isPrime") // req: int, resp: bool
+                    {
+                        int number = int.Parse(req.RequestPayload!.ToString()!);
+                        return await Task.FromResult(
+                            new GenericCommandResponse()
+                            {
+                                Status = 200,
+                                ReponsePayload = true
                             });
                     }
                     else
@@ -84,14 +91,14 @@ public  class GenericCommandE2EFixture
         IMqttClient consumerClient = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("consumer"));
         Consumer consumer = new(consumerClient);
 
-
         var respOne = await consumer.mqttCommand.InvokeAsync("deviceOne", 
-            new GenericCommandRequest() { CommandName = "echo", CommandPayload = "Hello One" });
-        Assert.Equal("Hello OneHello One", respOne.ReponsePayload);
+            new GenericCommandRequest() { CommandName = "echo", RequestPayload = "Hello One" });
+
+        Assert.Equal("Hello OneHello One", respOne.ReponsePayload!.ToString());
         
         var respTwo = await consumer.mqttCommand.InvokeAsync("deviceTwo", 
-            new GenericCommandRequest() { CommandName = "echo", CommandPayload = "Hello Two Loooonger " });
-        Assert.Equal("Hello Two Loooonger Hello Two Loooonger ", respTwo.ReponsePayload);
+            new GenericCommandRequest() { CommandName = "echo", RequestPayload = "Hello Two Loooonger " });
+        Assert.Equal("Hello Two Loooonger Hello Two Loooonger ", respTwo.ReponsePayload!.ToString());
 
         await producerClientOne.DisconnectAsync();
         await producerClientTwo.DisconnectAsync();
@@ -108,10 +115,33 @@ public  class GenericCommandE2EFixture
         Consumer consumer = new(consumerClient);
 
         var respOne = await consumer.mqttCommand.InvokeAsync("deviceThree",
-            new GenericCommandRequest() { CommandName = "notimpl", CommandPayload = "Hello One" });
+            new GenericCommandRequest() { CommandName = "notimpl", RequestPayload = "Hello One" });
         Assert.Equal(400, respOne.Status);
+
+        var respTwo = await consumer.mqttCommand.InvokeAsync("deviceThree",
+          new GenericCommandRequest() { CommandName = "notimpl" });
+        Assert.Equal(400, respTwo.Status);
 
         await producerClientOne.DisconnectAsync();
         await consumerClient.DisconnectAsync();
     }
+
+    [Fact]
+    public async Task CallWithPrimitiveTypes()
+    {
+        IMqttClient producerClientOne = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("deviceFour"));
+        _ = new Producer(producerClientOne);
+
+        IMqttClient consumerClient = await BrokerClientFactory.CreateFromConnectionSettingsAsync(TestCS("consumer4"));
+        Consumer consumer = new(consumerClient);
+
+        var respIsPrime = await consumer.mqttCommand.InvokeAsync("deviceFour", new GenericCommandRequest
+        {
+            CommandName = "isPrime",
+            RequestPayload = 4567
+        });
+        Assert.True(Convert.ToBoolean(respIsPrime.ReponsePayload!.ToString()));
+    }
+
+
 }
