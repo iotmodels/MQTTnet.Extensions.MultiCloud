@@ -19,10 +19,10 @@ namespace mqtt_commands
             IMqttClient connection = await BrokerClientFactory.CreateFromConnectionSettingsAsync(_configuration.GetConnectionString("Broker")!, false, stoppingToken);
             _logger.LogWarning("Connected to {cs}", BrokerClientFactory.ComputedSettings);
             GenericCommand cmd = new GenericCommand(connection);
-            cmd.OnCmdDelegate += req =>
+            cmd.OnCmdDelegate += async req =>
             {
                 _logger.LogInformation($"Received command {req.CommandName} with payload {req.CommandPayload}");
-                return new GenericCommandResponse() { Status = 200, ReponsePayload = $"{req.CommandPayload} {req.CommandPayload}" };
+                return await Task.FromResult(new GenericCommandResponse() { Status = 200, ReponsePayload = $"{req.CommandPayload} {req.CommandPayload}" });
             };
 
             //while (!stoppingToken.IsCancellationRequested)
