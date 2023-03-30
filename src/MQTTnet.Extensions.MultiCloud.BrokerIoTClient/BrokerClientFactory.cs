@@ -17,7 +17,6 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             MqttClient? mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
             var connAck = await mqtt!.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithConnectionSettings(cs, withBirth)
-                //.WithProtocolVersion(Formatter.MqttProtocolVersion.V500)
                 .Build(), cancellationToken);
             ComputedSettings = cs;
             if (connAck.ResultCode != MqttClientConnectResultCode.Success)
@@ -35,11 +34,11 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
                 var pubAck = await mqtt.PublishBinaryAsync(
                    BirthConvention.BirthTopic(mqtt.Options.ClientId),
                    birthPayload,
-                   Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true, cancellationToken); //hack to disable retained in registry
-                if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
-                {
-                    throw new ApplicationException($"Error publishing Birth {cs}");
-                }
+                   Protocol.MqttQualityOfServiceLevel.AtMostOnce, true, cancellationToken); 
+                //if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
+                //{
+                //    throw new ApplicationException($"Error publishing Birth {cs}");
+                //}
             }
             return mqtt;
         }
