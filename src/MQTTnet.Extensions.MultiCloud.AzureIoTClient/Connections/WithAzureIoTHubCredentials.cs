@@ -71,6 +71,11 @@ public static partial class MqttNetExtensions
             audience = $"{hostName}/devices/{deviceId}/modules/{moduleId}";
         }
 
+        if (!string.IsNullOrEmpty(gatewayHostName))
+        {
+            audience = $"{hostName}/devices/{deviceId}";
+        }
+
 
         (string username, string password) = SasAuth.GenerateHubSasCredentials(hostName, target, sasKey, audience, modelId, sasMinutes, gatewayHostName);
         builder.WithCredentials(username, password);
