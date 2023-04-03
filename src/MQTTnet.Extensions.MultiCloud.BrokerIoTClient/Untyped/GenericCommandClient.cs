@@ -11,7 +11,7 @@ public class GenericCommandClient
     TaskCompletionSource<GenericCommandResponse>? _tcs;
     string? _commandName;
     string _remoteClientId;
-    Guid corr = Guid.NewGuid();
+    byte[]? corr = new byte[] { };
 
 
     string requestTopicPattern = "device/{clientId}/commands/{commandName}";
@@ -32,7 +32,7 @@ public class GenericCommandClient
             var expectedTopic = responseTopicSuccess.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName);
             if (topic.StartsWith(expectedTopic))
             {
-                if (m.ApplicationMessage.CorrelationData != null && corr != new Guid(m.ApplicationMessage.CorrelationData))
+                if (m.ApplicationMessage.CorrelationData != null && !corr.SequenceEqual(m.ApplicationMessage.CorrelationData))
                 {
                     _tcs!.SetException(new ApplicationException("Invalid correlation data"));
                 }
@@ -64,7 +64,7 @@ public class GenericCommandClient
         _tcs = new TaskCompletionSource<GenericCommandResponse>();
         _remoteClientId = clientId;
         _commandName = request.CommandName;
-
+        corr = request.CorrelationId!;
         string commandTopic = requestTopicPattern.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName);
         var responseTopic = responseTopicSub.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName);
         _ =_mqttClient.SubscribeAsync(responseTopic, Protocol.MqttQualityOfServiceLevel.AtMostOnce, ct);
@@ -74,7 +74,7 @@ public class GenericCommandClient
                 .WithTopic(commandTopic)
                 .WithPayload(_serializer.ToBytes(request.RequestPayload))
                 .WithResponseTopic(responseTopicSuccess.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName))
-                .WithCorrelationData(corr.ToByteArray())
+                .WithCorrelationData(request.CorrelationId)
                 .Build());
         
         return await _tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(5));

@@ -92,12 +92,12 @@ public  class GenericCommandE2EFixture
         Consumer consumer = new(consumerClient);
 
         var respOne = await consumer.mqttCommand.InvokeAsync("deviceOne", 
-            new GenericCommandRequest() { CommandName = "echo", RequestPayload = "Hello One" });
+            new GenericCommandRequest() { CommandName = "echo", RequestPayload = "Hello One", CorrelationId = new byte[] { 1 } });
 
         Assert.Equal("Hello OneHello One", respOne.ReponsePayload!.ToString());
         
         var respTwo = await consumer.mqttCommand.InvokeAsync("deviceTwo", 
-            new GenericCommandRequest() { CommandName = "echo", RequestPayload = "Hello Two Loooonger " });
+            new GenericCommandRequest() { CommandName = "echo", RequestPayload = "Hello Two Loooonger ", CorrelationId = new byte[] { 2 } });
         Assert.Equal("Hello Two Loooonger Hello Two Loooonger ", respTwo.ReponsePayload!.ToString());
 
         await producerClientOne.DisconnectAsync();

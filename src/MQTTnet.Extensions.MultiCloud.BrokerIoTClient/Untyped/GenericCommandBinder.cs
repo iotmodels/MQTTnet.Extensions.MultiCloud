@@ -32,7 +32,8 @@ public class GenericCommand
                         GenericCommandRequest req = new()
                         {
                             CommandName = cmdName,
-                            RequestPayload = reqPayload
+                            RequestPayload = reqPayload,
+                            CorrelationId = m.ApplicationMessage.CorrelationData
                         };
 
                         GenericCommandResponse response = await OnCmdDelegate.Invoke(req);
@@ -40,7 +41,7 @@ public class GenericCommand
                             .WithTopic(responseTopic)
                             .WithPayload(_serializer.ToBytes(response.ReponsePayload))
                             .WithUserProperty("status", response.Status.ToString())
-                            .WithCorrelationData(m.ApplicationMessage.CorrelationData ?? Guid.Empty.ToByteArray())
+                            .WithCorrelationData(m.ApplicationMessage.CorrelationData)
                             .Build());
                     }
                 }
