@@ -3,10 +3,10 @@ using MQTTnet.Extensions.MultiCloud.Binders;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
 {
-    public class GenericCommand
+    public class GenericCommand : IGenericCommand
     {
         private readonly IMqttClient connection;
-        public Func<GenericCommandRequest, Task<GenericCommandResponse>>? OnCmdDelegate { get; set; }
+        public Func<IGenericCommandRequest, Task<IGenericCommandResponse>>? OnCmdDelegate { get; set; }
 
         public GenericCommand(IMqttClient c)
         {
@@ -28,7 +28,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped
                     if (OnCmdDelegate != null && req != null)
                     {
                         var tp = TopicParser.ParseTopic(topic);
-                        GenericCommandResponse response = await OnCmdDelegate.Invoke(req);
+                        IGenericCommandResponse response = await OnCmdDelegate.Invoke(req);
                         _ = connection.PublishStringAsync($"$iothub/methods/res/{response.Status}/?$rid={tp.Rid}", response.ReponsePayload);
                     }
                 }

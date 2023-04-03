@@ -21,8 +21,8 @@ namespace mqtt_commands
             GenericCommand cmd = new GenericCommand(connection);
             cmd.OnCmdDelegate += async req =>
             {
-                _logger.LogInformation($"Received command {req.CommandName} with payload {req.RequestPayload}");
-                return await Task.FromResult(new GenericCommandResponse() { Status = 200, ReponsePayload = $"{req.RequestPayload} {req.RequestPayload}" });
+                _logger.LogInformation($"Received command {req.CommandName} with payload {req.CommandPayload}");
+                return await Task.FromResult(new GenericCommandResponse() { Status = 200, ReponsePayload = $"{req.CommandPayload} {req.CommandPayload}" });
             };
 
             //while (!stoppingToken.IsCancellationRequested)

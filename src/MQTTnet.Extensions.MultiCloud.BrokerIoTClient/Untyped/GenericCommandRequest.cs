@@ -2,10 +2,10 @@
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Untyped
 {
-    public class GenericCommandRequest
+    public class GenericCommandRequest : IGenericCommandRequest
     {
         public string? CommandName { get; set; }
-        public object? RequestPayload { get; set; }
+        public string? CommandPayload { get; set; }
         [JsonIgnore]
         public byte[]? CorrelationId { get; set; }
     }

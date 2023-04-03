@@ -3,12 +3,12 @@ using MQTTnet.Extensions.MultiCloud.Serializers;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Untyped;
 
-public class GenericCommand
+public class GenericCommand : IGenericCommand
 {
     private readonly IMqttClient connection;
     private readonly IMessageSerializer _serializer;
 
-    public Func<GenericCommandRequest, Task<GenericCommandResponse>>? OnCmdDelegate { get; set; }
+    public Func<IGenericCommandRequest, Task<IGenericCommandResponse>>? OnCmdDelegate { get; set; }
 
     public GenericCommand(IMqttClient c)
     {
@@ -32,11 +32,11 @@ public class GenericCommand
                         GenericCommandRequest req = new()
                         {
                             CommandName = cmdName,
-                            RequestPayload = reqPayload,
-                            CorrelationId = m.ApplicationMessage.CorrelationData
+                            CommandPayload = reqPayload,
+                            //CorrelationId = m.ApplicationMessage.CorrelationData
                         };
 
-                        GenericCommandResponse response = await OnCmdDelegate.Invoke(req);
+                        IGenericCommandResponse response = await OnCmdDelegate.Invoke(req);
                         await connection.PublishAsync(new MqttApplicationMessageBuilder()
                             .WithTopic(responseTopic)
                             .WithPayload(_serializer.ToBytes(response.ReponsePayload))

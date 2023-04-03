@@ -2,6 +2,7 @@
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Untyped;
 using MQTTnet.Extensions.MultiCloud.Connections;
+using System.Text.Json;
 
 namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e;
 
@@ -37,23 +38,23 @@ public  class GenericCommandE2EFixture
                     await Console.Out.WriteLineAsync("[Producer] Running Generic Command in client: " + client.Options.ClientId);
                     if (req.CommandName == "echo") // req: string, resp: string
                     {
-                        await Task.Delay(req.RequestPayload!.ToString()!.Length * 100);
+                        await Task.Delay(req.CommandPayload!.ToString()!.Length * 100);
                         return await Task.FromResult(
                             new GenericCommandResponse() 
                             {
                                 Status = 200,
-                                ReponsePayload = req.RequestPayload.ToString() + req.RequestPayload.ToString()
+                                ReponsePayload = req.CommandPayload.ToString() + req.CommandPayload.ToString()
                             });
                     }
                     if (req.CommandName == "isPrime") // req: int, resp: bool
                     {
-                        int number = int.Parse(req.RequestPayload!.ToString()!);
+                        int number = int.Parse(req.CommandPayload!.ToString()!);
                         return await Task.FromResult(
                             new GenericCommandResponse()
                             {
                                 Status = 200,
-                                ReponsePayload = true
-                            });
+                                ReponsePayload = JsonSerializer.Serialize(true)
+                            }); ;
                     }
                     else
                     {
@@ -92,12 +93,12 @@ public  class GenericCommandE2EFixture
         Consumer consumer = new(consumerClient);
 
         var respOne = await consumer.mqttCommand.InvokeAsync("deviceOne", 
-            new GenericCommandRequest() { CommandName = "echo", RequestPayload = "Hello One", CorrelationId = new byte[] { 1 } });
+            new GenericCommandRequest() { CommandName = "echo", CommandPayload = "Hello One", CorrelationId = new byte[] { 1 } });
 
         Assert.Equal("Hello OneHello One", respOne.ReponsePayload!.ToString());
         
         var respTwo = await consumer.mqttCommand.InvokeAsync("deviceTwo", 
-            new GenericCommandRequest() { CommandName = "echo", RequestPayload = "Hello Two Loooonger ", CorrelationId = new byte[] { 2 } });
+            new GenericCommandRequest() { CommandName = "echo", CommandPayload = "Hello Two Loooonger ", CorrelationId = new byte[] { 2 } });
         Assert.Equal("Hello Two Loooonger Hello Two Loooonger ", respTwo.ReponsePayload!.ToString());
 
         await producerClientOne.DisconnectAsync();
@@ -115,7 +116,7 @@ public  class GenericCommandE2EFixture
         Consumer consumer = new(consumerClient);
 
         var respOne = await consumer.mqttCommand.InvokeAsync("deviceThree",
-            new GenericCommandRequest() { CommandName = "notimpl", RequestPayload = "Hello One" });
+            new GenericCommandRequest() { CommandName = "notimpl", CommandPayload = "Hello One" });
         Assert.Equal(400, respOne.Status);
 
         var respTwo = await consumer.mqttCommand.InvokeAsync("deviceThree",
@@ -138,7 +139,7 @@ public  class GenericCommandE2EFixture
         var respIsPrime = await consumer.mqttCommand.InvokeAsync("deviceFour", new GenericCommandRequest
         {
             CommandName = "isPrime",
-            RequestPayload = 4567
+            CommandPayload = JsonSerializer.Serialize(4567)
         });
         Assert.True(Convert.ToBoolean(respIsPrime.ReponsePayload!.ToString()));
     }

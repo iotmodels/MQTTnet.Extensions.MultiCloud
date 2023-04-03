@@ -17,7 +17,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
         private readonly UpdateTwinBinder<object> updateTwinBinder;
 
         private readonly GenericDesiredUpdatePropertyBinder genericDesiredUpdateProperty;
-        private readonly GenericCommand command;
+        private readonly IGenericCommand command;
 
         public HubMqttClient(IMqttClient c)
         {
@@ -30,7 +30,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c, updateTwinBinder!);
         }
 
-        public Func<GenericCommandRequest, Task<GenericCommandResponse>> OnCommandReceived
+        public Func<IGenericCommandRequest, Task<IGenericCommandResponse>> OnCommandReceived
         {
             get => command.OnCmdDelegate!;
             set => command.OnCmdDelegate = value;

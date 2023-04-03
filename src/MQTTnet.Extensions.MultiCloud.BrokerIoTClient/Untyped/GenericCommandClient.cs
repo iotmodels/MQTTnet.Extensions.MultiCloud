@@ -72,7 +72,7 @@ public class GenericCommandClient
         _ = _mqttClient.PublishAsync(
             new MqttApplicationMessageBuilder()
                 .WithTopic(commandTopic)
-                .WithPayload(_serializer.ToBytes(request.RequestPayload))
+                .WithPayload(_serializer.ToBytes(request.CommandPayload))
                 .WithResponseTopic(responseTopicSuccess.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName))
                 .WithCorrelationData(request.CorrelationId)
                 .Build());
