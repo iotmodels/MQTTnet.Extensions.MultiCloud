@@ -1,9 +1,5 @@
 ﻿using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.Serializers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,12 +16,12 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
             cmd.OnMessage = async req =>
             {
                 cmdReceived = true;
-                return await Task.FromResult(req.ToString());
+                return await Task.FromResult($"received {req}");
             };
-            mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmdReqResp",new UTF8JsonSerializer().ToBytes(2));
+            mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmdReqResp",new Utf8JsonSerializer().ToBytes(2));
             Assert.True(cmdReceived);
             Assert.Equal("device/mock/commands/aCmdReqResp/resp", mockMqtt.topicRecceived);
-            Assert.Equal("2", mockMqtt.payloadReceived);
+            Assert.Equal("received 2", mockMqtt.payloadReceived);
         }
 
         [Fact]
@@ -39,7 +35,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
                 cmdReceived = true;
                 return await Task.FromResult(string.Empty);
             };
-            mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmdReq", new UTF8JsonSerializer().ToBytes(2));
+            mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmdReq", new Utf8JsonSerializer().ToBytes(2));
             Assert.True(cmdReceived);
             Assert.Equal("device/mock/commands/aCmdReq/resp", mockMqtt.topicRecceived);
             Assert.Empty(mockMqtt.payloadReceived);
@@ -56,7 +52,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
                 cmdReceived = true;
                 return await Task.FromResult(1);
             };
-            mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmdRes", new UTF8JsonSerializer().ToBytes(""));
+            mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmdRes", new Utf8JsonSerializer().ToBytes(""));
             Assert.True(cmdReceived);
             Assert.Equal("device/mock/commands/aCmdRes/resp", mockMqtt.topicRecceived);
             Assert.Equal("1", mockMqtt.payloadReceived);
@@ -73,7 +69,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests.BrokerJsonBindings
                 cmdReceived = true;
                 return await Task.FromResult(string.Empty);
             };
-            mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmd", new UTF8JsonSerializer().ToBytes(""));
+            mockMqtt.SimulateNewBinaryMessage("device/mock/commands/aCmd", new Utf8JsonSerializer().ToBytes(""));
             Assert.True(cmdReceived);
             Assert.Equal("device/mock/commands/aCmd/resp", mockMqtt.topicRecceived);
             Assert.Empty(mockMqtt.payloadReceived);

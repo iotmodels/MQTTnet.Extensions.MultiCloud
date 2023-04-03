@@ -20,7 +20,7 @@ public abstract class CloudToDeviceBinder<T, TResp> : ICloudToDevice<T, TResp>
     protected Action<TopicParameters>? PreProcessMessage;
 
     public CloudToDeviceBinder(IMqttClient connection, string name)
-        : this(connection, name, new UTF8JsonSerializer()) { }
+        : this(connection, name, new Utf8JsonSerializer()) { }
 
     public CloudToDeviceBinder(IMqttClient connection, string name, IMessageSerializer serializer)
     {

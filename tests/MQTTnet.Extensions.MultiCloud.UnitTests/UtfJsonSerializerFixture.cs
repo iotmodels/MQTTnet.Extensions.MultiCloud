@@ -4,12 +4,12 @@ using Xunit;
 
 namespace MQTTnet.Extensions.MultiCloud.UnitTests;
 
-public class UtfJsonSerializerFixture
+public class SerializersFixture
 {
     [Fact]
     public void TryDeserializeOk()
     {
-        UTF8JsonSerializer ser = new();
+        Utf8JsonSerializer ser = new();
         byte[] payload = Encoding.UTF8.GetBytes(Json.Stringify(new { myBool = true }));
         if (ser.TryReadFromBytes(payload, "myBool", out bool propVal))
         {
@@ -33,7 +33,7 @@ public class UtfJsonSerializerFixture
     [Fact]
     public void Serialize_Strings()
     {
-        UTF8JsonSerializer ser = new();
+        Utf8StringSerializer ser = new();
         var bytes = ser.ToBytes("hola");
         Assert.Equal("hola"u8.ToArray(), bytes);
     }
@@ -42,7 +42,7 @@ public class UtfJsonSerializerFixture
     public void DeSerialize_Strings()
     {
 
-        UTF8JsonSerializer ser = new();
+        Utf8StringSerializer ser = new();
         var hola = "hola"u8.ToArray();
         if (ser.TryReadFromBytes<string>(hola, string.Empty, out string res))
         {

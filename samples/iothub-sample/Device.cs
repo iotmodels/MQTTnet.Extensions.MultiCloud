@@ -34,15 +34,15 @@ public class Device : BackgroundService
         var twin = await client.GetTwinAsync(stoppingToken);
         Console.WriteLine(twin);
         
-        client.OnCommandReceived = m =>
+        client.OnCommandReceived = async m =>
         {
             Console.WriteLine(m.CommandName);
             Console.WriteLine(m.CommandPayload);
-            return new GenericCommandResponse()
+            return await Task.FromResult(new GenericCommandResponse()
             {
                 Status = 200,
                 ReponsePayload = JsonSerializer.Serialize(new { myResponse = "whatever" })
-            };
+            });
         };
 
         client.OnPropertyUpdateReceived = m =>

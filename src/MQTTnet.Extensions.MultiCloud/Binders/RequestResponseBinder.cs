@@ -23,7 +23,7 @@ public class RequestResponseBinder<T, TResp>
     readonly IMessageSerializer _serializer;
 
     public RequestResponseBinder(IMqttClient client, string name, bool unwrap)
-        : this(client, name, unwrap, new UTF8JsonSerializer())
+        : this(client, name, unwrap, new Utf8JsonSerializer())
     {
 
     }

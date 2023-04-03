@@ -16,7 +16,7 @@ public class PropertyClient<T>
     
     public Action<string,T>? OnPropertyUpdated { get; set; } = null;
 
-    public PropertyClient(IMqttClient client, string name) : this(client, name, new UTF8JsonSerializer()) { }
+    public PropertyClient(IMqttClient client, string name) : this(client, name, new Utf8JsonSerializer()) { }
 
     public PropertyClient(IMqttClient client, string name, IMessageSerializer messageSerializer)
     {
