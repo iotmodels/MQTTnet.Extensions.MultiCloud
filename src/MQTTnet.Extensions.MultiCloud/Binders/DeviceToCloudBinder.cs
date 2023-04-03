@@ -15,7 +15,7 @@ public abstract class DeviceToCloudBinder<T> : IDeviceToCloud<T>
     public bool WrapMessage = false;
     public bool Retain = false;
 
-    public DeviceToCloudBinder(IMqttClient mqttClient, string name) : this(mqttClient, name, new UTF8JsonSerializer()) { }
+    public DeviceToCloudBinder(IMqttClient mqttClient, string name) : this(mqttClient, name, new Utf8JsonSerializer()) { }
 
     public DeviceToCloudBinder(IMqttClient mqttClient, string name, IMessageSerializer ser)
     {

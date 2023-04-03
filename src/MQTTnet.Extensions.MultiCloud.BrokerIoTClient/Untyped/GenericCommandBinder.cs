@@ -12,7 +12,7 @@ public class GenericCommand
 
     public GenericCommand(IMqttClient c)
     {
-        _serializer = new UTF8JsonSerializer();
+        _serializer = new Utf8JsonSerializer();
         connection = c;
         _ = connection.SubscribeWithReplyAsync($"device/{c.Options.ClientId}/commands/+");
         connection.ApplicationMessageReceivedAsync += async m =>
@@ -23,7 +23,7 @@ public class GenericCommand
                 var segments = topic.Split('/');
                 var cmdName = segments[3];
 
-                if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, string.Empty, out object reqPayload))
+                if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, string.Empty, out string reqPayload))
                 {
                     var responseTopic = m.ApplicationMessage.ResponseTopic ?? $"{topic}/resp";
 

@@ -227,6 +227,38 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests.e2e
             await rm.RemoveDeviceAsync(deviceId);
 
         }
+        [Fact]
+        internal async Task InvokeGenericCommand()
+        {
+            var deviceId = "gencmd" + new Random().Next(100);
+            var device = await GetOrCreateDeviceAsync(deviceId);
+            bool commandInvoked = false;
+            string commandName = string.Empty;
+            string commandRequestPayload = string.Empty;
+            var td = new HubMqttClient(await HubDpsFactory.CreateFromConnectionSettingsAsync($"HostName={hubName};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}"));
+            td.OnCommandReceived += async cmd =>
+            {
+                commandName = cmd.CommandName!;
+                commandRequestPayload = cmd.CommandPayload!.ToString();
+                commandInvoked = true;
+                return await Task.FromResult(new AzureIoTClient.Untyped.GenericCommandResponse 
+                    { 
+                    Status = 200, 
+                    ReponsePayload = JsonSerializer.Serialize(new { myCommandResponse = "adios"})
+                    });
+            };
+            await Task.Delay(200);
+            var sc = ServiceClient.CreateFromConnectionString(hubConnectionString);
+            CloudToDeviceMethod c2dMethod = new("aCommand");
+            string requestPayload = JsonSerializer.Serialize(new { myComandRequest = "hello" });
+            c2dMethod.SetPayloadJson(requestPayload); ;
+            var dmRes = await sc.InvokeDeviceMethodAsync(deviceId, c2dMethod);
+            Assert.True(commandInvoked);
+            Assert.Equal("aCommand", commandName);
+            Assert.Equal(requestPayload, commandRequestPayload);
+            string expectedJson = Json.Stringify(new { myCommandResponse = "adios" });
+            Assert.Equal(expectedJson, dmRes.GetPayloadAsJson());
+        }
 
         private async Task<Device> GetOrCreateDeviceAsync(string deviceId, bool x509 = false)
         {

@@ -23,7 +23,7 @@ public class GenericCommandClient
     {
         _mqttClient = client;
         _remoteClientId = string.Empty;
-        _serializer = new UTF8JsonSerializer();
+        _serializer = new Utf8JsonSerializer();
 
         _mqttClient.ApplicationMessageReceivedAsync += async m =>
         {
@@ -40,7 +40,7 @@ public class GenericCommandClient
                 var up = m.ApplicationMessage.UserProperties.FirstOrDefault(p => p.Name.Equals("status"));
                 int status = up != null ? int.Parse(up.Value) : 500;
 
-                if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, string.Empty, out object respPayload))
+                if (_serializer.TryReadFromBytes(m.ApplicationMessage.Payload, string.Empty, out string respPayload))
                 {
                     GenericCommandResponse resp = new()
                     {
@@ -67,20 +67,16 @@ public class GenericCommandClient
 
         string commandTopic = requestTopicPattern.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName);
         var responseTopic = responseTopicSub.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName);
-        await _mqttClient.SubscribeAsync(responseTopic, Protocol.MqttQualityOfServiceLevel.AtMostOnce, ct);
+        _ =_mqttClient.SubscribeAsync(responseTopic, Protocol.MqttQualityOfServiceLevel.AtMostOnce, ct);
 
-        var pubAck = await _mqttClient.PublishAsync(
+        _ = _mqttClient.PublishAsync(
             new MqttApplicationMessageBuilder()
                 .WithTopic(commandTopic)
                 .WithPayload(_serializer.ToBytes(request.RequestPayload))
                 .WithResponseTopic(responseTopicSuccess.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName))
                 .WithCorrelationData(corr.ToByteArray())
                 .Build());
-
-        if (!pubAck.IsSuccess)
-        {
-            throw new ApplicationException("Error publishing Request Message");
-        }
+        
         return await _tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(5));
 
     }
