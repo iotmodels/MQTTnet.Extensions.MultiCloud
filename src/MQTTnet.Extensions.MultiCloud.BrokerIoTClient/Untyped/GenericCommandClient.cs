@@ -1,6 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.Serializers;
 using MQTTnet.Server;
+using System.Text;
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Untyped;
 
@@ -14,9 +15,9 @@ public class GenericCommandClient
     byte[]? corr = new byte[] { };
 
 
-    string requestTopicPattern = "device/{clientId}/commands/{commandName}";
+    string requestTopicPattern = "device/{clientId}/commands/{commandName}?$rid={rid}";
     string responseTopicSub = "device/{clientId}/commands/{commandName}/+";
-    string responseTopicSuccess = "device/{clientId}/commands/{commandName}/resp";
+    string responseTopicSuccess = "device/{clientId}/commands/{commandName}/resp?$rid={rid}";
 
 
     public GenericCommandClient(IMqttClient client) 
@@ -47,7 +48,7 @@ public class GenericCommandClient
                         Status = status,
                         ReponsePayload = respPayload
                     };
-                    _tcs!.SetResult(resp);
+                    _tcs!.TrySetResult(resp);
                 }
                 else
                 {
@@ -59,25 +60,31 @@ public class GenericCommandClient
         };
     }
 
-    public async Task<GenericCommandResponse> InvokeAsync(string clientId, GenericCommandRequest request, CancellationToken ct = default)
+    public Task<GenericCommandResponse> InvokeAsync(string clientId, GenericCommandRequest request, CancellationToken ct = default)
     {
         _tcs = new TaskCompletionSource<GenericCommandResponse>();
         _remoteClientId = clientId;
         _commandName = request.CommandName;
         corr = request.CorrelationId!;
-        string commandTopic = requestTopicPattern.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName);
-        var responseTopic = responseTopicSub.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName);
+        string commandTopic = requestTopicPattern
+            .Replace("{clientId}", _remoteClientId)
+            .Replace("{commandName}", _commandName)
+            .Replace("{rid}", Encoding.UTF8.GetString(corr));
+        var responseTopic = responseTopicSub
+            .Replace("{clientId}", _remoteClientId)
+            .Replace("{commandName}", _commandName)
+            .Replace("{rid}", Encoding.UTF8.GetString(corr));
         _ =_mqttClient.SubscribeAsync(responseTopic, Protocol.MqttQualityOfServiceLevel.AtMostOnce, ct);
 
         _ = _mqttClient.PublishAsync(
             new MqttApplicationMessageBuilder()
                 .WithTopic(commandTopic)
                 .WithPayload(_serializer.ToBytes(request.RequestPayload))
-                .WithResponseTopic(responseTopicSuccess.Replace("{clientId}", _remoteClientId).Replace("{commandName}", _commandName))
+                .WithResponseTopic(responseTopic)
                 .WithCorrelationData(request.CorrelationId)
                 .Build());
         
-        return await _tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(5));
+        return _tcs.Task.TimeoutAfter(TimeSpan.FromSeconds(5));
 
     }
 }
