@@ -9,8 +9,8 @@ public class Command<T, TResp> : CloudToDeviceBinder<T, TResp>, ICommand<T, TRes
         : base(client, name)
     {
         SubscribeTopicPattern = "device/{clientId}/commands/{name}";
-        RequestTopicPattern = "device/{clientId}/commands/{name}?$rid={rid}";
-        ResponseTopicPattern = "device/{clientId}/commands/{name}/resp?$rid={rid}";
+        RequestTopicPattern = "device/{clientId}/commands/{name}";
+        ResponseTopicPattern = "device/{clientId}/commands/{name}/resp";
     }
 }
 
@@ -20,8 +20,8 @@ public class Command<T> : CloudToDeviceBinder<T, string>, ICommand<T>
         : base(client, name)
     {
         SubscribeTopicPattern = "device/{clientId}/commands/{name}";
-        RequestTopicPattern = "device/{clientId}/commands/{name}?$rid={rid}";
-        ResponseTopicPattern = "device/{clientId}/commands/{name}/resp?$rid={rid}";
+        RequestTopicPattern = "device/{clientId}/commands/{name}";
+        ResponseTopicPattern = "device/{clientId}/commands/{name}/resp";
     }
 }
 
@@ -31,8 +31,8 @@ public class Command : CloudToDeviceBinder<string, string>, ICommand
         : base(client, name)
     {
         SubscribeTopicPattern = "device/{clientId}/commands/{name}";
-        RequestTopicPattern = "device/{clientId}/commands/{name}?$rid={rid}";
-        ResponseTopicPattern = "device/{clientId}/commands/{name}/resp?$rid={rid}";
+        RequestTopicPattern = "device/{clientId}/commands/{name}";
+        ResponseTopicPattern = "device/{clientId}/commands/{name}/resp";
     }
 }
 
