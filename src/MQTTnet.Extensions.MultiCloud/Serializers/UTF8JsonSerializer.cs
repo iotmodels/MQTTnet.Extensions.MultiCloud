@@ -36,10 +36,10 @@ public class Utf8JsonSerializer : IMessageSerializer
             {
                 return Encoding.UTF8.GetBytes((payload as string)!);
             }
-            else if (typeof(T) == typeof(object))
-            {
-                return Encoding.UTF8.GetBytes(payload.ToString()!);
-            }
+            //else if (typeof(T) == typeof(object))
+            //{
+            //    return Encoding.UTF8.GetBytes(payload.ToString()!);
+            //}
             else
             {
                 return Encoding.UTF8.GetBytes(Json.Stringify(payload!));

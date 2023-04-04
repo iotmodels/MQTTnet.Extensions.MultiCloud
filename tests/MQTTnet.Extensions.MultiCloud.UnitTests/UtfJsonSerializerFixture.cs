@@ -39,6 +39,25 @@ public class SerializersFixture
     }
 
     [Fact]
+    public void Serialize_AnonObject()
+    {
+        Utf8JsonSerializer ser = new();
+        var bytes = ser.ToBytes(new { myKey = 12.3 });
+        var json = Encoding.UTF8.GetString(bytes);
+        Assert.Equal("{\"myKey\":12.3}", json);
+    }
+
+    [Fact]
+    public void Serialize_Object()
+    {
+        Utf8JsonSerializer ser = new();
+        var bytes = ser.ToBytes<object>(new { myKey = 12.3 });
+        var json = Encoding.UTF8.GetString(bytes);
+        Assert.Equal("{\"myKey\":12.3}", json);
+    }
+
+
+    [Fact]
     public void DeSerialize_Strings()
     {
 
