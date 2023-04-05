@@ -20,6 +20,7 @@ Connection settings can be established using the API or parsing a connection str
 - `CaFile` Path to the CA certificate required to stablish the TLS session
 - `GatewayHostName` Allows to connect to IoT Hub through a IoTEdge ($edgeHub) gateway (aka Transparent Gateway)
 - `MqttVersion` Sets the MqttProtocolVersion, allowed values are 5 and 3 (will use 3.1.1)
+- `MqttGatewayHostName` Allows to connect to IoTHub through a mqtt broker. Requires a gateway to implement the transparent gateway pattern.
 
 ## Sample Connection Strings
 
