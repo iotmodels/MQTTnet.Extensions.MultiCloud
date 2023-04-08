@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Client;
+using MQTTnet.Extensions.ManagedClient;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps;
 using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Diagnostics;
@@ -13,19 +14,25 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(string connectionString, CancellationToken cancellationToken = default) =>
             await CreateFromConnectionSettingsAsync(new ConnectionSettings(connectionString), cancellationToken);
 
+
+
+        public static async Task<IManagedMqttClient> CreateManagedClientFromConnectionSettingsAsync(ConnectionSettings cs, int retrySeconds, CancellationToken cancellationToken = default)
+        {
+            await ProvisionDevice(cs, cancellationToken);
+            var mqtt = new MqttFactory().CreateManagedMqttClient(MqttNetTraceLogger.CreateTraceLogger());
+            await mqtt.StartAsync(new ManagedMqttClientOptionsBuilder()
+                .WithClientOptions(new MqttClientOptionsBuilder()
+                    .WithAzureIoTHubCredentials(cs)
+                    .Build())
+                .WithAutoReconnectDelay(TimeSpan.FromSeconds(retrySeconds))
+                .Build());
+            return mqtt;
+        }
+
         public static async Task<IMqttClient> CreateFromConnectionSettingsAsync(ConnectionSettings cs, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(cs.HostName) && !string.IsNullOrEmpty(cs.IdScope))
-            {
-                var dpsMqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
-                await dpsMqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithAzureDpsCredentials(cs).Build(), cancellationToken);
-                var dpsClient = new MqttDpsClient(dpsMqtt, cs.ModelId!);
-                var dpsRes = await dpsClient.ProvisionDeviceIdentity();
-                cs.HostName = dpsRes.RegistrationState.AssignedHub;
-                cs.ClientId = dpsRes.RegistrationState.DeviceId;
-                await dpsMqtt.DisconnectAsync(new MqttClientDisconnectOptions() { Reason = MqttClientDisconnectReason.NormalDisconnection }, cancellationToken);
-            }
-            var mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
+            await ProvisionDevice(cs, cancellationToken);
+            var mqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger());
             MqttClientConnectResult connAck;
             if (cs.Auth == AuthType.Sas)
             {
@@ -41,6 +48,20 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             }
             ComputedSettings = cs;
             return mqtt!;
+        }
+
+        private static async Task ProvisionDevice(ConnectionSettings cs, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(cs.HostName) && !string.IsNullOrEmpty(cs.IdScope))
+            {
+                var dpsMqtt = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger()) as MqttClient;
+                await dpsMqtt!.ConnectAsync(new MqttClientOptionsBuilder().WithAzureDpsCredentials(cs).Build(), cancellationToken);
+                var dpsClient = new MqttDpsClient(dpsMqtt, cs.ModelId!);
+                var dpsRes = await dpsClient.ProvisionDeviceIdentity();
+                cs.HostName = dpsRes.RegistrationState.AssignedHub;
+                cs.ClientId = dpsRes.RegistrationState.DeviceId;
+                await dpsMqtt.DisconnectAsync(new MqttClientDisconnectOptions() { Reason = MqttClientDisconnectReason.NormalDisconnection }, cancellationToken);
+            }
         }
 
         private static MqttClientConnectResult ConnectWithTimer(IMqttClient mqtt, ConnectionSettings connectionSettings, CancellationToken cancellationToken = default)
@@ -65,7 +86,5 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             }, null, (connectionSettings.SasMinutes * 60 * 1000) - 10, 0);
             return connAck;
         }
-
-
     }
 }

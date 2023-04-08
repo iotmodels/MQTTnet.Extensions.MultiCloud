@@ -69,6 +69,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControlApp", "samples\Contr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mqtt-commands", "samples\mqtt-commands\mqtt-commands.csproj", "{72206AF8-D6A4-4098-9FC3-320402EF9E85}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "managed-client", "samples\managed-client\managed-client.csproj", "{B7C1959F-20D2-4629-9E8C-1B4DC63B346C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,10 @@ Global
 		{72206AF8-D6A4-4098-9FC3-320402EF9E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72206AF8-D6A4-4098-9FC3-320402EF9E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72206AF8-D6A4-4098-9FC3-320402EF9E85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7C1959F-20D2-4629-9E8C-1B4DC63B346C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7C1959F-20D2-4629-9E8C-1B4DC63B346C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7C1959F-20D2-4629-9E8C-1B4DC63B346C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7C1959F-20D2-4629-9E8C-1B4DC63B346C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -151,6 +157,7 @@ Global
 		{E1B90E61-2564-4FCE-8CED-F6D175DFBF4F} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 		{55CBDD98-6C1B-442F-B37C-B13599363FD3} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 		{72206AF8-D6A4-4098-9FC3-320402EF9E85} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
+		{B7C1959F-20D2-4629-9E8C-1B4DC63B346C} = {F5E59EDE-6E77-484C-AB93-C4651F43B9A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09914DD8-50B2-48E3-B9AB-7764AE36AD6B}

@@ -21,6 +21,10 @@ Provides an API surface to implement IoT Devices using MQTT.</Description>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.1.4.563" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MQTTnet.Extensions.MultiCloud\MQTTnet.Extensions.MultiCloud.csproj" />
   </ItemGroup>
 
