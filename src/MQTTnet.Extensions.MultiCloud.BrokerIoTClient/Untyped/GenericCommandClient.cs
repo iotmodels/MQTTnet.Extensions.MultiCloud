@@ -44,7 +44,7 @@ public class GenericCommandClient
                 {
                     GenericCommandResponse resp = new()
                     {
-                        Status = status,
+                        Status = 200,
                         ReponsePayload = respPayload
                     };
                     _tcs!.SetResult(resp);
