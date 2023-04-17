@@ -29,7 +29,7 @@ public class ReadOnlyProperty<T> : DeviceToCloudBinder<T>, IReadOnlyProperty<T>
         {
             if (m.ApplicationMessage.Topic == _topic)
             {
-                var ser = new UTF8JsonSerializer();
+                var ser = new Utf8JsonSerializer();
                 if (ser.TryReadFromBytes(m.ApplicationMessage.Payload, _name, out T propVal))
                 {
                     Value = propVal;

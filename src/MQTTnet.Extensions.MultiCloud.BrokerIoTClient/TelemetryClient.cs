@@ -13,7 +13,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
         public Action<string,T>? OnTelemetry { get; set; }
 
         public TelemetryClient(IMqttClient client, string name) 
-            : this(client, name, new UTF8JsonSerializer())
+            : this(client, name, new Utf8JsonSerializer())
         {
             
         }

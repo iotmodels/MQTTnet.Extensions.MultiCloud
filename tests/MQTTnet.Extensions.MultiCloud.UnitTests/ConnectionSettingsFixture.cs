@@ -85,7 +85,8 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
         [Fact]
         public void ParseConnectionStringWithAllValues()
         {
-            string cs = "HostName=<hubname>.azure-devices.net;DeviceId=<deviceId>;ClientId=<ClientId>;ModuleId=<moduleId>;SharedAccessKey=<SasKey>;SasMinutes=2;TcpPort=1234;UseTls=false;CaFile=<path>;DisableCrl=true;UserName=<usr>;Password=<pwd>;MqttVersion=3";
+            string cs = "HostName=<hubname>.azure-devices.net;DeviceId=<deviceId>;ClientId=<ClientId>;ModuleId=<moduleId>;SharedAccessKey=<SasKey>;SasMinutes=2;TcpPort=1234;UseTls=false;CaFile=<path>;DisableCrl=true;UserName=<usr>;Password=<pwd>;MqttVersion=3;MqttGatewayHostName=mqtt";
+
             ConnectionSettings dcs = ConnectionSettings.FromConnectionString(cs);
             Assert.Equal("<hubname>.azure-devices.net", dcs.HostName);
             Assert.Equal("<deviceId>", dcs.DeviceId);
@@ -100,6 +101,7 @@ namespace MQTTnet.Extensions.MultiCloud.UnitTests
             Assert.Equal("<path>", dcs.CaFile);
             Assert.True(dcs.DisableCrl);
             Assert.Equal(3, dcs.MqttVersion);
+            Assert.Equal("mqtt", dcs.MqttGatewayHostName);
         }
 
         [Fact]

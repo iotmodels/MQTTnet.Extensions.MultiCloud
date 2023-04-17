@@ -42,10 +42,9 @@ public class ConnectionSettings
     public bool UseTls { get; set; }
     public string? CaFile { get; set; }
     public bool DisableCrl { get; set; }
-
     public string? GatewayHostName { get; set; }
-
     public int? MqttVersion { get; set; }
+    public string? MqttGatewayHostName { get; set; }
 
     public ConnectionSettings()
     {
@@ -111,6 +110,7 @@ public class ConnectionSettings
         {
             throw new ApplicationException($"Invalid Mqtt Version {MqttVersion}", null);
         }
+        MqttGatewayHostName = GetStringValue(map, nameof(MqttGatewayHostName));
     }
 
     private static void AppendIfNotEmpty(StringBuilder sb, string name, string val)
@@ -143,7 +143,8 @@ public class ConnectionSettings
         AppendIfNotEmpty(result, nameof(ClientId), ClientId!);
         AppendIfNotEmpty(result, nameof(Auth), Auth!.ToString());
         AppendIfNotEmpty(result, nameof(MqttVersion), MqttVersion.ToString()!);
-        AppendIfNotEmpty(result, nameof(GatewayHostName), GatewayHostName!.ToString());
+        AppendIfNotEmpty(result, nameof(GatewayHostName), GatewayHostName!);
+        AppendIfNotEmpty(result, nameof(MqttGatewayHostName), MqttGatewayHostName!);
         result.Remove(result.Length - 1, 1);
         return result.ToString();
     }

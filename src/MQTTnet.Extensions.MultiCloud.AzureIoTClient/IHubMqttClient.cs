@@ -7,7 +7,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
     public interface IHubMqttClient
     {
         IMqttClient Connection { get; set; }
-        Func<GenericCommandRequest, GenericCommandResponse> OnCommandReceived { get; set; }
+        Func<IGenericCommandRequest, Task<IGenericCommandResponse>> OnCommandReceived { get; set; }
         Func<JsonNode, GenericPropertyAck> OnPropertyUpdateReceived { get; set; }
 
         Task<string> GetTwinAsync(CancellationToken cancellationToken = default);

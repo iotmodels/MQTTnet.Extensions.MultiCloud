@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace MQTTnet.Extensions.MultiCloud.Serializers;
 
-public class UTF8JsonSerializer : IMessageSerializer
+public class Utf8JsonSerializer : IMessageSerializer
 {
     private static class Json
     {
@@ -28,16 +28,23 @@ public class UTF8JsonSerializer : IMessageSerializer
 
     public byte[] ToBytes<T>(T payload, string name = "")
     {
+        if (payload is null)  return new byte[0];
+
         if (string.IsNullOrEmpty(name))
         {
             if (typeof(T) == typeof(string))
             {
                 return Encoding.UTF8.GetBytes((payload as string)!);
             }
+            //else if (typeof(T) == typeof(object))
+            //{
+            //    return Encoding.UTF8.GetBytes(payload.ToString()!);
+            //}
             else
             {
                 return Encoding.UTF8.GetBytes(Json.Stringify(payload!));
             }
+
         }
         else
         {
@@ -62,10 +69,15 @@ public class UTF8JsonSerializer : IMessageSerializer
             {
                 result = (T)Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T));
             }
+            else if (typeof(T) == typeof(object))
+            {
+                result = (T)Convert.ChangeType(Encoding.UTF8.GetString(payload), typeof(T))!;
+            }
             else
             {
                 result = Json.FromString<T>(Encoding.UTF8.GetString(payload))!;
             }
+
         }
         else
         {

@@ -23,7 +23,7 @@ public class Device : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs1"));
+        var connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
         _logger.LogWarning("Connecting to: {connectionSettings}", connectionSettings);
 
         var client = new HubMqttClient(await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionSettings, stoppingToken));
@@ -34,15 +34,15 @@ public class Device : BackgroundService
         var twin = await client.GetTwinAsync(stoppingToken);
         Console.WriteLine(twin);
         
-        client.OnCommandReceived = m =>
+        client.OnCommandReceived = async m =>
         {
             Console.WriteLine(m.CommandName);
             Console.WriteLine(m.CommandPayload);
-            return new GenericCommandResponse()
+            return await Task.FromResult(new GenericCommandResponse()
             {
                 Status = 200,
                 ReponsePayload = JsonSerializer.Serialize(new { myResponse = "whatever" })
-            };
+            });
         };
 
         client.OnPropertyUpdateReceived = m =>

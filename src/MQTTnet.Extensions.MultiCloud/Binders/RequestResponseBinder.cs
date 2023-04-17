@@ -14,16 +14,16 @@ public class RequestResponseBinder<T, TResp>
     protected string responseTopicSuccess = "device/{clientId}/commands/{commandName}/resp";
     protected string responseTopicFailure = "device/{clientId}/commands/{commandName}/err";
     protected bool requireNotEmptyPayload = true;
+    string remoteClientId = string.Empty;
     readonly bool _unwrap = true;
     Guid corr = Guid.NewGuid();
 
     protected Func<string, TResp>? VersionExtractor { get; set; }
 
-    string remoteClientId = string.Empty;
     readonly IMessageSerializer _serializer;
 
     public RequestResponseBinder(IMqttClient client, string name, bool unwrap)
-        : this(client, name, unwrap, new UTF8JsonSerializer())
+        : this(client, name, unwrap, new Utf8JsonSerializer())
     {
 
     }

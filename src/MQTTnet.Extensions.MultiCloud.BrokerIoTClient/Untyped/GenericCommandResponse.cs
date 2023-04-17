@@ -2,9 +2,9 @@
 
 namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient.Untyped
 {
-    public class GenericCommandResponse : BaseCommandResponse
+    public class GenericCommandResponse : IGenericCommandResponse
     {
-        [JsonPropertyName("payload")]
         public string? ReponsePayload { get; set; }
+        public int Status { get; set; }
     }
 }

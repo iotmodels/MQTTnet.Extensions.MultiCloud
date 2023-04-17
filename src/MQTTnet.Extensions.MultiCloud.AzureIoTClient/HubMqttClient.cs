@@ -1,6 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Untyped;
 using MQTTnet.Extensions.MultiCloud.Serializers;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
@@ -16,7 +17,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
         private readonly UpdateTwinBinder<object> updateTwinBinder;
 
         private readonly GenericDesiredUpdatePropertyBinder genericDesiredUpdateProperty;
-        private readonly GenericCommand command;
+        private readonly IGenericCommand command;
 
         public HubMqttClient(IMqttClient c)
         {
@@ -29,7 +30,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
             genericDesiredUpdateProperty = new GenericDesiredUpdatePropertyBinder(c, updateTwinBinder!);
         }
 
-        public Func<GenericCommandRequest, GenericCommandResponse> OnCommandReceived
+        public Func<IGenericCommandRequest, Task<IGenericCommandResponse>> OnCommandReceived
         {
             get => command.OnCmdDelegate!;
             set => command.OnCmdDelegate = value;
@@ -49,7 +50,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 
         public async Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default)
         {
-            var twin = await updateTwinBinder.InvokeAsync(Connection.Options.ClientId, payload, cancellationToken);
+            var twin = await updateTwinBinder.InvokeAsync(Connection.Options.ClientId, JsonSerializer.Serialize(payload), cancellationToken);
             return twin;
         }
 
@@ -61,7 +62,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
                 clientSegment = clientSegment.Replace("/", "/modules/");
             }
             return await Connection.PublishBinaryAsync($"devices/{clientSegment}/messages/events/",
-                new UTF8JsonSerializer().ToBytes(payload),
+                new Utf8JsonSerializer().ToBytes(payload),
                 Protocol.MqttQualityOfServiceLevel.AtLeastOnce,
                 false, t);
         }

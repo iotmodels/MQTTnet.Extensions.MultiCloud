@@ -26,7 +26,7 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
             }
             if (withBirth)
             {
-                var birthPayload = new UTF8JsonSerializer().ToBytes(
+                var birthPayload = new Utf8JsonSerializer().ToBytes(
                        new BirthConvention.BirthMessage(BirthConvention.ConnectionStatus.online)
                        {
                            ModelId = cs.ModelId
@@ -36,10 +36,10 @@ namespace MQTTnet.Extensions.MultiCloud.BrokerIoTClient
                    BirthConvention.BirthTopic(mqtt.Options.ClientId),
                    birthPayload,
                    Protocol.MqttQualityOfServiceLevel.AtLeastOnce, true, cancellationToken); //hack to disable retained in registry
-                if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
-                {
-                    throw new ApplicationException($"Error publishing Birth {cs}");
-                }
+                //if (pubAck.ReasonCode != MqttClientPublishReasonCode.Success)
+                //{
+                //    throw new ApplicationException($"Error publishing Birth {cs}");
+                //}
             }
             return mqtt;
         }
