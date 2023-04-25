@@ -97,15 +97,16 @@ namespace MQTTnet.Extensions.MultiCloud.IntegrationTests
             await client.DisconnectAsync();
         }
 
-        [Fact(Skip ="Required edgeHub-local")]
+        //Fact(Skip ="Required edgeHub-local")]
+        [Fact]
         public async Task ModuleSasUsingEdgeHub()
         {
             var cs = new ConnectionSettings()
             {
                 HostName = "rido-edges.azure-devices.net",
                 DeviceId = "riduntu22",
-                ModuleId = "MyFilterModule",
-                SharedAccessKey = "xidAoWNigrri7dAV/NynNFvOCTTgyTjlUIGoHI6wxyk=",
+                ModuleId = "ModuleOne",
+                SharedAccessKey = "c+ZZs5grZizn/RHj7vWjTvboY+wQ5sWu9PFfchJVybk=",
                 GatewayHostName = "localhost"
             };
             var connAck = await client!.ConnectAsync(new MqttClientOptionsBuilder()

@@ -36,6 +36,8 @@ public class GenericCommandClient
                 {
                     _tcs!.SetException(new ApplicationException("Invalid correlation data"));
                 }
+                
+                // TODO: Review UserProps retrieval (3 and 5)
                 //var up = m.ApplicationMessage.UserProperties.FirstOrDefault(p => p.Name.Equals("status"));
                 //int status = up != null ? int.Parse(up.Value) : 500;
 
