@@ -50,7 +50,7 @@ namespace MQTTnet.Extensions.MultiCloud.AzureIoTClient
 
         public async Task<int> UpdateTwinAsync(object payload, CancellationToken cancellationToken = default)
         {
-            var twin = await updateTwinBinder.InvokeAsync(Connection.Options.ClientId, JsonSerializer.Serialize(payload), cancellationToken);
+            var twin = await updateTwinBinder.InvokeAsync(Connection.Options.ClientId, payload, cancellationToken);
             return twin;
         }
 

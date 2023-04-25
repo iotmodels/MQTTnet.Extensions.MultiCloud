@@ -17,7 +17,8 @@ public  class GenericCommandE2EFixture
             TcpPort = 1883,
             UserName = "user",
             Password = "password",
-            ClientId = clientId
+            ClientId = clientId,
+            MqttVersion = 5
         };
     }
 
